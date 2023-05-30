@@ -15,6 +15,7 @@ test-job:
     - python manage.py test
 
 deploy-heroku-job:
+  image: 3.2.2-buster
   stage: deploy
   script:
     - echo "Deploying to Heroku via Docker container:"
