@@ -18,7 +18,8 @@ deploy-heroku-job:
   stage: deploy
   script:
     - echo "Deploying to Heroku via Docker container:"
-    - git push heroku master
+    - gem install dpl
+    - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
   environment:
     name: deployment
     url: HEROKU_URL
