@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-_c@cxz)gz3su--p0%w4y)rj2u*^jqeb$b682nys#r7)5shs0&8
 DEBUG = True
 
 LOCAL_HOST = '127.0.0.1'
-WEBAPP_HOST = 'patientoncall.herokuapp.com'
+WEBAPP_HOST = 'https://patientoncall.herokuapp.com/'
 ALLOWED_HOSTS = [WEBAPP_HOST, LOCAL_HOST]
 
 
