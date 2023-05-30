@@ -7,11 +7,13 @@ stages:
   - deploy
 
 compile-job:
+  image: python:3.10
   stage: compile
   script:
     - python manage.py migrate
 
 test-job:
+  image: python:3.10
   stage: test
   script:
     - python manage.py test
