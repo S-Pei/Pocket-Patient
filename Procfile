@@ -1,1 +1,1 @@
-web: gunicorn patientOnCall.wsgi:application
+web: gunicorn drp39.wsgi:application --log-file -
