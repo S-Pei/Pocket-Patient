@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-_c@cxz)gz3su--p0%w4y)rj2u*^jqeb$b682nys#r7)5shs0&8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['patientoncall.herokuapp.com']
 
 
 # Application definition
