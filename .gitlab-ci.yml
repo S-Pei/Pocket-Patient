@@ -21,8 +21,6 @@ deploy-heroku-job:
     - echo "Deploying to Heroku:"
     - gem install dpl
     - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
   environment:
     name: deployment
     url: HEROKU_URL
