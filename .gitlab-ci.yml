@@ -1,0 +1,26 @@
+variables:
+  HEROKU_URL: "patientoncall.herokuapp.com/"
+
+stages:
+  - compile
+  - test
+  - deploy
+
+compile-job:
+  stage: compile
+  script:
+    - python manage.py migrate
+
+test-job:
+  stage: test
+  script:
+    - python manage.py test
+
+deploy-heroku-job:
+  stage: deploy
+  script:
+    - echo "Deploying to Heroku via Docker container:"
+    - git push heroku master
+  environment:
+    name: deployment
+    url: HEROKU_URL
