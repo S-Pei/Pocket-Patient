@@ -18,6 +18,8 @@ deploy-heroku-job:
   image: ruby:3.1.2
   stage: deploy
   script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
     - echo "Deploying to Heroku via Docker container:"
     - gem install dpl
     - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
