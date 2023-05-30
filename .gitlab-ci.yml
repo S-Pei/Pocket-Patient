@@ -19,6 +19,7 @@ deploy-heroku-job:
   stage: deploy
   script:
     - echo "Deploying to Heroku:"
+    - apk add --no-cache ruby-dev build-base
     - gem install dpl
     - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
   environment:
