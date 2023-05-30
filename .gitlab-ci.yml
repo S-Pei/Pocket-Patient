@@ -15,7 +15,7 @@ test-job:
     - python manage.py test
 
 deploy-heroku-job:
-  image: ruby:3.1.2
+  image: ruby:3.1.2-alpine
   stage: deploy
   script:
     - echo "Deploying to Heroku:"
