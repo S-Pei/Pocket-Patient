@@ -1,1 +1,1 @@
-web: gunicorn drp39.wsgi:application --log-file -
+web: gunicorn drp39.wsgi
