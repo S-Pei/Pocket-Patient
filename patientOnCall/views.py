@@ -23,3 +23,6 @@ def index(request):
 
 def displayDoctor(request):
     return HttpResponse("DOCTOR ON CALLLLLLLLL!")
+
+def displayInfo(request):
+    return HttpResponse("Do sth later!")
