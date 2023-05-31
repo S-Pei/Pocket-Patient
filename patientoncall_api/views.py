@@ -1,20 +1,44 @@
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
+from .models import (
+    MedicalHistory,
+    LabHistory
+)
+
+from .serializers import (
+    MedicalHistorySerializer,
+    LabHistorySerializer
+)
+
 
 class PatientApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
-    # def get(self, request, patientId, *args, **kwargs):
-    #     '''
-    #     List all data for given requested patient user
-    #     '''
-    #     patient = request.user
-    #     print(patient.username)
-    #     serializer = PatientSerializer(patient, many=False)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, *args, **kwargs):
+        '''
+        List all data for given requested patient user
+        '''
+        userId = request.user.id
+        print(userId)
+        medicalHistories = MedicalHistory.objects.filter(patient=userId)
+        labHistories = LabHistory.objects.filter(patient=userId)
+        print(medicalHistories)
+        print(labHistories)
+        medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+                                                            many=True)
+        labHistorySerializer = LabHistorySerializer(labHistories, many=True)
+        
+        result = {
+            'medical-history': medicalHistorySerializer.data,
+            'lab-history': labHistorySerializer.data
+        }
+        return Response(result, status=status.HTTP_200_OK)
+    
+
