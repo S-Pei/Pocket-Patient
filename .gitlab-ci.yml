@@ -30,4 +30,3 @@ deploy-heroku-job:
   environment:
     name: deployment
     url: HEROKU_URL
-    
