@@ -1,8 +1,10 @@
 (function() {
+    const firstName = sessionStorage.getItem("patientFirstName")
+    const lastName = sessionStorage.getItem("patientLastName")
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
-    document.getElementById("patient-name").innerHTML = "hehe"
+    document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-age").innerHTML = "1"
 })();
 // document.getElementById("name").addEventListener("mouseover", (e) => {
