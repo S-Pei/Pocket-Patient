@@ -26,7 +26,17 @@ deploy-heroku-job:
     refs:
       - tags
       - master
-
   environment:
     name: deployment
     url: HEROKU_URL
+
+migrate-heroku:
+  stage: deploy
+  image: registry.heroku.com/patientoncall/web
+  script:
+    - apt-get update && apt-get install -y heroku
+    - heroku run python manage.py migrate --app patientoncall
+  only:
+    refs:
+      - tags
+      - master
