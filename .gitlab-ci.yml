@@ -34,7 +34,7 @@ deploy-flutter-job:
   image: "cirrusci/flutter:1.22.5"
   stage: deploy
   script:
-    - cd patient/mobile
+    - cd patient_mobile/
     - echo "Producing APK file for mobile app"
     - flutter build apk --no-tree-shake-icons
   artifacts:
