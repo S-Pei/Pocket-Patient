@@ -36,8 +36,8 @@ deploy-flutter-job:
   script:
     - cd patient_mobile/
     - echo "Producing APK file for mobile app"
-    - flutter build apk --split-per-abi --no-tree-shake-icons
+    - flutter build apk --no-tree-shake-icons
   artifacts:
     name: "${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}"
     paths: 
-      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/flutter-apk/app-release.apk
