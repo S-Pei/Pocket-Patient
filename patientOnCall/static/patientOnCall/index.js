@@ -1,4 +1,4 @@
-document.getElementById("patient-search-form").addEventListener("submit", (e) => {
+document.getElementById("patient-search-form").addEventListener("click", (e) => {
   e.preventDefault();
   
   let patientId = document.getElementById("patient-id").value;
@@ -6,17 +6,17 @@ document.getElementById("patient-search-form").addEventListener("submit", (e) =>
 
   console.log(patientId)
   console.log(patientName)
-
   //compare to database
   $.ajax({
-    type: "GET",
-    url: "api/doctor/patient-data",
+    type: "POST",
+    url: "api/doctor/patient-data/",
     data: {
         'patientId': patientId,
         'patientName': patientName
     },
     success: function (returned_value) {
       if (returned_value.ok == true) { 
+        window.location.href = "main/"
         console.log(returned_value);
       }
     },

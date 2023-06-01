@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -31,9 +32,10 @@ class PatientApiView(APIView):
         return Response(result, status=status.HTTP_200_OK)
     
 
+@csrf_exempt
 def getPatientData(request):
-    if request.method == "GET":
-        user = matchPatientUser(request.GET['patientId'], request.GET['patientName'])
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientId'], request.POST['patientName'])
         if user:
             data = getAllPatientDataById(request, user.id)
             return JsonResponse(data, status=status.HTTP_200_OK)
