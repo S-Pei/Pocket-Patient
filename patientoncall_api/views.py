@@ -37,7 +37,7 @@ def getPatientData(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientId'], request.POST['patientName'])
         if user:
-            data = getAllPatientDataById(request, user.id)
+            data = getAllPatientDataById(request, user)
             return JsonResponse(data, status=status.HTTP_200_OK)
 
 
@@ -50,15 +50,17 @@ def matchPatientUser(patientId, patientName):
             return user
     return None
 
-def getAllPatientDataById(request, userId):
-    medicalHistories = MedicalHistory.objects.filter(patient=userId)
-    labHistories = LabHistory.objects.filter(patient=userId)
+def getAllPatientDataById(request, user):
+    medicalHistories = MedicalHistory.objects.filter(patient=user.id)
+    labHistories = LabHistory.objects.filter(patient=user.id)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
     return {
-        "ok": True,
+        'ok': True,
+        'patient-first-name': user.first_name,
+        'patient-last-name': user.last_name,
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data
     }
