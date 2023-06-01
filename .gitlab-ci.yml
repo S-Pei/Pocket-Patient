@@ -45,4 +45,5 @@ deploy-flutter-job:
     paths: 
       - build/app/outputs/flutter-apk/app-release.apk
   environment:
+    name: deployment
     GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=1g"
