@@ -16,8 +16,10 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
     },
     success: function (returned_value) {
       if (returned_value.ok == true) { 
+        console.log(returned_value["lab-history"])
+        sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
+        sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
         window.location.href = "main/"
-        console.log(returned_value);
       }
     },
     error: function () { }
