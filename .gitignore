@@ -1,6 +1,16 @@
 # Ignore virtual environment folder
 env/
-Python-3.10.11/
+
+static/
+staticfiles/
+
+patientoncall_api/__pycache__/
+patientoncall_api/migrations/__pycache__
+patientOnCall/__pycache__
+patientOnCall/migrations/__pycache__
+drp39/__pycache__
+
 
 #Ignore DS_Store
 .DS_Store
+
