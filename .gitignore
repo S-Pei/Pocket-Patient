@@ -1,5 +1,9 @@
 # Ignore virtual environment folder
 env/
 
+# static folders
+staticfiles/
+static/
+
 #Ignore DS_Store
 .DS_Store
