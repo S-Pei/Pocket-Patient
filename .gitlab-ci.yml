@@ -31,7 +31,7 @@ deploy-heroku-job:
     url: HEROKU_URL
 
 deploy-flutter-job:
-  image: "cirruslabs/flutter:3.10.2"
+  image: "cirrusci/flutter:3.10.2"
   stage: deploy
   script:
     - cd patient_mobile/
