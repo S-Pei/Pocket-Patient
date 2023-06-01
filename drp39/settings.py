@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_c@cxz)gz3su--p0%w4y)rj2u*^jqeb$b682nys#r7)5shs0&8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 LOCAL_HOST = '127.0.0.1'
 WEBAPP_HOST = 'patientoncall.herokuapp.com'
