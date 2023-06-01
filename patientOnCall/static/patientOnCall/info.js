@@ -1,10 +1,14 @@
-document.getElementById("name").addEventListener("mouseover", (e) => {
-
+(function() {
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+
+    document.getElementById("patient-name").innerHTML = "hehe"
+    document.getElementById("patient-age").innerHTML = "1"
+})();
+// document.getElementById("name").addEventListener("mouseover", (e) => {
+
+//     console.log("hohoho")
   
-    console.log(labHistory[0])
-    console.log(medicalHistory)
     //compare to database
     // $.ajax({
     //   type: "POST",
@@ -23,4 +27,4 @@ document.getElementById("name").addEventListener("mouseover", (e) => {
     //   },
     //   error: function () { }
     // });
-  })
+//   })
