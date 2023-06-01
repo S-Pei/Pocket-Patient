@@ -1,0 +1,55 @@
+variables:
+  HEROKU_URL: "group41-simplewebapp.herokuapp.com/"
+
+image: "gitlab/gitlab-ee:latest"
+
+stages:
+  - compile
+  - test
+  - deploy
+
+compile-job:
+  image: maven:3-jdk-11
+  stage: compile
+  script:
+    - echo "Compiling project:"
+    - mvn compile
+
+test-job:
+  image: maven:3-jdk-11
+  stage: test
+  script:
+    - echo "Running test cases:"
+    - mvn test
+
+# deploy-vm-job:
+#   image: maven:3-jdk-11
+#   stage: deploy
+#   script:
+#     - echo "Deploying app on port 5000:"
+#     - fuser -k 5000/tcp || true
+#     - mvn package
+#     - export PORT=5000
+#     - sh target/bin/simplewebapp 1>/dev/null 2>/dev/null &
+#     - echo "Started web server on port 5000 in background"
+
+deploy-heroku-job:
+  stage: deploy
+  script:
+    - echo "Deploying to Heroku via Docker container:"
+    - gem install dpl
+    - dpl --provider=heroku --app=group41-simplewebapp --api-key=$HEROKU_AUTH_TOKEN
+  environment:
+    name: deployment
+    url: HEROKU_URL
+  
+deploy-flutter-job:
+  stage: deploy
+  script:
+    - echo "Producing APK file for mobile app"
+    - flutter build apk --no-tree-shake-icons
+  artifacts:
+    name: "${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}"
+    paths: 
+      - build/app/outputs/flutter-apk/app-release.apk
+
