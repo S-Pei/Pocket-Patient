@@ -20,6 +20,9 @@ deploy-heroku-job:
   stage: deploy
   script:
     - echo "Deploying to Heroku:"
+    - wget -O- https://toolbelt.heroku.com/apt/release.key | apt-key add -
+    - apt-get update
+    - apt-get install -y heroku-toolbelt
     - gem install dpl
     - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
     - heroku run python manage.py migrate --app patientoncall --api-key=$HEROKU_AUTH_TOKEN
