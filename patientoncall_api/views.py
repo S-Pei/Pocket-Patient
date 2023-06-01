@@ -19,6 +19,7 @@ from .serializers import (
 )
 
 
+# PUBLIC API SECTION
 @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
     # add permission to check if user is authenticated
@@ -29,11 +30,12 @@ class PatientApiView(APIView):
         List all data for given requested patient user
         '''
         userId = request.user.id
-        print(userId)
         result = getAllPatientDataById(request, userId)
         return Response(result, status=status.HTTP_200_OK)
     
 
+
+# PRIVATE API SECTION
 @csrf_exempt
 def getPatientData(request):
     if request.method == "POST":
@@ -43,6 +45,8 @@ def getPatientData(request):
             return JsonResponse(data, status=status.HTTP_200_OK)
 
 
+
+# HELPERS
 def matchPatientUser(patientId, patientName):
     patientUser = PatientUser.objects.get(patientId=patientId)
     if patientUser != None:
@@ -51,6 +55,7 @@ def matchPatientUser(patientId, patientName):
         if patientName.lower().replace(" ", "") == fullname.lower().replace(" ", ""):
             return user
     return None
+
 
 def getAllPatientDataById(request, userId):
     medicalHistories = MedicalHistory.objects.filter(patient=userId)
