@@ -20,10 +20,10 @@ deploy-heroku-job:
   stage: deploy
   script:
     - echo "Deploying to Heroku:"
-    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    # - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - gem install dpl
     - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
-    - heroku run python manage.py migrate --app patientoncall --api-key=$HEROKU_AUTH_TOKEN
+    # - heroku run python manage.py migrate --app patientoncall --api-key=$HEROKU_AUTH_TOKEN
   only:
     refs:
       - tags
