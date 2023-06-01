@@ -31,6 +31,7 @@ deploy-heroku-job:
     url: HEROKU_URL
 
 deploy-flutter-job:
+  image: "cirrusci/flutter:1.22.5"
   stage: deploy
   script:
     - echo "Producing APK file for mobile app"
