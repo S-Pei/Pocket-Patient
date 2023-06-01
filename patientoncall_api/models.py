@@ -7,8 +7,6 @@ from django.utils import timezone
 class PatientUser(models.Model):
   patientId = models.IntegerField(primary_key=True, default=None, editable=True)
   patient = models.ForeignKey(User, on_delete=models.CASCADE)
-  patientFirstName = models.CharField(max_length=255, default="", blank=True, null=True)
-  patientLastName = models.CharField(max_length=255, default="", blank=True, null=True)
   patientBirthdate = models.DateField(blank=True, null=True)
   patientAddress = models.TextField(max_length=1024, default="", blank=True, null=True)
 
