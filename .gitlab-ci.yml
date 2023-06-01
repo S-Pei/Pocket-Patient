@@ -33,8 +33,11 @@ deploy-heroku-job:
 deploy-flutter-job:
   image: "cirrusci/flutter:latest"
   stage: deploy
-  script:
+  before_script:
     - cd patient_mobile/
+    - flutter packages get
+    - flutter clean
+  script:
     - echo "Producing APK file for mobile app"
     - flutter build apk --no-tree-shake-icons
   artifacts:
