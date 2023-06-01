@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework import permissions
 
 from .models import (
+    PatientUser,
     MedicalHistory,
     LabHistory
 )
@@ -42,3 +43,13 @@ class PatientApiView(APIView):
         return Response(result, status=status.HTTP_200_OK)
     
 
+def getPatientData(request):
+    if request.method == "GET":
+        patientUser = matchPatientUser(request.GET['patientId'])
+
+
+def matchPatientUser(patientId, patientName):
+    patientUser = PatientUser.objects.get(patientId=patientId)
+    if patientUser != None:
+        fullname = patientUser.firstName + ' ' + patientUser.lastName
+        print(fullname)

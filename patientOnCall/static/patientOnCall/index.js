@@ -9,7 +9,7 @@ document.getElementById("patient-search-form").addEventListener("submit", (e) =>
 
   //compare to database
   $.ajax({
-    type: "POST",
+    type: "GET",
     url: "api/patient-data",
     data: {
         'patientId': patientId,
