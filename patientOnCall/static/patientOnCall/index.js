@@ -1,4 +1,4 @@
-document.getElementById("patient-search-form").addEventListener("click", (e) => {
+document.getElementById("patient-search-submit").addEventListener("click", (e) => {
   e.preventDefault();
   
   let patientId = document.getElementById("patient-id").value;
