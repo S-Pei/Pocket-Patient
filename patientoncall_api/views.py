@@ -32,9 +32,8 @@ class PatientApiView(APIView):
         '''
         List all data for given requested patient user
         '''
-        userId = request.user.id
-        print(userId)
-        result = getAllPatientDataById(request, userId)
+        user = matchPatientUser(12345, 'Bob Choy')
+        result = getAllPatientDataById(request, user)
         return Response(result, status=status.HTTP_200_OK)
     
 
