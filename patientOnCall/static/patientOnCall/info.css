@@ -1,0 +1,30 @@
+:root {
+  --info-bg-color: #89CFF0;
+}
+
+#main-past-medical-history-box {
+  height: 50vh;
+}
+
+ul {
+  list-style-type: none;
+  max-width: 700px;
+}
+
+#patient-medical-history-add-entry {
+  max-width: 700px;
+}
+
+.past-medical-history-entry {
+  background-color: var(--info-bg-color);
+}
+
+.past-medical-history-date {
+  width: 20%;
+  font-size: 1.1em;
+}
+
+.past-medical-history-summary {
+  width: 15%;
+  font-size: 1.1em;
+}

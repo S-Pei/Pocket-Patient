@@ -10,6 +10,8 @@ patientOnCall/__pycache__
 patientOnCall/migrations/__pycache__
 drp39/__pycache__
 
+db.sqlite3
+
 
 #Ignore DS_Store
 .DS_Store
