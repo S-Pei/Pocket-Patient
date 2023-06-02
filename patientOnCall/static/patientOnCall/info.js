@@ -1,3 +1,5 @@
+var base_url = window.location.origin;
+
 (function() {
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
@@ -28,3 +30,31 @@ function addEntry(date, summary) {
     var summaryCell = newRow.insertCell();
     summaryCell.textContent = summary;
 }
+
+document.getElementById("entry-submit").addEventListener("click", (e) => {
+    e.preventDefault();
+    
+    let date = document.getElementById("entry-date").value;
+    let summary = document.getElementById("entry-summary").value;
+
+    const firstName = sessionStorage.getItem("patientFirstName")
+    const lastName = sessionStorage.getItem("patientLastName")
+  
+    //compare to database
+    $.ajax({
+      type: "POST",
+      url: base_url + "/api/doctor/patient-data/medical-history/",
+      data: {
+        'patientID': sessionStorage.getItem("patientID"),
+        'patientName': firstName + ' ' + lastName,
+        'entryDate': date,
+        'entrySummary': summary
+      },
+      success: function (returned_value) {
+        if (returned_value.ok == true) { 
+            addEntry(date, summary)
+        }
+      },
+      error: function () { }
+    });
+  })

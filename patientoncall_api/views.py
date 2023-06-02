@@ -74,6 +74,15 @@ def getAllPatientDataById(request, user):
         'lab-history': labHistorySerializer.data
     }
 
+@csrf_exempt
+def addMedicalHistory(request):
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
+        MedicalHistory.objects.create(patient=user, 
+                                      date=request.POST['entryDate'], 
+                                      summary=request.POST['entrySummary'])
+        return JsonResponse({'ok': True}, status=status.HTTP_201_CREATED)
+
 def calculate_age(birthdate):
     # Get the current date
     current_date = date.today()

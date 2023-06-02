@@ -31,6 +31,19 @@
             <!-- Table entries will be added here -->
         </tbody>
     </table>
+    <form class="add-entry" id="patient-medical-history">
+      <div class="add-history">
+        <label for="entry-date">Enter ID</label>
+        <input type="date"  name="entry-date" id="entry-date"></input>
+      </div>
+      <div class="add-history">
+        <label for="entry-summary">Enter Name</label>
+        <input type="text" name="entry-summary" id="entry-summary"></input>
+      </div>
+      <div class="add-history">
+        <input type="submit" value="Submit" id="entry-submit">
+      </div>
+    </form>
       <script src="{% static 'patientOnCall/info.js' %}"></script>
     </body>
   </html>
