@@ -4,9 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.parsers import JSONParser 
 
-from datetime import date
+from datetime import datetime, date
 
 from .models import (
     PatientUser,
@@ -21,6 +23,7 @@ from .serializers import (
 )
 
 
+# @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
     # add permission to check if user is authenticated
     # permission_classes = [permissions.IsAuthenticated]
@@ -33,6 +36,30 @@ class PatientApiView(APIView):
         print(userId)
         result = getAllPatientDataById(request, userId)
         return Response(result, status=status.HTTP_200_OK)
+    
+
+# @permission_classes([IsAuthenticated])
+class PatientMedicalHistoryApiView(APIView):
+    # add permission to check if user is authenticated
+
+    @csrf_exempt    
+    def post(self, request, *args, **kwargs):
+        '''
+        List all data for given requested patient user
+        '''
+        
+        user = matchPatientUser(12345, 'Bob Choy')
+        request_data = JSONParser().parse(request)
+        print(request_data)
+        date_str = request_data['date']
+        summary = request_data['summary']
+        if not date_str or not summary:
+            return Response({'ok': False}, status=status.HTTP_404_NOT_FOUND)
+        
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+
+        MedicalHistory.objects.create(patient=user, date=date, summary=summary)
+        return Response({'ok': True}, status=status.HTTP_201_CREATED)
     
 
 @csrf_exempt
