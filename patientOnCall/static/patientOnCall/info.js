@@ -9,27 +9,43 @@ var base_url = window.location.origin;
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-age").innerHTML = age
-    document.getElementById("patient-address").innerHTML = address
+    document.getElementById("patient-age").innerHTML 
+      = "Age: " + age
+    document.getElementById("patient-address").innerHTML 
+      = "Address: " + address
 
-    var i = 0
-    while (i < medicalHistory.length) {
-        addEntry(medicalHistory[i]["date"], medicalHistory[i]["summary"])
-        i++;
-    }
+    insertMedHistoryEntries(medicalHistory);
 })();
-function addEntry(date, summary) {
-    // Create a new row for the table
-    var tableBody = document.getElementById("tableBody");
-    var newRow = tableBody.insertRow();
 
-    // Insert cells with the entry data
-    var dateCell = newRow.insertCell();
-    dateCell.textContent = date;
 
-    var summaryCell = newRow.insertCell();
-    summaryCell.textContent = summary;
+function insertMedHistoryEntries(medicalHistory) {
+  var i = 0
+  while (i < medicalHistory.length) {
+      addMedHistoryEntry(medicalHistory[i]["date"], medicalHistory[i]["summary"])
+      i++;
+  }
 }
+
+function addMedHistoryEntry(date, summary) {
+    // Create a new entry for the table
+    var tableBody = document.getElementById("past-medical-history-entries");
+    const newEntry = document.createElement("li");
+    newEntry.classList.add("past-medical-history-entry", "p-1", "d-flex", 
+        "flex-row", "w-100", "mb-2", "rounded-3", "border", "text-black-50")
+
+    const entryDate = document.createElement("div");
+    entryDate.classList.add("past-medical-history-date");
+    entryDate.textContent = date;
+
+    const entrySummary = document.createElement("div");
+    entrySummary.classList.add("past-medical-history-summary", "flex-grow-1");
+    entrySummary.textContent = summary;
+
+    newEntry.appendChild(entryDate);
+    newEntry.appendChild(entrySummary);
+    tableBody.appendChild(newEntry);
+}
+
 
 document.getElementById("entry-submit").addEventListener("click", (e) => {
     e.preventDefault();
