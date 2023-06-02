@@ -68,7 +68,7 @@ document.getElementById("entry-submit").addEventListener("click", (e) => {
       },
       success: function (returned_value) {
         if (returned_value.ok == true) { 
-            addEntry(date, summary)
+          addMedHistoryEntry(date, summary)
         }
       },
       error: function () { }

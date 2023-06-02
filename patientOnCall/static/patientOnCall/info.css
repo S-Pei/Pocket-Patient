@@ -11,6 +11,10 @@ ul {
   max-width: 700px;
 }
 
+#patient-medical-history-add-entry {
+  max-width: 700px;
+}
+
 .past-medical-history-entry {
   background-color: var(--info-bg-color);
 }
