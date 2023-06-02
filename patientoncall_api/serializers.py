@@ -1,9 +1,15 @@
 from rest_framework import serializers
 
 from .models import (
+    PatientUser,
     MedicalHistory,
     LabHistory
 )
+
+class PatientUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientUser
+        fields = ['patientBirthdate', 'patientAddress']
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
     class Meta:
