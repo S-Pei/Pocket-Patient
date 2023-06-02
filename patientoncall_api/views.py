@@ -90,12 +90,13 @@ def getAllPatientDataById(request, user):
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
     
-    patientAge = calculate_age(date.fromisoformat(patientUserSerializer.data["patientBirthdate"]))
+    # patientAge = calculate_age(date.fromisoformat(patientUserSerializer.data["patientBirthdate"]))
+    print(patientUserSerializer.data["patientBirthdate"])
     return {
         'ok': True,
         'patient-first-name': user.first_name,
         'patient-last-name': user.last_name,
-        'patient-age': patientAge,
+        'patient-dob': patientUserSerializer.data["patientBirthdate"],
         'patient-address': patientUserSerializer.data["patientAddress"],
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data

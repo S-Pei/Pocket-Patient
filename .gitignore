@@ -1,6 +1,8 @@
 # Ignore virtual environment folder
 env/
 
+.env
+
 static/
 staticfiles/
 

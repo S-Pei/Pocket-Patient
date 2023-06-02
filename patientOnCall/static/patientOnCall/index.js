@@ -4,8 +4,6 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
   let patientId = document.getElementById("patient-id").value;
   let patientName = document.getElementById("patient-name").value;
 
-  console.log(patientId)
-  console.log(patientName)
   //compare to database
   $.ajax({
     type: "POST",
@@ -20,7 +18,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
         sessionStorage.setItem("patientID", patientId)
         sessionStorage.setItem("patientFirstName", returned_value["patient-first-name"])
         sessionStorage.setItem("patientLastName", returned_value["patient-last-name"])
-        sessionStorage.setItem("patientAge", returned_value["patient-age"])
+        sessionStorage.setItem("patientDob", returned_value["patient-dob"])
         sessionStorage.setItem("patientAddress", returned_value["patient-address"])
         sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
