@@ -6,3 +6,6 @@ def index(request):
 
 def displayInfo(request):
     return render(request, 'patientOnCall/info.html')
+
+def displayPrescription(request):
+    return render(request, 'patientOnCall/prescription.html')
