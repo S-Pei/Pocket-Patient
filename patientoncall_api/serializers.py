@@ -3,7 +3,8 @@ from rest_framework import serializers
 from .models import (
     PatientUser,
     MedicalHistory,
-    LabHistory
+    LabHistory,
+    Prescription
 )
 
 class PatientUserSerializer(serializers.ModelSerializer):
@@ -22,3 +23,8 @@ class LabHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = LabHistory
         fields = ('date', 'report')
+
+class PrescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prescription
+        fields = ('drug', 'dosage', 'startDate', 'endDate', 'duration', 'route')

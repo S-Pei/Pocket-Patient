@@ -22,7 +22,8 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
         sessionStorage.setItem("patientAddress", returned_value["patient-address"])
         sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
-        window.location.href = "main/"
+        sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+        window.location.href = "prescription/"
       }
     },
     error: function () { }
