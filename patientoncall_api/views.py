@@ -92,11 +92,13 @@ def getAllPatientDataById(request, user):
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
     prescriptionSerializer = PrescriptionSerializer(prescription, many=True)
-    
+    sessionID = request.session.session_key
+    print(sessionID)
     # patientAge = calculate_age(date.fromisoformat(patientUserSerializer.data["patientBirthdate"]))
     print(patientUserSerializer.data["patientBirthdate"])
     return {
         'ok': True,
+        'sessionId': sessionID,
         'patient-first-name': user.first_name,
         'patient-last-name': user.last_name,
         'patient-dob': patientUserSerializer.data["patientBirthdate"],
@@ -111,8 +113,11 @@ def addMedicalHistory(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
         MedicalHistory.objects.create(patient=user, 
-                                      date=request.POST['entryDate'], 
-                                      summary=request.POST['entrySummary'])
+                                      admissionDate=request.POST['entryAdmissionDate'], 
+                                      dischargeDate=request.POST['entryDischargeDate'], 
+                                      summary=request.POST['entrySummary'],
+                                      consultant=request.POST['entryConsultant'],
+                                      visitType=request.POST['entryVisitType'])
         medicalHistories = MedicalHistory.objects.filter(patient=user.id)
         medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)

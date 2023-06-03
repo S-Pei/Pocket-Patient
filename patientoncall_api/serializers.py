@@ -15,7 +15,7 @@ class PatientUserSerializer(serializers.ModelSerializer):
 class MedicalHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalHistory
-        fields = ['date', 'summary']
+        fields = ['admissionDate', 'dischargeDate', 'consultant', 'summary', 'visitType']
 
 class LabHistorySerializer(serializers.ModelSerializer):
     report = serializers.ImageField(max_length=None, use_url=True, 
