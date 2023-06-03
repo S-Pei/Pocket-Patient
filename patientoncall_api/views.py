@@ -108,7 +108,12 @@ def addMedicalHistory(request):
         MedicalHistory.objects.create(patient=user, 
                                       date=request.POST['entryDate'], 
                                       summary=request.POST['entrySummary'])
-        return JsonResponse({'ok': True}, status=status.HTTP_201_CREATED)
+        medicalHistories = MedicalHistory.objects.filter(patient=user.id)
+        medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'medical-history': medicalHistorySerializer.data},
+                               status=status.HTTP_201_CREATED)
 
 def calculate_age(birthdate):
     # Get the current date

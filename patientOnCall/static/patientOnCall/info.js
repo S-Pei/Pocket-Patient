@@ -1,6 +1,7 @@
 var base_url = window.location.origin;
 
 (function() {
+  
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
     const dob = sessionStorage.getItem("patientDob")
@@ -46,7 +47,6 @@ function addMedHistoryEntry(date, summary) {
     tableBody.appendChild(newEntry);
 }
 
-
 document.getElementById("entry-submit").addEventListener("click", (e) => {
     e.preventDefault();
     
@@ -69,6 +69,7 @@ document.getElementById("entry-submit").addEventListener("click", (e) => {
       success: function (returned_value) {
         if (returned_value.ok == true) { 
           addMedHistoryEntry(date, summary)
+          sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
         }
       },
       error: function () { }
