@@ -19,7 +19,7 @@ ul {
   background-color: var(--info-bg-color);
 }
 
-.past-medical-history-date {
+.past-medical-history-discharge-date {
   width: 20%;
   font-size: 1.1em;
 }
