@@ -13,13 +13,15 @@ from datetime import datetime, date
 from .models import (
     PatientUser,
     MedicalHistory,
-    LabHistory
+    LabHistory,
+    Prescription
 )
 
 from .serializers import (
     PatientUserSerializer,
     MedicalHistorySerializer,
-    LabHistorySerializer
+    LabHistorySerializer,
+    PrescriptionSerializer
 )
 
 
@@ -83,22 +85,27 @@ def getAllPatientDataById(request, user):
     patientUser = PatientUser.objects.get(patient=user.id)
     medicalHistories = MedicalHistory.objects.filter(patient=user.id)
     labHistories = LabHistory.objects.filter(patient=user.id)
+    prescription = Prescription.objects.filter(patient=user.id)
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
-    
+    prescriptionSerializer = PrescriptionSerializer(prescription, many=True)
+    sessionID = request.session.session_key
+    print(sessionID)
     # patientAge = calculate_age(date.fromisoformat(patientUserSerializer.data["patientBirthdate"]))
     print(patientUserSerializer.data["patientBirthdate"])
     return {
         'ok': True,
+        'sessionId': sessionID,
         'patient-first-name': user.first_name,
         'patient-last-name': user.last_name,
         'patient-dob': patientUserSerializer.data["patientBirthdate"],
         'patient-address': patientUserSerializer.data["patientAddress"],
         'medical-history': medicalHistorySerializer.data,
-        'lab-history': labHistorySerializer.data
+        'lab-history': labHistorySerializer.data,
+        'prescription': prescriptionSerializer.data
     }
 
 @csrf_exempt
@@ -106,9 +113,35 @@ def addMedicalHistory(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
         MedicalHistory.objects.create(patient=user, 
-                                      date=request.POST['entryDate'], 
-                                      summary=request.POST['entrySummary'])
-        return JsonResponse({'ok': True}, status=status.HTTP_201_CREATED)
+                                      admissionDate=request.POST['entryAdmissionDate'], 
+                                      dischargeDate=request.POST['entryDischargeDate'], 
+                                      summary=request.POST['entrySummary'],
+                                      consultant=request.POST['entryConsultant'],
+                                      visitType=request.POST['entryVisitType'])
+        medicalHistories = MedicalHistory.objects.filter(patient=user.id)
+        medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'medical-history': medicalHistorySerializer.data},
+                               status=status.HTTP_201_CREATED)
+    
+@csrf_exempt
+def addPrescription(request):
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
+        Prescription.objects.create(patient=user, 
+                                    drug=request.POST['prescriptionDrug'], 
+                                    dosage=request.POST['prescriptionDosage'], 
+                                    startDate=request.POST['prescriptionStartDate'], 
+                                    endDate=request.POST['prescriptionEndDate'], 
+                                    duration=request.POST['prescriptionDuration'], 
+                                    route=request.POST['prescriptionRoute'])
+        prescription = Prescription.objects.filter(patient=user.id)
+        prescriptionSerializer = PrescriptionSerializer(prescription, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'prescription': prescriptionSerializer.data},
+                               status=status.HTTP_201_CREATED)
 
 def calculate_age(birthdate):
     # Get the current date
