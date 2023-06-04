@@ -1,8 +1,14 @@
-#main-past-medical-history-box {
-  height: 50vh;
+#past-medical-history-and-presentation-box {
+  height: 40vh;
+  width: 100%;
+  display: flex;
 }
 
-ul {
+#main-past-medical-history-box {
+  width: 65%;
+}
+
+#main-past-medical-history-box ul {
   list-style-type: none;
   max-width: 700px;
 }
@@ -22,5 +28,14 @@ ul {
 
 .past-medical-history-summary {
   width: 15%;
+  font-size: 1.1em;
+}
+
+#presentation-box {
+  width: 35%;
+  border: 3px solid var(--info-darker-bg-color);
+  margin-right: 1em;
+  border-radius: 15px;
+  background-color: var(--info-lighter-bg-color);
   font-size: 1.1em;
 }
