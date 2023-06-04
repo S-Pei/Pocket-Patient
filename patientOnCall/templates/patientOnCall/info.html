@@ -1,59 +1,50 @@
+{% extends "patientOnCall/base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-  <html>
-    <head>
-        <title>Welcome</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="Patient On Call">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'patientOnCall/info.css' %}"></link>
-        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        {% comment %} <script src="{% static 'patientOnCall/redirect.js' %}"></script> {% endcomment %}
-    </head>
-    <body>
-      
-      {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
-      <div class="container-fluid p-3 mb-3">
-        <h1 id="patient-name"></h1>
-        <h2 id="patient-age"></h2>
-        <h2 id="patient-address"></h2>
-      </div>
-      <div class="p-3" id="main-past-medical-history-box">
-        <h2>Past Medical History</h2>
-        <ul class="p-0 m-0 mb-3" id="past-medical-history-entries"></ul>
-        <!-- <h4>Add New Medical History</h4>
-        <form class="add-entry-form d-flex flex-row justify-content-between" id="patient-medical-history-add-entry">
-          <div class="add-history pt-1">
-            <label class="mr-2" for="entry-admission-date">Admission Date</label>
-            <input type="date"  name="entry-admission-date" id="entry-admission-date"></input>
-          </div>
-          <div class="add-history pt-1">
-            <label for="entry-discharge-date">Dischage Date</label>
-            <input type="date" name="entry-discharge-date" id="entry-discharge-date"></input>
-          </div>
-          <div class="add-history pt-1">
-            <label for="entry-summary">Summary</label>
-            <input type="text" name="entry-summary" id="entry-summary"></input>
-          </div>
-          <div class="add-history pt-1">
-            <label for="entry-consultant">Consultant</label>
-            <input type="text" name="entry-consultant" id="entry-consultant"></input>
-          </div>
-          <div class="add-history pt-1">
-            <label for="entry-visit-type">Visit Type</label>
-            <select name="entry-visit-type" id="entry-visit-type">
-              <option value="Hospital Visit" selected>Hospital Visit</option>
-              <option value="GP Consultation">GP Consultation</option>
-            </select>
-          </div>
-          <div class="add-history">
-            <input class="btn btn-primary" type="submit" value="Submit" id="entry-submit">
-          </div>
-        </form> -->
-      </div>
-      <script src="{% static 'patientOnCall/info.js' %}"></script>
-    </body>
-  </html>
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'patientOnCall/info.css' %}"></link>
+  {% comment %} <script src="{% static 'patientOnCall/redirect.js' %}"></script> {% endcomment %}
+</head>
+<body>
+  <div class="container-fluid p-3 mb-3">
+    <h1 id="patient-name"></h1>
+    <h2 id="patient-age"></h2>
+    <h2 id="patient-address"></h2>
+  </div>
+  <div class="p-3" id="main-past-medical-history-box">
+    <h2>Past Medical History</h2>
+    <ul class="p-0 m-0 mb-3" id="past-medical-history-entries"></ul>
+  </div>
+  <!-- <h4>Add New Medical History</h4>
+  <form class="add-entry-form d-flex flex-row justify-content-between" id="patient-medical-history-add-entry">
+    <div class="add-history pt-1">
+      <label class="mr-2" for="entry-admission-date">Admission Date</label>
+      <input type="date"  name="entry-admission-date" id="entry-admission-date"></input>
+    </div>
+    <div class="add-history pt-1">
+      <label for="entry-discharge-date">Dischage Date</label>
+      <input type="date" name="entry-discharge-date" id="entry-discharge-date"></input>
+    </div>
+    <div class="add-history pt-1">
+      <label for="entry-summary">Summary</label>
+      <input type="text" name="entry-summary" id="entry-summary"></input>
+    </div>
+    <div class="add-history pt-1">
+      <label for="entry-consultant">Consultant</label>
+      <input type="text" name="entry-consultant" id="entry-consultant"></input>
+    </div>
+    <div class="add-history pt-1">
+      <label for="entry-visit-type">Visit Type</label>
+      <select name="entry-visit-type" id="entry-visit-type">
+        <option value="Hospital Visit" selected>Hospital Visit</option>
+        <option value="GP Consultation">GP Consultation</option>
+      </select>
+    </div>
+    <div class="add-history">
+      <input class="btn btn-primary" type="submit" value="Submit" id="entry-submit">
+    </div>
+  </form> -->
+  <script src="{% static 'patientOnCall/info.js' %}"></script>
+</body>
+{% endblock %}
