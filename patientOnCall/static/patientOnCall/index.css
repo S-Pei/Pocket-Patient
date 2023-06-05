@@ -32,6 +32,8 @@ body {
   background-color: var(--info-bg-color);
 }
 
+/* WAITING FOR PATIENT CONFIRMATION LOADING */
+
 #waiting-for-confirmation-box {
   position: absolute;
   top: 50%;
@@ -72,6 +74,19 @@ body {
   100% {background-color: black;}
 }
 
+#waiting-for-confirmation-cancel-btn {
+  margin-top: 1.7em;
+  background-color: var(--error-lighter-color);
+  color: var(--error-darker-color);
+  font-weight: 400;
+  font-size: 1.2rem;
+  border: 2px solid var(--error-darker-color);
+  border-radius: 12px;
+  padding: 0 1em;
+}
+
+/* STATUS NOTIFICATION */
+
 .status-notification-box {
   width: 100%;
   position: absolute;
@@ -94,22 +109,11 @@ body {
   font-size: 1.3rem;
 }
 
-/* .status-notification-animation {
-  animation-name: status-notification-fade;
-  animation-delay: 2s;
-  animation-duration: 1s;
-} */
-
 .fade-out-animation {
   -webkit-animation: fadeOut 1s;
   animation: fadeOut 6s;
   animation-fill-mode: forwards;
 }
-
-/* @keyframes status-notification-fade {
-  0% { }
-  100% { display: none; }
-} */
 
 @-webkit-keyframes fadeOut {
   0% { opacity: 1;}
