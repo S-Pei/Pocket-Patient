@@ -32,7 +32,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
     error: function (xhr) { 
       if (xhr.status == 400) {
         clear_input();
-        status_error("User information entered is not valid!");
+        status_error("Patient information entered is not valid!");
       }
     }
   });
