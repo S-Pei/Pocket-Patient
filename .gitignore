@@ -3,7 +3,7 @@ env/
 
 .env
 
-static/
+
 staticfiles/
 
 patientoncall_api/__pycache__/
