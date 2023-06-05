@@ -34,7 +34,7 @@
 #presentation-box {
   width: 35%;
   border: 3px solid var(--info-darker-bg-color);
-  margin-right: 1em;
+  margin-right: 0.1%;
   border-radius: 15px;
   background-color: var(--info-lighter-bg-color);
   font-size: 1.1em;
@@ -56,6 +56,5 @@
 
 #main-current-prescription-box button {
   flex: 1;
-  margin: 0 .5em;
-  padding: .1em .4em;
+  margin: 0 1%;
 }

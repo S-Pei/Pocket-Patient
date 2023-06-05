@@ -1,0 +1,38 @@
+{% extends "patientOnCall/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'patientOnCall/visit.css' %}"></link>
+</head>
+<body>
+  {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
+  <div class="container-fluid p-3 mb-3">
+    <h1 id="patient-name">Bob Choy</h1>
+    <h2 id="patient-id">12345</h2>
+  </div>
+  <div class="p-3" id="main-visit-box">
+    <div class="p-3" id="main-current-visit-box">
+      <div id="main-current-visit-box-headers">
+        <h2>Healthcare Visit History:</h2>
+      </div>
+      <div class="info-table" id="main-current-visit-box-table">
+        <div class="info-table-item info-table-label">Date of Admission</div>
+        <div class="info-table-item info-table-label">Date of Discharge</div>
+        <div class="info-table-item info-table-label">Discharge Summary</div>
+        <div class="info-table-item info-table-label">Consultant</div>
+        <div class="info-table-item info-table-label">Type of Visit</div>
+        <div class="info-table-item info-table-label">Letter</div>
+        <div class="info-table-item">2012-13-13</div>
+        <div class="info-table-item">2012-13-18</div>
+        <div class="info-table-item">Amputated</div>
+        <div class="info-table-item">Dr. Dre</div>
+        <div class="info-table-item">Hospital Visit</div>
+        <div class="info-table-item">Hehe</div>
+      </div>
+      <div><button id="add-visit">Add visit</button></div>
+    </div>
+  </div>
+  <script src="{% static 'patientOnCall/visit.js' %}"></script>
+</body>
+{% endblock %}

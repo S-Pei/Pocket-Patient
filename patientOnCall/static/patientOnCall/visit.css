@@ -1,0 +1,32 @@
+#main-current-visit-box {
+    padding-top: 2em;
+    max-height: 35vh;
+  }
+  
+  #main-current-visit-box-headers {
+    display: flex;
+  }
+  
+  #main-current-visit-box h2 {
+    flex: 4;
+    margin-bottom: 0 !important;
+  }
+  
+  #main-current-visit-box button {
+    flex: 1;
+    margin-left: 1%;
+    margin-right: 1%;
+  }
+  
+  #add-visit {
+    background-color: var(--info-darker-bg-color);
+    color: white;
+    border: none;
+    padding: auto;
+    border-radius: 15px;
+    width: 30%;
+    margin-left: 35%;
+    margin-right: 35%;
+    padding: 1% 1%;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
