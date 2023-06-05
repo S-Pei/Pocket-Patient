@@ -4,6 +4,8 @@
   --info-lighter-bg-color: #CBEDF4;
   --dark-shade-color: rgba(0, 0, 0, 0.7);
   --table-background-colour: #DBE2E3;
+  --error-darker-color: #C41E3A;
+  --error-lighter-color: #ffc1c1;
 }
 
 body {
@@ -64,4 +66,25 @@ body {
   0% {background-color: black;}
   50% {background-color: white;}
   100% {background-color: black;}
+}
+
+.status-notification-box {
+  width: 100%;
+  position: absolute;
+  top: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.status-notification {
+  width: 40%;
+  height: 60px;
+  border-radius: 40px;
+  background-color: var(--error-lighter-color);
+}
+
+.status-text {
+  color:var(--error-darker-color);
+  font-weight: 500;
+  font-size: 1.3rem;
 }
