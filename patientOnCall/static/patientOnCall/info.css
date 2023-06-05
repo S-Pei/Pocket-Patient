@@ -68,6 +68,10 @@
   border: 1px solid black;
 }
 
+.info-table-label {
+  font-weight: 600;
+}
+
 .info-table-item {
   text-align: center;
   background-color: var(--table-background-colour);
