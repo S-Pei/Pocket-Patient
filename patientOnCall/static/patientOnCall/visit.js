@@ -21,11 +21,12 @@ function insertMedHistoryEntries(medicalHistory) {
       medicalHistory[i]["dischargeDate"],
        medicalHistory[i]["summary"],
        medicalHistory[i]["consultant"],
-       medicalHistory[i]["visitType"])
+       medicalHistory[i]["visitType"],
+       medicalHistory[i]["letter"])
       i++;
   }
 }
-function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, visitType) {
+function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, visitType, letter) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-visit-box-table");
 
@@ -49,9 +50,15 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, v
     entryVisitType.classList.add("info-table-item");
     entryVisitType.textContent = visitType;
 
-    const entryLetter = document.createElement("div");
+    const entryLetter = document.createElement("a");
     entryLetter.classList.add("info-table-item");
-    entryLetter.textContent = "Change this field to some pdf or sth, dunno";
+    entryLetter.href = base_url + letter;
+    if (visitType == "GP Consultation") {
+        entryLetter.textContent = "GP Letter";
+    }
+    else {
+        entryLetter.textContent = "Discharge Letter";
+    }
 
     tableBody.appendChild(entryAdmissionDate);
     tableBody.appendChild(entryDischargeDate);

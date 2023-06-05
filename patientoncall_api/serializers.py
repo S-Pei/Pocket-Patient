@@ -13,9 +13,10 @@ class PatientUserSerializer(serializers.ModelSerializer):
         fields = ['patientBirthdate', 'patientAddress']
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
+    letter = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
     class Meta:
         model = MedicalHistory
-        fields = ['admissionDate', 'dischargeDate', 'consultant', 'summary', 'visitType']
+        fields = ['admissionDate', 'dischargeDate', 'consultant', 'summary', 'visitType', 'letter']
 
 class LabHistorySerializer(serializers.ModelSerializer):
     report = serializers.ImageField(max_length=None, use_url=True, 

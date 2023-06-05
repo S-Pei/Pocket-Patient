@@ -18,6 +18,7 @@ class MedicalHistory(models.Model):
   summary = models.TextField(max_length=2048, blank=True, null=True)
   consultant = models.TextField(max_length=64, blank=True, null=True)
   visitType = models.TextField(max_length=32, blank=True, null=True)
+  letter = models.FileField(upload_to='letterattachments/', blank=True, null=True)
 
 class LabHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
