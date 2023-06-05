@@ -31,6 +31,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
     },
     error: function (xhr) { 
       if (xhr.status == 400) {
+        clear_input();
         status_error("User information entered is not valid!");
       }
     }
@@ -40,13 +41,29 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
 function wait_for_patient_approval() {
   $("#patient-search-form").addClass("invisible");
   $("#waiting-for-confirmation-box").removeClass("invisible");
+  $(".status-notification-box").removeClass("fade-out-animation");
+
+  $("#waiting-for-confirmation-cancel-btn").on("click", function() {
+    $("#waiting-for-confirmation-box").addClass("invisible");
+    $("#patient-search-form").removeClass("invisible");
+  })
 }
+
+function clear_input() {
+  $("#patient-id").val('');
+  $("#patient-name").val('');
+}
+
+let statusTimeout = null;
 
 function status_error(message) {
   $(".status-notification-box .status-text").text(message);
-  $(".status-notification-box").removeClass("fade-out-animation")
-                               .addClass("fade-out-animation");
-  setTimeout(() => {
-    $(".status-notification-box").removeClass("fade-out-animation")
-  }, 6500);
+
+  let statusNotiBox = $(".status-notification-box")
+  if (!statusNotiBox.hasClass("fade-out-animation")) {
+    statusNotiBox.addClass("fade-out-animation");
+    statusTimeout = setTimeout(() => {
+      $(".status-notification-box").removeClass("fade-out-animation")
+    }, 6500);
+  }
 }
