@@ -17,6 +17,10 @@ body {
   display: none;
 }
 
+.visible {
+  visibility: visible;
+}
+
 #patient-search-submit {
   background-color: var(--info-lighter-bg-color);
   max-width: 160px;
@@ -74,12 +78,13 @@ body {
   top: 80%;
   display: flex;
   justify-content: center;
+  opacity: 0;
 }
 
 .status-notification {
   width: 40%;
   height: 60px;
-  border-radius: 40px;
+  border-radius: 20px;
   background-color: var(--error-lighter-color);
 }
 
@@ -87,4 +92,32 @@ body {
   color:var(--error-darker-color);
   font-weight: 500;
   font-size: 1.3rem;
+}
+
+/* .status-notification-animation {
+  animation-name: status-notification-fade;
+  animation-delay: 2s;
+  animation-duration: 1s;
+} */
+
+.fade-out-animation {
+  -webkit-animation: fadeOut 1s;
+  animation: fadeOut 6s;
+  animation-fill-mode: forwards;
+}
+
+/* @keyframes status-notification-fade {
+  0% { }
+  100% { display: none; }
+} */
+
+@-webkit-keyframes fadeOut {
+  0% { opacity: 1;}
+  90% { opacity: 1;}
+  100% { opacity: 0;}
+}  
+@keyframes fadeOut {
+  0% { opacity: 1;}
+  90% { opacity: 1;}
+  100% { opacity: 0;}
 }

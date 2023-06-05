@@ -29,11 +29,24 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
         // window.location.href = "main/"
       }
     },
-    error: function () { }
+    error: function (xhr) { 
+      if (xhr.status == 400) {
+        status_error("User information entered is not valid!");
+      }
+    }
   });
 })
 
 function wait_for_patient_approval() {
   $("#patient-search-form").addClass("invisible");
   $("#waiting-for-confirmation-box").removeClass("invisible");
+}
+
+function status_error(message) {
+  $(".status-notification-box .status-text").text(message);
+  $(".status-notification-box").removeClass("fade-out-animation")
+                               .addClass("fade-out-animation");
+  setTimeout(() => {
+    $(".status-notification-box").removeClass("fade-out-animation")
+  }, 6500);
 }

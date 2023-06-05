@@ -51,11 +51,11 @@ class PatientMedicalHistoryApiView(APIView):
         
         user = matchPatientUser(12345, 'Bob Choy')
         request_data = JSONParser().parse(request)
-        print(request_data)
+        # print(request_data)
         date_str = request_data['date']
         summary = request_data['summary']
         if not date_str or not summary:
-            return Response({'ok': False}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
         
         date = datetime.strptime(date_str, '%Y-%m-%d').date()
 
@@ -67,19 +67,23 @@ class PatientMedicalHistoryApiView(APIView):
 def getPatientData(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientId'], request.POST['patientName'])
+        if not user:
+            return JsonResponse({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
         if user:
             data = getAllPatientDataById(request, user)
             return JsonResponse(data, status=status.HTTP_200_OK)
 
 
 def matchPatientUser(patientId, patientName):
-    patientUser = PatientUser.objects.get(patientId=patientId)
-    if patientUser != None:
-        user = patientUser.patient
-        fullname = user.first_name + ' ' + user.last_name
-        if patientName.lower().replace(" ", "") == fullname.lower().replace(" ", ""):
-            return user
-    return None
+    try:
+        patientUser = PatientUser.objects.get(patientId=patientId)
+        if patientUser != None:
+            user = patientUser.patient
+            fullname = user.first_name + ' ' + user.last_name
+            if patientName.lower().replace(" ", "") == fullname.lower().replace(" ", ""):
+                return user
+    except:
+        return None
 
 def getAllPatientDataById(request, user):
     patientUser = PatientUser.objects.get(patient=user.id)
@@ -93,9 +97,9 @@ def getAllPatientDataById(request, user):
                         context={"request": request}, many=True)
     prescriptionSerializer = PrescriptionSerializer(prescription, many=True)
     sessionID = request.session.session_key
-    print(sessionID)
+    # print(sessionID)
     # patientAge = calculate_age(date.fromisoformat(patientUserSerializer.data["patientBirthdate"]))
-    print(patientUserSerializer.data["patientBirthdate"])
+    # print(patientUserSerializer.data["patientBirthdate"])
     return {
         'ok': True,
         'sessionId': sessionID,
