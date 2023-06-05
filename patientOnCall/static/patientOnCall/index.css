@@ -1,3 +1,11 @@
+:root {
+  --info-bg-color: #73C1D2;
+  --info-darker-bg-color: #239DB8;
+  --info-lighter-bg-color: #CBEDF4;
+  --dark-shade-color: rgba(0, 0, 0, 0.7);
+  --table-background-colour: #DBE2E3;
+}
+
 /* .search-bar {
   display: block;
   text-align: center;
@@ -13,3 +21,14 @@
   height: 5em;
   width: 50em;
 } */
+
+#patient-search-submit {
+  background-color: var(--info-lighter-bg-color);
+  max-width: 160px;
+  width: 15%;
+  border: 3px solid var(--info-bg-color);
+}
+
+#patient-search-submit:hover {
+  background-color: var(--info-bg-color);
+}
