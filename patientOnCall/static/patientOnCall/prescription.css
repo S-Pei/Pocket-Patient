@@ -17,16 +17,3 @@
   margin-left: 1%;
   margin-right: 1%;
 }
-
-#add-prescription {
-  background-color: var(--info-darker-bg-color);
-  color: white;
-  border: none;
-  padding: auto;
-  border-radius: 15px;
-  width: 30%;
-  margin-left: 35%;
-  margin-right: 35%;
-  padding: 1% 1%;
-  transition: transform 0.1s, box-shadow 0.1s;
-}
