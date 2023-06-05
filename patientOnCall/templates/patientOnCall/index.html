@@ -26,6 +26,14 @@
           <script type="text/javascript"></script>
         </div>
       </form>
+      <div class="invisible" id="waiting-for-confirmation-box">
+        <h1>waiting for patient confirmation</h1>
+        <div class="loading-animation-box d-flex">
+          <div class="loading-dot" id="loading-dot-1"></div>
+          <div class="loading-dot" id="loading-dot-2"></div>
+          <div class="loading-dot" id="loading-dot-3"></div>
+        </div>
+      </div>
     
       <script src="{% static 'patientOnCall/index.js' %}"></script>
     </body>
