@@ -59,7 +59,7 @@
 
 #return-to-search-btn:hover {
   transform: scale(1.03);
-  box-shadow: 2px 2px 4px var(--dark-shade-color) ;
+  box-shadow: 2px 2px 4px var(--dark-shade-color);
 }
 
 .sidebar-option {
@@ -70,7 +70,7 @@
 
 .sidebar-option a {
   text-decoration: none;
-  color:var(--dark-shade-color);
+  color: var(--dark-shade-color);
   font-weight: 500;
   padding: 1em;
 }
@@ -79,4 +79,22 @@
   color: white;
   text-decoration: underline;
   transition: all 0.1s;
+}
+
+.info-table {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 2fr 1fr;
+  margin-top: 1em;
+  margin-bottom: .3em;
+  border: 1px solid black;
+}
+
+.info-table-label {
+  font-weight: 600;
+}
+
+.info-table-item {
+  text-align: center;
+  background-color: var(--table-background-colour);
+  border: 1px solid black;
 }

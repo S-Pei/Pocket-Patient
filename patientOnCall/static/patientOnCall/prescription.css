@@ -1,0 +1,29 @@
+#main-current-prescription-box {
+  padding-top: 2em;
+  max-height: 35vh;
+}
+
+#main-current-prescription-box-headers {
+  display: flex;
+}
+
+#main-current-prescription-box h2 {
+  flex: 4;
+  margin-bottom: 0 !important;
+}
+
+#main-current-prescription-box button {
+  flex: 1;
+  margin: 0 .5em;
+  padding: .1em .4em;
+}
+
+#add-prescription {
+  background-color: var(--info-darker-bg-color);
+  color: white;
+  border: none;
+  padding: 0.3em 1em;
+  border-radius: 15px;
+  width: 70%;
+  transition: transform 0.1s, box-shadow 0.1s;
+}

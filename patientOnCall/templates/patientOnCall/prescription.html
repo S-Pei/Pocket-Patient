@@ -1,59 +1,73 @@
+{% extends "patientOnCall/base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-  <html>
-    <head>
-        <title>Welcome</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="Patient On Call">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'patientOnCall/prescription.css' %}"></link>
-        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <script src="{% static 'patientOnCall/redirect.js' %}"></script>
-    </head>
-    <body>
-      
-      {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
-      <div class="container-fluid p-3 mb-3">
-        <h1 id="patient-name"></h1>
-        <h2 id="patient-id"></h2>
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'patientOnCall/prescription.css' %}"></link>
+</head>
+<body>
+  {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
+  <div class="container-fluid p-3 mb-3">
+    <h1 id="patient-name">Bob Choy</h1>
+    <h2 id="patient-id">12345</h2>
+  </div>
+  <div class="p-3" id="main-prescription-box">
+    <div class="p-3" id="main-current-prescription-box">
+      <div id="main-current-prescription-box-headers">
+        <h2>Current Prescriptions:</h2>
+        <button class="red-btn print-btn">print</button>
+        <button class="green-btn prev-btn">prev</button>
       </div>
-      <div class="p-3" id="main-prescription-box">
-        <h2>Prescriptions</h2>
-        <ul class="p-0 m-0 mb-3" id="prescription-entries"></ul>
-        <h4>Add New Prescription</h4>
-        <form class="add-entry-form d-flex flex-row justify-content-between" id="prescription-add-entry">
-          <div class="add-prescription pt-1">
-            <label class="mr-2" for="prescription-drug">Drug</label>
-            <input type="text"  name="prescription-drug" id="prescription-drug"></input>
-          </div>
-          <div class="add-prescription pt-1">
-            <label for="prescription-dosage">Dosage</label>
-            <input type="text" name="prescription-dosage" id="prescription-dosage"></input>
-          </div>
-          <div class="add-prescription pt-1">
-            <label for="prescription-start-date">Start Date</label>
-            <input type="date" name="prescription-start-date" id="prescription-start-date"></input>
-          </div>
-          <div class="add-prescription pt-1">
-            <label for="prescription-end-date">End Date</label>
-            <input type="date" name="prescription-end-date" id="prescription-end-date"></input>
-          </div>
-          <div class="add-prescription pt-1">
-            <label for="prescription-duration">Duration</label>
-            <input type="text" name="prescription-duration" id="prescription-duration"></input>
-          </div>
-          <div class="add-prescription pt-1">
-            <label for="prescription-route">Route</label>
-            <input type="text" name="prescription-route" id="prescription-route"></input>
-          </div>
-          <div class="add-precription">
-            <input class="btn btn-primary" type="submit" value="Submit" id="prescription-submit">
-          </div>
-        </form>
+      <div class="info-table" id="main-current-prescription-box-table">
+        <div class="info-table-item info-table-label">Drug</div>
+        <div class="info-table-item info-table-label">Dose & Frequency</div>
+        <div class="info-table-item info-table-label">Start Date</div>
+        <div class="info-table-item info-table-label">End Date</div>
+        <div class="info-table-item info-table-label">Duration</div>
+        <div class="info-table-item info-table-label">Route</div>
+        <div class="info-table-item">Antibiotics</div>
+        <div class="info-table-item">2 tablets, 2 times per day</div>
+        <div class="info-table-item">2012-13-13</div>
+        <div class="info-table-item">2012-13-18</div>
+        <div class="info-table-item">1 week</div>
+        <div class="info-table-item">Tablets</div>
       </div>
-      <script src="{% static 'patientOnCall/prescription.js' %}"></script>
-    </body>
-  </html>
+      <div class="main-current-prescription-foot-note">
+        last prescription date: 1/1/2013
+      </div>
+      <div><button id="add-prescription">Add prescription</button></div>
+    </div>
+    <!-- <h4>Add New Prescription</h4>
+    <form class="add-entry-form d-flex flex-row justify-content-between" id="prescription-add-entry">
+      <div class="add-prescription pt-1">
+        <label class="mr-2" for="prescription-drug">Drug</label>
+        <input type="text"  name="prescription-drug" id="prescription-drug"></input>
+      </div>
+      <div class="add-prescription pt-1">
+        <label for="prescription-dosage">Dosage</label>
+        <input type="text" name="prescription-dosage" id="prescription-dosage"></input>
+      </div>
+      <div class="add-prescription pt-1">
+        <label for="prescription-start-date">Start Date</label>
+        <input type="date" name="prescription-start-date" id="prescription-start-date"></input>
+      </div>
+      <div class="add-prescription pt-1">
+        <label for="prescription-end-date">End Date</label>
+        <input type="date" name="prescription-end-date" id="prescription-end-date"></input>
+      </div>
+      <div class="add-prescription pt-1">
+        <label for="prescription-duration">Duration</label>
+        <input type="text" name="prescription-duration" id="prescription-duration"></input>
+      </div>
+      <div class="add-prescription pt-1">
+        <label for="prescription-route">Route</label>
+        <input type="text" name="prescription-route" id="prescription-route"></input>
+      </div>
+      <div class="add-precription">
+        <input class="btn btn-primary" type="submit" value="Submit" id="prescription-submit">
+      </div>
+    </form> -->
+  </div>
+  <!-- <script src="{% static 'patientOnCall/prescription.js' %}"></script> -->
+</body>
+{% endblock %}

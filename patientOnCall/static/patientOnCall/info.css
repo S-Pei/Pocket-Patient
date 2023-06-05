@@ -59,21 +59,3 @@
   margin: 0 .5em;
   padding: .1em .4em;
 }
-
-.info-table {
-  display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 2fr 1fr;
-  margin-top: 1em;
-  margin-bottom: .3em;
-  border: 1px solid black;
-}
-
-.info-table-label {
-  font-weight: 600;
-}
-
-.info-table-item {
-  text-align: center;
-  background-color: var(--table-background-colour);
-  border: 1px solid black;
-}
