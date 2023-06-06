@@ -14,7 +14,9 @@ function wait_for_patient_approval() {
   $("#waiting-for-confirmation-box").removeClass("invisible");
   $(".status-notification-box").removeClass("fade-out-animation");
 
+  // Add cancel to wait event listener
   $("#waiting-for-confirmation-cancel-btn").on("click", function() {
+    disconnect_websocket();
     show_patient_search_ui();
   })
 
@@ -48,6 +50,13 @@ function status_error(message) {
 function connect_to_websocket() {
   if (websocket == null) {
     create_websocket();
+  }
+}
+
+function disconnect_websocket() {
+  if (websocket != null) {
+    websocket.close();
+    websocket = null;    
   }
 }
 
