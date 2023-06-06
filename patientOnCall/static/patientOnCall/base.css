@@ -65,14 +65,15 @@
 .sidebar-option {
   text-align: center;
   font-size: 1.5em;
-  margin-bottom: 1em;
+  margin-bottom: 0.2em;
 }
 
 .sidebar-option a {
   text-decoration: none;
   color: var(--dark-shade-color);
   font-weight: 500;
-  padding: 1em;
+  padding: 0.2em;
+  display: inline-block;
 }
 
 .sidebar-option a:hover {

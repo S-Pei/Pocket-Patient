@@ -6,10 +6,18 @@
   <link rel="stylesheet" href="{% static 'patientOnCall/info.css' %}"></link>
 </head>
 <body>
-  <div class="container-fluid p-3 mb-3">
-    <h1 id="patient-name"></h1>
-    <h2 id="patient-age"></h2>
-    <h2 id="patient-address"></h2>
+  <div class="personal">
+    <div class="patient-photo"> 
+    </div>
+    <div class="container-fluid p-3 mb-3">
+      <h1 id="patient-name"></h1>
+      <!-- <h3 id="patient-age"></h3> -->
+      <!-- <h3 id="patient-address"></h3> -->
+      <h3 id="patient-id">NHS Number:</h3>
+      <div id="allergies-box">
+        <h4 id="allergies">Drug Allergies: --- </h4>
+      </div>
+    </div>
   </div>
   <div id="past-medical-history-and-presentation-box">
     <div class="p-3" id="main-past-medical-history-box">
@@ -28,8 +36,8 @@
   <div class="p-3" id="main-current-prescription-box">
     <div id="main-current-prescription-box-headers">
       <h2>Current Prescriptions:</h2>
-      <button class="red-btn print-btn">print</button>
-      <button class="green-btn prev-btn">prev</button>
+      <button class="" id="print-button">print</button>
+      <button class="" id="prev-button">prev</button>
     </div>
     <div class="info-table" id="main-current-prescription-box-table">
       <div class="info-table-item info-table-label">Drug</div>
