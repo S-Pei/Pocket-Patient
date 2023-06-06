@@ -6,7 +6,7 @@ from channels.generic.websocket import WebsocketConsumer
 
 class EditConsumer(WebsocketConsumer):
 
-    async def connect(self):
+    def connect(self):
         # self.patient_id = self.scope['url_route']['kwargs']['patient_id']
         # self.patient_name = self.scope['url_route']['kwargs']['patient_name']
         # self.room_group_name = 'connection_%s' % (self.patient_id + '_' + self.patient_name)
@@ -15,26 +15,26 @@ class EditConsumer(WebsocketConsumer):
 
 
         # Join room group
-        await self.channel_layer.group_add('patientoncall',
+        async_to_sync(self.channel_layer.group_add)('patientoncall',
                                             self.channel_name)
 
-        await self.accept()
+        self.accept()
 
-        await self.channel_layer.group_send(self.room_group_name, {
+        async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'send_data',
                 'status': 'success',
                 'event': "websocket-connect"
             })
 
-    async def disconnect(self, close_code):
+    def disconnect(self, close_code):
         # print('consumer disconnected in %s' % self.room_group_name)
         print('consumer disconnected')
         
         # Leave room group
-        await self.channel_layer.group_discard('patientoncall',
+        async_to_sync(self.channel_layer.group_discard)('patientoncall',
                                                 self.channel_name)
         
-    async def receive(self, data):
+    def receive(self, data):
         """
         Receive message from WebSocket.
         Get the event and send the appropriate event
@@ -48,26 +48,26 @@ class EditConsumer(WebsocketConsumer):
 
 
     # Send data to Websocket functions
-    async def send_data(self, res):
-        await self.send(text_data=json.dumps({
+    def send_data(self, res):
+        async_to_sync(self.send)(text_data=json.dumps({
             "payload": res
         }))
     
-    async def patient_data_access_authentication(self, res):
-        await self.send(text_data=json.dumps({
+    def patient_data_access_authentication(self, res):
+        async_to_sync(self.send)(text_data=json.dumps({
             "event": res["event"]
         }))
     
     
     # Helpers
-    async def request_patient_data_access(self):
-        await self.channel_layer.group_send(self.room_group_name, {
+    def request_patient_data_access(self):
+        async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'patient_data_access_authentication',
                 'event': "REQUEST_PATIENT_DATA_ACCESS"
             })
 
     async def accept_patient_data_access(self):
-        await self.channel_layer.group_send(self.room_group_name, {
+        async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'patient_data_access_authentication',
                 'event': "ACCESS_PATIENT_DATA_ACCESS"
             })
