@@ -35,34 +35,26 @@ class EditConsumer(WebsocketConsumer):
         response = json.loads(text_data)
         event = response.get("event", None)
         if event == "REQUEST_PATIENT_DATA_ACCESS":
-            self.request_patient_data_access()
             print("DOCTOR REQUESTED ACCESS")
+            async_to_sync(self.channel_layer.group_send)('patientoncall', {
+                'type': 'patient_data_access_authentication',
+                'event': "REQUEST_PATIENT_DATA_ACCESS"
+            })
         if event == "GRANT_PATIENT_DATA_ACCESS":
             print("PATIENT GRANTED ACCESS")
-            self.grant_patient_data_access()
+            async_to_sync(self.channel_layer.group_send)('patientoncall', {
+                'type': 'patient_data_access_authentication',
+                'event': "GRANT_PATIENT_DATA_ACCESS"
+            })
 
 
     # Send data to Websocket functions
     def send_data(self, res):
-        async_to_sync(self.send)(text_data=json.dumps({
+        self.send(text_data=json.dumps({
             "payload": res
         }))
     
     def patient_data_access_authentication(self, res):
-        async_to_sync(self.send)(text_data=json.dumps({
+        self.send(text_data=json.dumps({
             "event": res["event"]
         }))
-    
-    
-    # Helpers
-    def request_patient_data_access(self):
-        async_to_sync(self.channel_layer.group_send)('patientoncall', {
-                'type': 'patient_data_access_authentication',
-                'event': "REQUEST_PATIENT_DATA_ACCESS"
-            })
-
-    async def grant_patient_data_access(self):
-        async_to_sync(self.channel_layer.group_send)('patientoncall', {
-                'type': 'patient_data_access_authentication',
-                'event': "GRANT_PATIENT_DATA_ACCESS"
-            })

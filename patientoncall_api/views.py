@@ -64,6 +64,15 @@ class PatientMedicalHistoryApiView(APIView):
     
 
 @csrf_exempt
+def verifyPatientCredentials(request):
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientId'], request.POST['patientName'])
+        if not user:
+            return JsonResponse({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return JsonResponse({'ok': True}, status=status.HTTP_200_OK)
+
+@csrf_exempt
 def getPatientData(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientId'], request.POST['patientName'])
