@@ -175,6 +175,12 @@ REST_FRAMEWORK = {
     )
 }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 cloudinary.config( 
   cloud_name = str(os.getenv('CLOUD_NAME')), 
   api_key = str(os.getenv('CLOUD_API_KEY')), 
