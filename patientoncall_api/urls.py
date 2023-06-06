@@ -14,6 +14,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('patient-data/', PatientApiView.as_view()),
     path('patient-data/medical-history/', PatientMedicalHistoryApiView.as_view()),
+    path('doctor/patient-verify/', views.verifyPatientCredentials),
     path('doctor/patient-data/', views.getPatientData),
     path('doctor/patient-data/medical-history/', views.addMedicalHistory),
     path('doctor/patient-data/prescription/', views.addPrescription),

@@ -4,38 +4,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
   let patientId = document.getElementById("patient-id").value;
   let patientName = document.getElementById("patient-name").value;
 
-  //compare to database
-  $.ajax({
-    type: "POST",
-    url: "api/doctor/patient-data/",
-    data: {
-        'patientId': patientId,
-        'patientName': patientName
-    },
-    success: function (returned_value) {
-      if (returned_value.ok == true) {
-        // Wait for patient approval
-        wait_for_patient_approval();
-
-        // sessionStorage.setItem("sessionID", returned_value["sessionId"])
-        // sessionStorage.setItem("patientID", patientId)
-        // sessionStorage.setItem("patientFirstName", returned_value["patient-first-name"])
-        // sessionStorage.setItem("patientLastName", returned_value["patient-last-name"])
-        // sessionStorage.setItem("patientDob", returned_value["patient-dob"])
-        // sessionStorage.setItem("patientAddress", returned_value["patient-address"])
-        // sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
-        // sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
-        // sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-        // window.location.href = "main/"
-      }
-    },
-    error: function (xhr) { 
-      if (xhr.status == 400) {
-        clear_input();
-        status_error("Patient information entered is not valid!");
-      }
-    }
-  });
+  api_verify_valid_patient_credentials(patientId, patientName);
 })
 
 var websocket = null;
@@ -46,11 +15,15 @@ function wait_for_patient_approval() {
   $(".status-notification-box").removeClass("fade-out-animation");
 
   $("#waiting-for-confirmation-cancel-btn").on("click", function() {
-    $("#waiting-for-confirmation-box").addClass("invisible");
-    $("#patient-search-form").removeClass("invisible");
+    show_patient_search_ui();
   })
 
   connect_to_websocket();
+}
+
+function show_patient_search_ui() {
+  $("#waiting-for-confirmation-box").addClass("invisible");
+  $("#patient-search-form").removeClass("invisible");
 }
 
 function clear_input() {
@@ -76,17 +49,86 @@ function connect_to_websocket() {
   if (websocket == null) {
     create_websocket();
   }
-
-  websocket.send(JSON.stringify({
-    "event": "REQUEST_PATIENT_DATA_ACCESS"
-  }))
 }
 
 function create_websocket() {
-  var connectionString = 'wss://' + window.location.host + '/ws/patientoncall/';
+  let connectionString = ''
+  if (window.location.protocol == "https:") {
+    connectionString = 'wss://' + window.location.host + '/ws/patientoncall/';
+  } else {
+    connectionString = 'ws://' + window.location.host + '/ws/patientoncall/';
+  }
   websocket = new WebSocket(connectionString);
 
-  websocket.onmessage = function (data) {
-    console.log(data)
+  websocket.onopen = function (event) {
+    websocket.send(JSON.stringify({
+        "event": "REQUEST_PATIENT_DATA_ACCESS"
+      }))
   }
+
+  websocket.onmessage = function (response) {
+    let data = response.data
+    let event = data.event
+
+    if (event == "GRANT_PATIENT_DATA_ACCESS") {
+      api_fetch_patient_full_data();
+    }
+  }
+}
+
+
+// API Functions
+
+function api_verify_valid_patient_credentials(patientId, patientName) {
+  $.ajax({
+    type: "POST",
+    url: "api/doctor/patient-verify/",
+    data: {
+        'patientId': patientId,
+        'patientName': patientName
+    },
+    success: function (returned_value) {
+      if (returned_value.ok == true) {
+        sessionStorage.setItem("patientID", patientId)
+        sessionStorage.setItem("patientName", patientName)
+
+        // Wait for patient approval
+        wait_for_patient_approval();
+      }
+    },
+    error: function (xhr) { 
+      clear_input();
+      show_patient_search_ui();
+      status_error("Error retrieving patient data!");
+    }
+  });
+}
+
+function api_fetch_patient_full_data() {
+  $.ajax({
+    type: "POST",
+    url: "api/doctor/patient-data/",
+    data: {
+        'patientId': sessionStorage.getItem("patientID"),
+        'patientName': sessionStorage.getItem("patientName")
+    },
+    success: function (returned_value) {
+      if (returned_value.ok == true) {
+        sessionStorage.setItem("sessionID", returned_value["sessionId"])
+        sessionStorage.setItem("patientFirstName", returned_value["patient-first-name"])
+        sessionStorage.setItem("patientLastName", returned_value["patient-last-name"])
+        sessionStorage.setItem("patientDob", returned_value["patient-dob"])
+        sessionStorage.setItem("patientAddress", returned_value["patient-address"])
+        sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
+        sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
+        sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+        window.location.href = "main/"
+      }
+    },
+    error: function (xhr) { 
+      clear_input();
+      show_patient_search_ui();
+      status_error("Error retrieving patient data!");
+    }
+  });
 }
