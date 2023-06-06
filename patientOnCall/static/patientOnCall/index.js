@@ -38,6 +38,8 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
   });
 })
 
+var websocket = null;
+
 function wait_for_patient_approval() {
   $("#patient-search-form").addClass("invisible");
   $("#waiting-for-confirmation-box").removeClass("invisible");
@@ -47,6 +49,8 @@ function wait_for_patient_approval() {
     $("#waiting-for-confirmation-box").addClass("invisible");
     $("#patient-search-form").removeClass("invisible");
   })
+
+  connect_to_websocket();
 }
 
 function clear_input() {
@@ -65,5 +69,24 @@ function status_error(message) {
     statusTimeout = setTimeout(() => {
       $(".status-notification-box").removeClass("fade-out-animation")
     }, 6500);
+  }
+}
+
+function connect_to_websocket() {
+  if (websocket == null) {
+    create_websocket();
+  }
+
+  websocket.send(JSON.stringify({
+    "event": "REQUEST_PATIENT_DATA_ACCESS"
+  }))
+}
+
+function create_websocket() {
+  var connectionString = 'wss://' + window.location.host + '/ws/patientoncall/';
+  websocket = new WebSocket(connectionString);
+
+  websocket.onmessage = function (data) {
+    console.log(data)
   }
 }

@@ -36,6 +36,7 @@ class EditConsumer(WebsocketConsumer):
         event = response.get("event", None)
         if event == "REQUEST_PATIENT_DATA_ACCESS":
             self.request_patient_data_access()
+            print("DOCTOR REQUESTED ACCESS")
         if event == "GRANT_PATIENT_DATA_ACCESS":
             print("PATIENT GRANTED ACCESS")
             self.grant_patient_data_access()
