@@ -6,7 +6,7 @@ from channels.generic.websocket import WebsocketConsumer
 
 class EditConsumer(WebsocketConsumer):
 
-    def connect(self):
+    async def connect(self):
         # self.patient_id = self.scope['url_route']['kwargs']['patient_id']
         # self.patient_name = self.scope['url_route']['kwargs']['patient_name']
         # self.room_group_name = 'connection_%s' % (self.patient_id + '_' + self.patient_name)
@@ -15,15 +15,29 @@ class EditConsumer(WebsocketConsumer):
 
 
         # Join room group
-        async_to_sync(self.channel_layer.group_add)('patientoncall',
-                                                    self.channel_name)
+        await self.channel_layer.group_add('patientoncall',
+                                            self.channel_name)
 
-        self.accept()
+        await self.accept()
 
-    def disconnect(self, close_code):
+        await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'connection',
+                'status': 'success',
+                'event': "websocket-connect"
+            })
+
+    async def disconnect(self, close_code):
         # print('consumer disconnected in %s' % self.room_group_name)
         print('consumer disconnected')
         
         # Leave room group
-        async_to_sync(self.channel_layer.group_discard)('patientoncall',
-                                                        self.channel_name)
+        await self.channel_layer.group_discard('patientoncall',
+                                                self.channel_name)
+        
+    # async def receive(self, data):
+    #     """
+    #     Receive message from WebSocket.
+    #     Get the event and send the appropriate event
+    #     """
+    #     response = json.loads(data)
+    #     event = response.get("event", None)
