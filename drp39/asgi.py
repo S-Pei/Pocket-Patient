@@ -12,12 +12,15 @@ import os
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
-import patientoncall_api.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drp39.settings')
 
+django_asi_app = get_asgi_application()
+
+from patientoncall_api.routing import *
+
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
+    "http": django_asi_app,
     "websocket":
-      AuthMiddlewareStack(URLRouter(patientoncall_api.routing.websocket_urlpatterns))
+      AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
 })
