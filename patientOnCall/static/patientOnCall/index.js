@@ -81,7 +81,7 @@ function create_websocket() {
 
   websocket.onmessage = function (response) {
     let data = response.data
-    let event = data.event
+    let event = data["event"]
 
     console.log(event)
 
