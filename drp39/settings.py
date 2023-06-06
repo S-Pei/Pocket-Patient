@@ -17,6 +17,8 @@ from datetime import timedelta
 from dotenv import load_dotenv
 load_dotenv()
 
+import cloudinary
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'patientOnCall',
     'patientoncall_api',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -172,6 +175,18 @@ REST_FRAMEWORK = {
     )
 }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+cloudinary.config( 
+  cloud_name = str(os.getenv('CLOUD_NAME')), 
+  api_key = str(os.getenv('CLOUD_API_KEY')), 
+  api_secret = str(os.getenv('CLOUD_API_SECRET'))
+)
+
 # STORAGES = {
 #     "default": {
 #         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -192,6 +207,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+ASGI_APPLICATION = 'drp39.asgi.application'
 
 
 # Static files (CSS, JavaScript, Images)

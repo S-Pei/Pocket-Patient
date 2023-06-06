@@ -26,12 +26,13 @@ function insertMedHistoryEntries(medicalHistory) {
       medicalHistory[i]["dischargeDate"],
        medicalHistory[i]["summary"],
        medicalHistory[i]["consultant"],
-       medicalHistory[i]["visitType"])
+       medicalHistory[i]["visitType"],
+       medicalHistory[i]["letter"])
       i++;
   }
 }
 
-function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, visitType) {
+function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, visitType, letter) {
     // Create a new entry for the table
     var tableBody = document.getElementById("past-medical-history-entries");
     const newEntry = document.createElement("li");

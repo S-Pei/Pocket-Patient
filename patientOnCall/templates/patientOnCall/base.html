@@ -25,23 +25,27 @@
             </button>
           </div>
           <ul class="sidebar-components">
-              <li class="sidebar-option">
-                  <a href="#">Prescriptions</a>
+              <li class="sidebar-option" id="patient-summary">
+                <a href="#">Patient Summary</a>
               </li>
-              <li class="sidebar-option">
+              <li class="sidebar-option" id="personal-information">
+                <a href="#">Patient Personal Information</a>
+              </li>
+              <li class="sidebar-option" id="prescription">
+                <a href="#">Prescription</a>
+              </li>
+              <li class="sidebar-option" id="visit-history">
                 <a href="#">Healthcare Visit History</a>
               </li>
-              <li class="sidebar-option">
+              <li class="sidebar-option" id="lab-history">
                 <a href="#">Lab History</a>
               </li>
-              <li class="sidebar-option">
+              <li class="sidebar-option" id="imaging-history">
                 <a href="#">Imaging History</a>
-              </li>
-              <li class="sidebar-option">
-                <a href="#">More Personal Information</a>
               </li>
           </ul>
         </nav>
+        <script src="{% static 'patientOnCall/base.js' %}"></script>
         <div class="main-box">
           {% block content %} {% endblock %} 
         </div>

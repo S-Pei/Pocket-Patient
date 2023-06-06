@@ -121,7 +121,8 @@ def addMedicalHistory(request):
                                       dischargeDate=request.POST['entryDischargeDate'], 
                                       summary=request.POST['entrySummary'],
                                       consultant=request.POST['entryConsultant'],
-                                      visitType=request.POST['entryVisitType'])
+                                      visitType=request.POST['entryVisitType'],
+                                      letter=request.POST['entryLetter'])
         medicalHistories = MedicalHistory.objects.filter(patient=user.id)
         medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)

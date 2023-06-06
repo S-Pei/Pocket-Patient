@@ -1,0 +1,19 @@
+#main-current-prescription-box {
+  padding-top: 2em;
+  max-height: 35vh;
+}
+
+#main-current-prescription-box-headers {
+  display: flex;
+}
+
+#main-current-prescription-box h2 {
+  flex: 4;
+  margin-bottom: 0 !important;
+}
+
+#main-current-prescription-box button {
+  flex: 1;
+  margin-left: 1%;
+  margin-right: 1%;
+}
