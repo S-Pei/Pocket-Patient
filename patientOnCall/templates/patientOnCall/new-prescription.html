@@ -1,0 +1,53 @@
+{% extends "patientOnCall/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'patientOnCall/new-prescription.css' %}"></link>
+</head>
+<body>
+  {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
+  <div class="container-fluid p-3 mb-3">
+    <h1 id="patient-name">Bob Choy</h1>
+    <h2 id="patient-id">12345</h2>
+  </div>
+  <div class="p-3" id="main-prescription-box">
+    <div class="p-3" id="main-current-prescription-box">
+      <div id="main-current-prescription-box-headers">
+        <h2>Current Prescriptions:</h2>
+        <button class="red-btn print-btn">print</button>
+        <button class="green-btn prev-btn">prev</button>
+      </div>
+      <div class="info-table" id="main-current-prescription-box-table">
+        <div class="info-table-item info-table-label">Action</div>
+        <div class="info-table-item info-table-label">Drug</div>
+        <div class="info-table-item info-table-label">Dose & Frequency</div>
+        <div class="info-table-item info-table-label">Start Date</div>
+        <div class="info-table-item info-table-label">End Date</div>
+        <div class="info-table-item info-table-label">Duration</div>
+        <div class="info-table-item info-table-label">Route</div>
+        <div class="info-table-item info-table-label">Confirmation</div>
+        <div class="info-table-item">
+            <select id="selecting">
+            <option id="saved-option" value="option1" selected>Saved</option>
+            <option id="edit-option" value="option2">Edit</option>
+            <option id="del-option" value="option3">Delete</option>
+            </select>
+        </div>
+        <div class="info-table-item">Antibiotics</div>
+        <div class="info-table-item">2 tablets, 2 times per day</div>
+        <div class="info-table-item">2012-13-13</div>
+        <div class="info-table-item">2012-13-18</div>
+        <div class="info-table-item">1 week</div>
+        <div class="info-table-item">Tablets</div>
+        <div class="info-table-item"><button>Confirm</button></div>
+      </div>
+      <div class="main-current-prescription-foot-note">
+        last prescription date: 1/1/2013
+      </div>
+      <div class="add-button-box"><button id="add-prescription" class="add-button">Add prescription</button></div>
+    </div>
+  </div>
+  <script src="{% static 'patientOnCall/new-prescription.js' %}"></script>
+</body>
+{% endblock %}
