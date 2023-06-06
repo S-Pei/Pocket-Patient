@@ -17,6 +17,8 @@ from datetime import timedelta
 from dotenv import load_dotenv
 load_dotenv()
 
+import cloudinary
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -171,6 +173,12 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+cloudinary.config( 
+  cloud_name = str(os.getenv('CLOUD_NAME')), 
+  api_key = str(os.getenv('CLOUD_API_KEY')), 
+  api_secret = str(os.getenv('CLOUD_API_SECRET'))
+)
 
 # STORAGES = {
 #     "default": {

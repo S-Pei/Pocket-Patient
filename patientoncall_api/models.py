@@ -13,6 +13,7 @@ class PatientUser(models.Model):
   patientBirthdate = models.DateField(blank=True, null=True)
   patientAddress = models.TextField(max_length=1024, default="", blank=True, null=True)
 
+
 class MedicalHistory(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   patient = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,11 +24,13 @@ class MedicalHistory(models.Model):
   visitType = models.TextField(max_length=32, blank=True, null=True)
   letter = cloudinary.models.CloudinaryField('image', null=True)
 
+
 class LabHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     report = cloudinary.models.CloudinaryField('image', null=True)
+
 
 class Prescription(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -38,3 +41,6 @@ class Prescription(models.Model):
     endDate = models.DateField()
     duration = models.TextField(max_length=1024)
     route = models.TextField(max_length=1024)
+
+class Photo(models.Model):
+    image = CloudinaryField('image')
