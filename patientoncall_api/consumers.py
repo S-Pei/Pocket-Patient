@@ -20,12 +20,6 @@ class EditConsumer(WebsocketConsumer):
 
         self.accept()
 
-        async_to_sync(self.channel_layer.group_send)('patientoncall', {
-                'type': 'send_data',
-                'status': 'success',
-                'event': "websocket-connect"
-            })
-
     def disconnect(self, close_code):
         # print('consumer disconnected in %s' % self.room_group_name)
         print('consumer disconnected')
@@ -43,8 +37,9 @@ class EditConsumer(WebsocketConsumer):
         event = response.get("event", None)
         if event == "REQUEST_PATIENT_DATA_ACCESS":
             self.request_patient_data_access()
-        if event == "ACCEPT_PATIENT_DATA_ACCESS":
-            self.accept_patient_data_access()
+        if event == "GRANT_PATIENT_DATA_ACCESS":
+            print("PATIENT GRANTED ACCESS")
+            self.grant_patient_data_access()
 
 
     # Send data to Websocket functions
@@ -66,8 +61,8 @@ class EditConsumer(WebsocketConsumer):
                 'event': "REQUEST_PATIENT_DATA_ACCESS"
             })
 
-    async def accept_patient_data_access(self):
+    async def grant_patient_data_access(self):
         async_to_sync(self.channel_layer.group_send)('patientoncall', {
                 'type': 'patient_data_access_authentication',
-                'event': "ACCESS_PATIENT_DATA_ACCESS"
+                'event': "GRANT_PATIENT_DATA_ACCESS"
             })
