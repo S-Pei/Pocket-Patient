@@ -1,6 +1,5 @@
 var base_url = window.location.origin;
 
-
 (function() {
   
     const firstName = sessionStorage.getItem("patientFirstName")
@@ -67,3 +66,8 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, v
     tableBody.appendChild(entryVisitType);
     tableBody.appendChild(entryLetter);
 }
+
+document.getElementById("add-visit").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = base_url + "/add-visit"
+  })
