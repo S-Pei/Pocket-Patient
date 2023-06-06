@@ -63,10 +63,14 @@ function disconnect_websocket() {
 function create_websocket() {
   let connectionString = ''
   if (window.location.protocol == "https:") {
-    connectionString = 'wss://' + window.location.host + '/ws/patientoncall/';
+    connectionString += 'wss://';
   } else {
-    connectionString = 'ws://' + window.location.host + '/ws/patientoncall/';
+    connectionString += 'ws://';
   }
+  connectionString += window.location.host + '/ws/patientoncall/'
+                      // + sessionStorage.getItem("patientID") + '/'
+                      // + sessionStorage.getItem("patientName") + '/'
+
   websocket = new WebSocket(connectionString);
 
   websocket.onopen = function (event) {
@@ -78,6 +82,8 @@ function create_websocket() {
   websocket.onmessage = function (response) {
     let data = response.data
     let event = data.event
+
+    console.log(event)
 
     if (event == "GRANT_PATIENT_DATA_ACCESS") {
       api_fetch_patient_full_data();
@@ -114,6 +120,7 @@ function api_verify_valid_patient_credentials(patientId, patientName) {
 }
 
 function api_fetch_patient_full_data() {
+  console.log('Trying to get patient full data...')
   $.ajax({
     type: "POST",
     url: "api/doctor/patient-data/",
@@ -123,6 +130,7 @@ function api_fetch_patient_full_data() {
     },
     success: function (returned_value) {
       if (returned_value.ok == true) {
+        console.log('Got patient data');
         sessionStorage.setItem("sessionID", returned_value["sessionId"])
         sessionStorage.setItem("patientFirstName", returned_value["patient-first-name"])
         sessionStorage.setItem("patientLastName", returned_value["patient-last-name"])
