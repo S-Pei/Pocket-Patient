@@ -21,7 +21,7 @@ class EditConsumer(WebsocketConsumer):
         await self.accept()
 
         await self.channel_layer.group_send(self.room_group_name, {
-                'type': 'connection',
+                'type': 'send_data',
                 'status': 'success',
                 'event': "websocket-connect"
             })
@@ -34,10 +34,40 @@ class EditConsumer(WebsocketConsumer):
         await self.channel_layer.group_discard('patientoncall',
                                                 self.channel_name)
         
-    # async def receive(self, data):
-    #     """
-    #     Receive message from WebSocket.
-    #     Get the event and send the appropriate event
-    #     """
-    #     response = json.loads(data)
-    #     event = response.get("event", None)
+    async def receive(self, data):
+        """
+        Receive message from WebSocket.
+        Get the event and send the appropriate event
+        """
+        response = json.loads(data)
+        event = response.get("event", None)
+        if event == "REQUEST_PATIENT_DATA_ACCESS":
+            self.request_patient_data_access()
+        if event == "ACCEPT_PATIENT_DATA_ACCESS":
+            self.accept_patient_data_access()
+
+
+    # Send data to Websocket functions
+    async def send_data(self, res):
+        await self.send(text_data=json.dumps({
+            "payload": res
+        }))
+    
+    async def patient_data_access_authentication(self, res):
+        await self.send(text_data=json.dumps({
+            "event": res["event"]
+        }))
+    
+    
+    # Helpers
+    async def request_patient_data_access(self):
+        await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'patient_data_access_authentication',
+                'event': "REQUEST_PATIENT_DATA_ACCESS"
+            })
+
+    async def accept_patient_data_access(self):
+        await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'patient_data_access_authentication',
+                'event': "ACCESS_PATIENT_DATA_ACCESS"
+            })
