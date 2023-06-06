@@ -13,7 +13,6 @@ class EditConsumer(WebsocketConsumer):
         # print('consumer connected to %s' % self.room_group_name)
         print('consumer connected')
 
-
         # Join room group
         async_to_sync(self.channel_layer.group_add)('patientoncall',
                                             self.channel_name)
@@ -28,12 +27,12 @@ class EditConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)('patientoncall',
                                                 self.channel_name)
         
-    def receive(self, data):
+    def receive(self, text_data):
         """
         Receive message from WebSocket.
         Get the event and send the appropriate event
         """
-        response = json.loads(data)
+        response = json.loads(text_data)
         event = response.get("event", None)
         if event == "REQUEST_PATIENT_DATA_ACCESS":
             self.request_patient_data_access()
