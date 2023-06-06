@@ -80,10 +80,8 @@ function create_websocket() {
   }
 
   websocket.onmessage = function (response) {
-    let data = response.data
+    let data = JSON.parse(response.data)
     let event = data["event"]
-
-    console.log(event)
 
     if (event == "GRANT_PATIENT_DATA_ACCESS") {
       api_fetch_patient_full_data();
