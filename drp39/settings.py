@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'patientOnCall',
     'patientoncall_api',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -200,6 +201,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+ASGI_APPLICATION = 'drp39.asgi.application'
 
 
 # Static files (CSS, JavaScript, Images)
