@@ -99,27 +99,8 @@ function assignEvent() {
                     const firstName = sessionStorage.getItem("patientFirstName");
                     const lastName = sessionStorage.getItem("patientLastName");
 
-                    $.ajax({
-                    type: "POST",
-                    url: base_url + "/api/doctor/patient-data/prescription/",
-                    data: {
-                        'patientID': sessionStorage.getItem("patientID"),
-                        'patientName': firstName + ' ' + lastName,
-                        'prescriptionDrug': drug, 
-                        'prescriptionDosage': dosage, 
-                        'prescriptionStartDate': startDate, 
-                        'prescriptionEndDate': endDate, 
-                        'prescriptionDuration': duration, 
-                        'prescriptionRoute': route
-                    },
-                    success: function (returned_value) {
-                        if (returned_value.ok == true) { 
-                            savedEdit(row, drug, dosage, startDate, endDate, duration, route)
-                            sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-                        }
-                    },
-                    error: function () { }
-                    })
+                    savedEdit(row, drug, dosage, startDate, endDate, duration, route);
+
                 })
             } 
             else if (name === 'del') {
@@ -159,8 +140,6 @@ function savedEdit(row, drug, dosage, startDate, endDate, duration, route) {
     document.getElementById("prescription-end-date-" + row).innerHTML = endDate;
     document.getElementById("prescription-duration-" + row).innerHTML = duration;
     document.getElementById("prescription-route-" + row).innerHTML = route;
-
-    // addPrescription(row, drug, dosage, startDate, endDate, duration, route);
 
     document.getElementById("select-" + row).selectedIndex = 0;
     document.getElementById("prescription-confirm-" + row).innerHTML = "Confirmed";
@@ -282,6 +261,53 @@ function reloadPrescriptionInfo(row, type) {
         document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get(type);
     }
 }
+
+function updatePrescription(row) {
+    const selectElem = document.getElementById(`select-${row}`);
+    if (selectElem.value == "option1") {
+        let drug = document.getElementById(`prescription-drug-${row}`).innerHTML;
+        let dosage = document.getElementById(`prescription-dosage-${row}`).innerHTML;
+        let startDate = document.getElementById(`prescription-start-date-${row}`).innerHTML;
+        let endDate = document.getElementById(`prescription-end-date-${row}`).innerHTML;
+        let duration = document.getElementById(`prescription-duration-${row}`).innerHTML;
+        let route = document.getElementById(`prescription-route-${row}`).innerHTML;
+
+        const firstName = sessionStorage.getItem("patientFirstName");
+        const lastName = sessionStorage.getItem("patientLastName");
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "/api/doctor/patient-data/prescription/",
+            data: {
+                'patientID': sessionStorage.getItem("patientID"),
+                'patientName': firstName + ' ' + lastName,
+                'prescriptionDrug': drug, 
+                'prescriptionDosage': dosage, 
+                'prescriptionStartDate': startDate, 
+                'prescriptionEndDate': endDate, 
+                'prescriptionDuration': duration, 
+                'prescriptionRoute': route
+            },
+            success: function (returned_value) {
+                if (returned_value.ok == true) { 
+                    savedEdit(row, drug, dosage, startDate, endDate, duration, route)
+                    sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+                }
+            },
+            error: function () { }
+            })
+    }
+}
+
+document.getElementById("save-prescription").addEventListener("click", (e) => {
+    var i = 0;
+    const prescription = JSON.parse(sessionStorage.getItem("prescription"));
+    while (i < prescription.length) {
+        updatePrescription(i);
+        i++;
+    }
+    window.location.href = "/prescription"
+})
 
 // TODO
 // document.getElementById("prescription-submit").addEventListener("click", (e) => {
