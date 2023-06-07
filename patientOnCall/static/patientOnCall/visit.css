@@ -3,11 +3,16 @@
     max-height: 35vh;
   }
   
-  #main-current-visit-box-headers {
-    display: flex;
-  }
-  
-  #main-current-visit-box h2 {
-    flex: 4;
-    margin-bottom: 0 !important;
-  }
+#main-current-visit-box-headers {
+  display: flex;
+}
+
+#main-current-visit-box h2 {
+  flex: 4;
+  margin-bottom: 0 !important;
+}
+
+.info-table-label {
+  font-weight: bold;
+}
+

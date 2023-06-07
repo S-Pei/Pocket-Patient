@@ -1,6 +1,5 @@
 var base_url = window.location.origin;
 
-
 (function() {
   
     const firstName = sessionStorage.getItem("patientFirstName")
@@ -9,7 +8,7 @@ var base_url = window.location.origin;
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-id").innerHTML = id
+    document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
     insertMedHistoryEntries(medicalHistory);
 })();
@@ -49,6 +48,12 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, v
     const entryVisitType = document.createElement("div");
     entryVisitType.classList.add("info-table-item");
     entryVisitType.textContent = visitType;
+    if (visitType == "GP Consultation") {
+        entryVisitType.style.backgroundColor = "#C55252";
+    }
+    else {
+        entryVisitType.style.backgroundColor = "#6BC4EB";
+    }
 
     const entryLetter = document.createElement("a");
     entryLetter.classList.add("info-table-item");
@@ -67,3 +72,8 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, v
     tableBody.appendChild(entryVisitType);
     tableBody.appendChild(entryLetter);
 }
+
+document.getElementById("add-visit").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = base_url + "/add-visit"
+  })

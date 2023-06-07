@@ -8,8 +8,7 @@ var base_url = window.location.origin;
     const prescription = JSON.parse(sessionStorage.getItem("prescription"))
 
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-id").innerHTML 
-      = "Patient ID: " + patientID
+    document.getElementById("patient-id").innerHTML = 'NHS Number:' + patientID
 
     insertPrescription(prescription);
 })();

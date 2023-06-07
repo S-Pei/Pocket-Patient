@@ -1,0 +1,31 @@
+.add-entry-form {
+    margin-left: 10%;
+}
+
+.add-history {
+    padding: 10px;
+    max-width: 900px;
+}
+.add-history label{
+    font-weight: bold;
+    font-size: large;
+}
+
+.add-history input{
+    text-align: left;
+    padding: 10px;
+    clear: both;
+}
+
+#add-visit-wrapper {
+    margin-left: 0%;
+    max-width: 900px;
+    align-items: center;
+    text-align: center;
+    padding: 0.5em; 
+}
+
+#add-visit {
+    text-align: center;
+}
+ 

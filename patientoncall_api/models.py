@@ -10,16 +10,15 @@ class PatientUser(models.Model):
   patientBirthdate = models.DateField(blank=True, null=True)
   patientAddress = models.CharField(max_length=1024, default="", blank=True, null=True)
 
-
 class MedicalHistory(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   patient = models.ForeignKey(User, on_delete=models.CASCADE)
   admissionDate = models.DateField(blank=True, null=True)
   dischargeDate = models.DateField(blank=True, null=True)
   summary = models.TextField(max_length=2048, blank=True, null=True)
-  consultant = models.CharField(max_length=64, blank=True, null=True)
-  visitType = models.CharField(max_length=32, blank=True, null=True)
-  letter = models.ImageField(blank=True, null=True)
+  consultant = models.TextField(max_length=64, blank=True, null=True)
+  visitType = models.TextField(max_length=32, blank=True, null=True)
+  letter = models.FileField(upload_to='letterattachments/', blank=True, null=True, default=True)
 
 
 class LabHistory(models.Model):

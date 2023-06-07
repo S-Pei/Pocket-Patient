@@ -91,6 +91,8 @@ function create_websocket() {
     let event = data["event"]
 
     if (event == "GRANT_PATIENT_DATA_ACCESS") {
+      let toHideIds = data["ids"];
+      console.log(toHideIds);
       api_fetch_patient_full_data();
     }
   }

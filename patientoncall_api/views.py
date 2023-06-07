@@ -124,7 +124,7 @@ def getAllPatientDataById(request, user):
 @csrf_exempt
 def addMedicalHistory(request):
     if request.method == "POST":
-        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName']) 
         MedicalHistory.objects.create(patient=user, 
                                       admissionDate=request.POST['entryAdmissionDate'], 
                                       dischargeDate=request.POST['entryDischargeDate'], 
@@ -169,3 +169,4 @@ def calculate_age(birthdate):
         age -= 1
 
     return age
+

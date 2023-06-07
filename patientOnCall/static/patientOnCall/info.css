@@ -1,3 +1,29 @@
+.patient-photo {
+  width: 30%; 
+  float:left;
+  padding-left:10px;
+}
+.container-fluid {
+  text-align: left;
+  float:right;
+  padding-right:10px;
+}
+
+.personal{
+  height: 25%;
+  max-height: 300px;
+  max-width: 980px;
+}
+
+#allergies-box {
+  width: 90%;
+  height: 40px;
+  background-color: #BFE2F1;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
 #past-medical-history-and-presentation-box {
   height: 40vh;
   width: 100%;
@@ -31,6 +57,7 @@
   font-size: 1.1em;
 }
 
+
 #presentation-box {
   width: 35%;
   border: 3px solid var(--info-darker-bg-color);
@@ -43,6 +70,7 @@
 #main-current-prescription-box {
   padding-top: 2em;
   max-height: 35vh;
+  background-color: #FFFFFF;
 }
 
 #main-current-prescription-box-headers {
@@ -55,6 +83,19 @@
 }
 
 #main-current-prescription-box button {
+  font-size: 1.2em;
   flex: 1;
   margin: 0 1%;
+  color: white;
+  border-width: 0;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 2px rgba(0,0,0,.5);
+}
+
+#print-button {
+  background-color: #E27CA1;
+}
+
+#prev-button {
+  background-color: #A1DADE;
 }

@@ -17,13 +17,14 @@
       <div class="window-box">
         <nav id="sidebar">
           <div class="mb-4" id="home-btn-wrapper">
-            <img src="{% static 'patientOnCall/assets/home-logo.png' %}" alt="home logo">
+              <img id="profile" src="{% static 'patientOnCall/assets/home-logo.png' %}" alt="home logo" >
           </div>
           <div class="sidebar-option" id="return-to-search-btn-wrapper">
             <button class="" id="return-to-search-btn" onclick="window.location.href='/'">
               return to search
             </button>
           </div>
+
           <ul class="sidebar-components">
               <li class="sidebar-option" id="patient-summary">
                 <a href="#">Patient Summary</a>
@@ -32,7 +33,7 @@
                 <a href="#">Patient Personal Information</a>
               </li>
               <li class="sidebar-option" id="prescription">
-                <a href="#">Prescription</a>
+                <a href="#">Prescriptions</a>
               </li>
               <li class="sidebar-option" id="visit-history">
                 <a href="#">Healthcare Visit History</a>
@@ -44,6 +45,7 @@
                 <a href="#">Imaging History</a>
               </li>
           </ul>
+
         </nav>
         <script src="{% static 'patientOnCall/base.js' %}"></script>
         <div class="main-box">

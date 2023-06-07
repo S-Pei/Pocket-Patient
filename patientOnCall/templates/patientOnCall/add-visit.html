@@ -1,0 +1,62 @@
+{% extends "patientOnCall/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+   <link rel="stylesheet" href="{% static 'patientOnCall/add-visit.css' %}"></link>  
+</head>
+<body> 
+  {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
+  <div class="container-fluid p-3 mb-3 patient-identity">
+    <h1 id="patient-name"></h1>
+    <h2 id="patient-id"></h2>
+  </div>
+
+  <h4 class="section-header">Add Visit Entry</h4>
+ 
+    <form class="add-entry-form" id="patient-medical-history-add-entry" method="POST">
+      {% csrf_token %}
+      <div class="add-history pt-1">
+        <label class="mr-2" for="entry-admission-date">Admission Date:</label>
+        <input class="form-control" type="date"  name="entry-admission-date" id="entry-admission-date"></input>
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-discharge-date">Discharge Date:</label>
+        <input class="form-control" type="date" name="entry-discharge-date" id="entry-discharge-date"></input>
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-visit-type">Visit Type:</label>
+        <select name="entry-visit-type" id="entry-visit-type">
+          <option value="Hospital Visit" selected>Hospital Visit</option>
+          <option value="GP Consultation">GP Consultation</option>
+        </select>
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-practice-name">Name of practice:</label> 
+        <!-- <p>St Mary's Hospital</p> -->
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-address">Address of practice:</label> 
+        <!-- <p>12 Smith Street, AB 321 London.</p> -->
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-summary">Summary:</label>
+        <input class="form-control" type="text" name="entry-summary" id="entry-summary"></input>
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-consultant">Consultant:</label>
+        <input class="form-control" type="text" name="entry-consultant" id="entry-consultant"></input>
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-letter">Letter:</label>
+        <input class="form-control" type="file" name="entry-letter" id="entry-letter"></input>
+      </div>
+      <div class="add-history" id="add-visit-wrapper">
+        <input class="add-button" type="submit" value="Save" id="add-visit">
+      </div>
+    </form> 
+
+
+  <script src="{% static 'patientOnCall/add-visit.js' %}"></script> 
+</body>  
+{% endblock %}
