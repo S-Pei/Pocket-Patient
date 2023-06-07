@@ -99,7 +99,6 @@ function assignEvent() {
                     const firstName = sessionStorage.getItem("patientFirstName");
                     const lastName = sessionStorage.getItem("patientLastName");
 
-                    //compare to database
                     $.ajax({
                     type: "POST",
                     url: base_url + "/api/doctor/patient-data/prescription/",
@@ -117,7 +116,6 @@ function assignEvent() {
                         if (returned_value.ok == true) { 
                             savedEdit(row, drug, dosage, startDate, endDate, duration, route)
                             sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-                            console.log(returned_value)
                         }
                     },
                     error: function () { }
@@ -125,19 +123,17 @@ function assignEvent() {
                 })
             } 
             else if (name === 'del') {
+                // TODO
                 console.log("hi2");
             }
             else {
-                console.log(hashMap);
-                console.log(row);
-                console.log(hashMap.get("" + row))
-                document.getElementById("prescription-drug-" + row).innerHTML = hashMap.get("" + row).get("drug")
-                document.getElementById("prescription-dosage-" + row).innerHTML = hashMap.get("" + row).get("dosage")
-                document.getElementById("prescription-start-date-" + row).innerHTML = hashMap.get("" + row).get("startDate")
-                document.getElementById("prescription-end-date-" + row).innerHTML = hashMap.get("" + row).get("endDate")
-                document.getElementById("prescription-duration-" + row).innerHTML = hashMap.get("" + row).get("duration")
-                document.getElementById("prescription-route-" + row).innerHTML = hashMap.get("" + row).get("route")
-                document.getElementById("prescription-confirm-" + row).innerHTML = "Confirmed";
+                reloadPrescriptionInfo(row, "drug");
+                reloadPrescriptionInfo(row, "dosage");
+                reloadPrescriptionInfo(row, "start-date");
+                reloadPrescriptionInfo(row, "end-date");
+                reloadPrescriptionInfo(row, "duration");
+                reloadPrescriptionInfo(row, "route");
+                reloadPrescriptionInfo(row, "confirm");
             }
         });
     }
@@ -273,6 +269,18 @@ function changePrescriptionInfoToEditable(row, type) {
     }
     elem.innerHTML = "";
     elem.appendChild(input);
+}
+
+function reloadPrescriptionInfo(row, type) {
+    if (type == "confirm") {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = "Confirmed"
+    } else if (type == "start-date") {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get("startDate");
+    } else if (type == "end-date") {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get("endDate");
+    } else {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get(type);
+    }
 }
 
 // TODO
