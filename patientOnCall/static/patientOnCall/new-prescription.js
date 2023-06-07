@@ -236,7 +236,7 @@ function changePrescriptionInfoToEditable(row, type) {
         newChild.textContent = "Save";
         newChild.id = "prescription-confirm-button-" + row;
     } else if (type == "duration") {
-        newChild = createDurationEditablesElement(row);
+        newChild = createDurationEditablesElement(elem, row);
     } else {
         newChild = document.createElement("input");
         newChild.type = (type == "start-date" || type == "end-date") ? "date": "text";
@@ -252,7 +252,11 @@ function changePrescriptionInfoToEditable(row, type) {
     elem.appendChild(newChild);
 }
 
-function createDurationEditablesElement(row) {
+function createDurationEditablesElement(elem, row) {
+    let durationStr = elem.textContent
+    let durationNum = durationStr.split(" ")[0];
+    let durationTime = durationStr.split(" ")[1];
+
     let editablesElem = document.createElement("div");
     editablesElem.classList.add("input-duration-editables");
     editablesElem.id =`input-duration-editables-${row}`;
@@ -263,7 +267,7 @@ function createDurationEditablesElement(row) {
     numberInput.type = "text";
     numberInput.name = `input-duration-number-${row}`;
     numberInput.id = `input-duration-number-${row}`;
-    numberInput.value = 1;
+    numberInput.value = durationNum;
     editNumber.appendChild(numberInput);
 
     let editTime = document.createElement("div");
@@ -272,12 +276,14 @@ function createDurationEditablesElement(row) {
     timeSelect.class = `input-duration-time`;
     timeSelect.id = `input-duration-time-${row}`;
     let times = ["day", "week", "month", "year"]
+    let optionIndex = times.indexOf(durationTime);
     for (i in times) {
         let newOption = document.createElement("option");
         newOption.value = times[i];
         newOption.innerHTML = `${times[i]}(s)`;
         timeSelect.appendChild(newOption);
     }
+    timeSelect.selectedIndex = optionIndex;
     editTime.appendChild(timeSelect);
 
     
@@ -338,6 +344,7 @@ function getRowFromId(id) {
     let ws = id.split("-");
     return parseInt(ws[ws.length - 1]);
 }
+
 function updatePrescription(row) {
     const selectElem = document.getElementById(`select-${row}`);
     if (selectElem.value == "option1") {
