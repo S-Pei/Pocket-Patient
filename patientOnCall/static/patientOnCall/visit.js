@@ -48,6 +48,12 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, v
     const entryVisitType = document.createElement("div");
     entryVisitType.classList.add("info-table-item");
     entryVisitType.textContent = visitType;
+    if (visitType == "GP Consultation") {
+        entryVisitType.style.backgroundColor = "#C55252";
+    }
+    else {
+        entryVisitType.style.backgroundColor = "#6BC4EB";
+    }
 
     const entryLetter = document.createElement("a");
     entryLetter.classList.add("info-table-item");

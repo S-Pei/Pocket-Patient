@@ -22,6 +22,7 @@ function enterVisitEntry() {
       let summary = document.getElementById("entry-summary").value;
       let consultant = document.getElementById("entry-consultant").value;
       let visitType = document.getElementById("entry-visit-type").value;
+      let letter = document.getElementById("entry-letter").value;
   
       const firstName = sessionStorage.getItem("patientFirstName")
       const lastName = sessionStorage.getItem("patientLastName")
@@ -37,7 +38,8 @@ function enterVisitEntry() {
           'entryDischargeDate': dischargeDate,
           'entrySummary': summary,
           'entryConsultant': consultant,
-          'entryVisitType': visitType
+          'entryVisitType': visitType,
+          'entryLetter': letter
         },
         success: function (returned_value) {
           if (returned_value.ok == true) { 

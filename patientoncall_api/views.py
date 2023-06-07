@@ -124,14 +124,14 @@ def getAllPatientDataById(request, user):
 @csrf_exempt
 def addMedicalHistory(request):
     if request.method == "POST":
-        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName']) 
         MedicalHistory.objects.create(patient=user, 
                                       admissionDate=request.POST['entryAdmissionDate'], 
                                       dischargeDate=request.POST['entryDischargeDate'], 
                                       summary=request.POST['entrySummary'],
                                       consultant=request.POST['entryConsultant'],
-                                      visitType=request.POST['entryVisitType'])
-                                    #   letter=request.POST['entryLetter'])
+                                      visitType=request.POST['entryVisitType'],
+                                      letter=request.POST['entryLetter'])
         medicalHistories = MedicalHistory.objects.filter(patient=user.id)
         medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
@@ -169,3 +169,4 @@ def calculate_age(birthdate):
         age -= 1
 
     return age
+
