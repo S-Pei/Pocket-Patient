@@ -97,16 +97,12 @@ function assignEvent() {
                     let duration = durationMap["number"] + " " + durationMap["time"];
                     let route = document.getElementById("input-route-" + row).value;
 
-                    const firstName = sessionStorage.getItem("patientFirstName");
-                    const lastName = sessionStorage.getItem("patientLastName");
-
                     savedEdit(row, drug, dosage, startDate, endDate, duration, route);
 
                 })
             } 
             else if (name === 'del') {
-                // TODO
-                console.log("hi2");
+                showDeleteButton(row);
             }
             else {
                 reloadPrescriptionInfo(row, "drug");
@@ -171,6 +167,7 @@ function getToday() {
 function createAndInsertPrescriptionInfo(tableBody, row, type, data) {
     let prescriptionInfo = document.createElement("div");
     prescriptionInfo.classList.add("info-table-item");
+    prescriptionInfo.classList.add(`prescription-${row}`);
     if (type == "action") {
         let selectElem = createActionPrescriptionElement(row);
         prescriptionInfo.appendChild(selectElem);
@@ -391,6 +388,22 @@ document.getElementById("save-prescription").addEventListener("click", (e) => {
     }
     window.location.href = "/prescription"
 })
+
+// DELETE PRESCRIPTION
+function showDeleteButton(row) {
+    let deleteButton = document.createElement("button");
+    deleteButton.id = `prescription-delete-button-${row}`;
+    deleteButton.innerHTML = "Delete";
+    deleteButton.addEventListener("click", (e) => { 
+        e.preventDefault();
+        deletePrescription(row);
+    });
+    $(`#prescription-confirm-${row}`).html(deleteButton);
+}
+
+function deletePrescription(row) { 
+    $(`.prescription-${row}`).remove();
+}
 
 // TODO
 // document.getElementById("prescription-submit").addEventListener("click", (e) => {
