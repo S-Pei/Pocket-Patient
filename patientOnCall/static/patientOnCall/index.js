@@ -68,8 +68,8 @@ function create_websocket() {
     connectionString += 'ws://';
   }
   connectionString += window.location.host + '/ws/patientoncall/'
-                      // + sessionStorage.getItem("patientID") + '/'
-                      // + sessionStorage.getItem("patientName") + '/'
+                      + sessionStorage.getItem("patientID") + '/'
+                      + sessionStorage.getItem("patientName") + '/'
 
   websocket = new WebSocket(connectionString);
 
