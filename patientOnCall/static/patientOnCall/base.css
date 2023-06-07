@@ -109,6 +109,14 @@
   border: 1px solid black;
 }
 
+.red-btn {
+  background-color: #E27CA1;
+}
+
+.green-btn {
+  background-color: #A1DADE;
+}
+
 .add-button-box {
   text-align: center;
 }
@@ -125,6 +133,7 @@
   padding: 1% 1%;
   transition: transform 0.1s, box-shadow 0.1s;
 }
+
 
 .section-header {
   font-size: 50px;

@@ -70,6 +70,7 @@
 #main-current-prescription-box {
   padding-top: 2em;
   max-height: 35vh;
+  background-color: #FFFFFF;
 }
 
 #main-current-prescription-box-headers {
