@@ -211,7 +211,7 @@ USE_TZ = True
 ASGI_APPLICATION = 'drp39.asgi.application'
 
 if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = ["https://patientoncall.herokuapp.com/"]
+    CSRF_TRUSTED_ORIGINS = ["https://patientoncall.herokuapp.com"]
 
 
 # Default primary key field type
