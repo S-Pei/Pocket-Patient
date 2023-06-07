@@ -20,11 +20,13 @@ margin-right: 1%;
 }
 
 #main-current-prescription-box-table {
-    grid-template-columns: 1fr 2fr 2fr 1fr 1fr 2fr 1fr 1fr;
+  overflow-x: inherit;
+  overflow-y: auto;
+  grid-template-columns: 1fr 2fr 2fr 1fr 1fr 2fr 1fr 1fr;
 }
 
 .info-table-item > input {
-  max-width: inherit;
+  max-width: 95%;
 }
 
 .input-duration-editables {
