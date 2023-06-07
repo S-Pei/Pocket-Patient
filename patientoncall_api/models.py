@@ -4,9 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-import cloudinary
-from cloudinary.models import CloudinaryField
-
 class PatientUser(models.Model):
   patientId = models.IntegerField(primary_key=True, default=None, editable=True)
   patient = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -22,14 +19,14 @@ class MedicalHistory(models.Model):
   summary = models.TextField(max_length=2048, blank=True, null=True)
   consultant = models.TextField(max_length=64, blank=True, null=True)
   visitType = models.TextField(max_length=32, blank=True, null=True)
-  letter = cloudinary.models.CloudinaryField('image', blank=True, null=True)
+  letter = models.ImageField(blank=True, null=True)
 
 
 class LabHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
-    report = cloudinary.models.CloudinaryField('image', blank=True, null=True)
+    report = models.ImageField(blank=True, null=True)
 
 
 class Prescription(models.Model):
