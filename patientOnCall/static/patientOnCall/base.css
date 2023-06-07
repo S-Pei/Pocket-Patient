@@ -61,6 +61,7 @@
   border-radius: 15px;
   width: 70%;
   transition: transform 0.1s, box-shadow 0.1s;
+  font-weight: bold;
 }
 
 #return-to-search-btn:hover {
@@ -128,4 +129,13 @@
 .section-header {
   font-size: 50px;
   text-align: center;
+}
+
+.patient-identity {
+  background-color: #DBF1F5;
+  width: 40%;
+  height: 15%;
+  margin: 1em;
+  padding: 0.5em;
+  box-shadow: 2px 2px 2px 2px rgba(0,0,0,.5);
 }

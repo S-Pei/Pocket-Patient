@@ -8,7 +8,7 @@ var base_url = window.location.origin;
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-id").innerHTML = id
+    document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
     insertMedHistoryEntries(medicalHistory);
 })();

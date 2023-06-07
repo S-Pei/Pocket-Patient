@@ -19,7 +19,7 @@ class MedicalHistory(models.Model):
   summary = models.TextField(max_length=2048, blank=True, null=True)
   consultant = models.TextField(max_length=64, blank=True, null=True)
   visitType = models.TextField(max_length=32, blank=True, null=True)
-  letter = models.ImageField(blank=True, null=True)
+  # letter = models.ImageField(blank=True, null=True)
 
 
 class LabHistory(models.Model):

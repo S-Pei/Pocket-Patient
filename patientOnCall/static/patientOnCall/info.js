@@ -5,16 +5,18 @@ var base_url = window.location.origin;
   
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
+    const patientID = sessionStorage.getItem("patientID")
     const dob = sessionStorage.getItem("patientDob")
     const address = sessionStorage.getItem("patientAddress")
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-age").innerHTML 
-      = "Date of Birth: " + dob
-    document.getElementById("patient-address").innerHTML 
-      = "Address: " + address
+    document.getElementById("patient-id").innerHTML = 'NHS Number: ' + patientID
+    // document.getElementById("patient-age").innerHTML 
+    //   = "Date of Birth: " + dob
+    // document.getElementById("patient-address").innerHTML 
+    //   = "Address: " + address
 
     insertMedHistoryEntries(medicalHistory);
 })();
@@ -67,37 +69,37 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, v
     tableBody.appendChild(newEntry);
 }
 
-document.getElementById("entry-submit").addEventListener("click", (e) => {
-    e.preventDefault();
+// document.getElementById("entry-submit").addEventListener("click", (e) => {
+//     e.preventDefault();
     
-    let admissionDate = document.getElementById("entry-admission-date").value;
-    let dischargeDate = document.getElementById("entry-discharge-date").value;
-    let summary = document.getElementById("entry-summary").value;
-    let consultant = document.getElementById("entry-consultant").value;
-    let visitType = document.getElementById("entry-visit-type").value;
+//     let admissionDate = document.getElementById("entry-admission-date").value;
+//     let dischargeDate = document.getElementById("entry-discharge-date").value;
+//     let summary = document.getElementById("entry-summary").value;
+//     let consultant = document.getElementById("entry-consultant").value;
+//     let visitType = document.getElementById("entry-visit-type").value;
 
-    const firstName = sessionStorage.getItem("patientFirstName")
-    const lastName = sessionStorage.getItem("patientLastName")
+//     const firstName = sessionStorage.getItem("patientFirstName")
+//     const lastName = sessionStorage.getItem("patientLastName")
   
-    //compare to database
-    $.ajax({
-      type: "POST",
-      url: base_url + "/api/doctor/patient-data/medical-history/",
-      data: {
-        'patientID': sessionStorage.getItem("patientID"),
-        'patientName': firstName + ' ' + lastName,
-        'entryAdmissionDate': admissionDate,
-        'entryDischargeDate': dischargeDate,
-        'entrySummary': summary,
-        'entryConsultant': consultant,
-        'entryVisitType': visitType
-      },
-      success: function (returned_value) {
-        if (returned_value.ok == true) { 
-          addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, visitType)
-          sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
-        }
-      },
-      error: function () { }
-    });
-  })
+//     //compare to database
+//     $.ajax({
+//       type: "POST",
+//       url: base_url + "/api/doctor/patient-data/medical-history/",
+//       data: {
+//         'patientID': sessionStorage.getItem("patientID"),
+//         'patientName': firstName + ' ' + lastName,
+//         'entryAdmissionDate': admissionDate,
+//         'entryDischargeDate': dischargeDate,
+//         'entrySummary': summary,
+//         'entryConsultant': consultant,
+//         'entryVisitType': visitType
+//       },
+//       success: function (returned_value) {
+//         if (returned_value.ok == true) { 
+//           addMedHistoryEntry(admissionDate, dischargeDate, summary, consultant, visitType)
+//           sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
+//         }
+//       },
+//       error: function () { }
+//     });
+//   })
