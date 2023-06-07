@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'patientOnCall',
     'patientoncall_api',
-    'channels'
+    'channels',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -187,6 +188,13 @@ cloudinary.config(
   api_key = str(os.getenv('CLOUD_API_KEY')), 
   api_secret = str(os.getenv('CLOUD_API_SECRET'))
 )
+
+AWS_QUERYSTRING_AUTH = False
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+AWS_ACCESS_KEY_ID = str(os.getenv('AWS_ACCESS_KEY_ID'))
+AWS_SECRET_ACCESS_KEY = str(os.getenv('AWS_SECRET_ACCESS_KEY'))
+AWS_STORAGE_BUCKET_NAME = str(os.getenv('AWS_STORAGE_BUCKET_NAME'))
 
 # STORAGES = {
 #     "default": {
