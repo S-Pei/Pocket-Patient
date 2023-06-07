@@ -15,3 +15,9 @@ def displayVisit(request):
 
 def displayAddVisit(request):
     return render(request, 'patientOnCall/add-visit.html')
+
+def newPrescription(request):
+    return render(request, 'patientOnCall/new-prescription.html')
+
+def addPrescription(request):
+    return render(request, 'patientOnCall/add-prescription.html')

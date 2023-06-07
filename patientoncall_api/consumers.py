@@ -34,17 +34,26 @@ class EditConsumer(WebsocketConsumer):
         """
         response = json.loads(text_data)
         event = response.get("event", None)
+
         if event == "REQUEST_PATIENT_DATA_ACCESS":
             print("DOCTOR REQUESTED ACCESS")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'patient_data_access_authentication',
                 'event': "REQUEST_PATIENT_DATA_ACCESS"
             })
-        if event == "GRANT_PATIENT_DATA_ACCESS":
+        elif event == "GRANT_PATIENT_DATA_ACCESS":
             print("PATIENT GRANTED ACCESS")
+            ids = response.get("ids", None)
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'patient_data_access_authentication',
-                'event': "GRANT_PATIENT_DATA_ACCESS"
+                'event': "GRANT_PATIENT_DATA_ACCESS",
+                'ids': ids
+            })
+        else:
+            print("UNKNOWN EVENT")
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_data',
+                'event': "UNKNOWN_EVENT"
             })
 
 
@@ -56,5 +65,6 @@ class EditConsumer(WebsocketConsumer):
     
     def patient_data_access_authentication(self, res):
         self.send(text_data=json.dumps({
-            "event": res["event"]
+            "event": res["event"],
+            "ids": res["ids"] if "ids" in res else []
         }))

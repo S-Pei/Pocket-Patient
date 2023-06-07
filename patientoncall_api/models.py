@@ -8,7 +8,7 @@ class PatientUser(models.Model):
   patientId = models.IntegerField(primary_key=True, default=None, editable=True)
   patient = models.ForeignKey(User, on_delete=models.CASCADE)
   patientBirthdate = models.DateField(blank=True, null=True)
-  patientAddress = models.TextField(max_length=1024, default="", blank=True, null=True)
+  patientAddress = models.CharField(max_length=1024, default="", blank=True, null=True)
 
 class MedicalHistory(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -31,9 +31,10 @@ class LabHistory(models.Model):
 class Prescription(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
-    drug = models.TextField(max_length=256)
-    dosage = models.TextField(max_length=1024)
+    drug = models.CharField(max_length=256)
+    dosage = models.CharField(max_length=1024)
     startDate = models.DateField()
     endDate = models.DateField()
-    duration = models.TextField(max_length=1024)
-    route = models.TextField(max_length=1024)
+    duration = models.CharField(max_length=1024)
+    route = models.CharField(max_length=1024)
+    status = models.CharField(max_length=32, default="current")

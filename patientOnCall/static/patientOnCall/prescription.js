@@ -64,6 +64,11 @@ function addPrescription(drug, dosage, startDate, endDate, duration, route) {
     tableBody.appendChild(prescriptionRoute);
 }
 
+document.getElementById("new-prescription").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = base_url + "/new-prescription"
+  })
+
 // document.getElementById("prescription-submit").addEventListener("click", (e) => {
 //     e.preventDefault();
 
