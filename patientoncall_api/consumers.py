@@ -40,12 +40,14 @@ class EditConsumer(WebsocketConsumer):
                 'type': 'patient_data_access_authentication',
                 'event': "REQUEST_PATIENT_DATA_ACCESS"
             })
-        if event == "GRANT_PATIENT_DATA_ACCESS":
+        elif event == "GRANT_PATIENT_DATA_ACCESS":
             print("PATIENT GRANTED ACCESS")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'patient_data_access_authentication',
                 'event': "GRANT_PATIENT_DATA_ACCESS"
             })
+        else:
+            print(event)
 
 
     # Send data to Websocket functions
