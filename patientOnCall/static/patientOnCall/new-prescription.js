@@ -21,10 +21,13 @@ var hashMap = new Map();
 })();
 
 
+/**
+ * Inserts all prescriptions into current prescription table
+ * @param {Dictionary} prescription list of prescriptions
+ */
 function insertPrescription(prescription) {
   var i = 0
   while (i < prescription.length) {
-    
       addPrescription(i, prescription[i]["drug"], 
                         prescription[i]["dosage"], 
                         prescription[i]["startDate"], 
@@ -35,14 +38,173 @@ function insertPrescription(prescription) {
   }
 }
 
+/**
+ * Adds a single prescription entry into current prescription table
+ * @param {int} row row index of prescription
+ * @param {string} drug name of drug
+ * @param {string} dosage drug dosage
+ * @param {string} startDate prescription start date
+ * @param {string} endDate prescription end date
+ * @param {string} duration prescription duration
+ * @param {string} route prescription route
+ */
 function addPrescription(row, drug, dosage, startDate, endDate, duration, route) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-prescription-box-table");
 
-    // Create the <div> element
-    const prescriptionAction = document.createElement('div');
+    // Insert all information in prescription
+    createAndInsertPrescriptionInfo(tableBody, row, "action", null);
+    createAndInsertPrescriptionInfo(tableBody, row, "drug", drug);
+    createAndInsertPrescriptionInfo(tableBody, row, "dosage", dosage);
+    createAndInsertPrescriptionInfo(tableBody, row, "start-date", startDate);
+    createAndInsertPrescriptionInfo(tableBody, row, "end-date", endDate);
+    createAndInsertPrescriptionInfo(tableBody, row, "duration", duration);
+    createAndInsertPrescriptionInfo(tableBody, row, "route", route);
+    createAndInsertPrescriptionInfo(tableBody, row, "confirmation", null);
 
-    // Create the <select> element
+    // save value to hashmap
+    saveToHash(row, drug, dosage, startDate, endDate, duration, route);
+}
+
+function assignEvent() {
+    const elements = document.getElementsByClassName("selection");
+
+    // Iterate over the elements and attach the event listener
+    for (let i = 0; i < elements.length; i++) {
+        const elem = elements[i];
+        elem.addEventListener('change', (e) => {
+            e.preventDefault();
+            // Check the ID of the clicked element
+            // Get the selected option
+            const selectedOption = elem.options[elem.selectedIndex];
+
+            // Get the ID of the selected option
+            const selectedOptionId = selectedOption.id;
+            const name = selectedOptionId.match(/[a-zA-Z]+/)[0];
+            const row = selectedOptionId.match(/\d+/)[0];
+
+            // Perform specific actions based on the element's ID
+            if (name === 'edit') {
+                changeEditable(row);
+                document.getElementById("prescription-confirm-button-" + row).addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    let drug = document.getElementById("input-drug-" + row).value;
+                    let dosage = document.getElementById("input-dosage-" + row).value;
+                    let startDate = document.getElementById("input-start-date-" + row).value;
+                    let endDate = document.getElementById("input-end-date-" + row).value;
+                    let duration = document.getElementById("input-duration-" + row).value;
+                    let route = document.getElementById("input-route-" + row).value;
+
+                    const firstName = sessionStorage.getItem("patientFirstName");
+                    const lastName = sessionStorage.getItem("patientLastName");
+
+                    $.ajax({
+                    type: "POST",
+                    url: base_url + "/api/doctor/patient-data/prescription/",
+                    data: {
+                        'patientID': sessionStorage.getItem("patientID"),
+                        'patientName': firstName + ' ' + lastName,
+                        'prescriptionDrug': drug, 
+                        'prescriptionDosage': dosage, 
+                        'prescriptionStartDate': startDate, 
+                        'prescriptionEndDate': endDate, 
+                        'prescriptionDuration': duration, 
+                        'prescriptionRoute': route
+                    },
+                    success: function (returned_value) {
+                        if (returned_value.ok == true) { 
+                            savedEdit(row, drug, dosage, startDate, endDate, duration, route)
+                            sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+                        }
+                    },
+                    error: function () { }
+                    })
+                })
+            } 
+            else if (name === 'del') {
+                // TODO
+                console.log("hi2");
+            }
+            else {
+                reloadPrescriptionInfo(row, "drug");
+                reloadPrescriptionInfo(row, "dosage");
+                reloadPrescriptionInfo(row, "start-date");
+                reloadPrescriptionInfo(row, "end-date");
+                reloadPrescriptionInfo(row, "duration");
+                reloadPrescriptionInfo(row, "route");
+                reloadPrescriptionInfo(row, "confirm");
+            }
+        });
+    }
+}
+
+function saveToHash(row, drug, dosage, startDate, endDate, duration, route) {
+    if (!hashMap.has("" + row)) {
+        hashMap.set("" + row, new Map());
+    }
+    corresponding = hashMap.get("" + row);
+    corresponding.set("drug", drug);
+    corresponding.set("dosage", dosage);
+    corresponding.set("startDate", startDate);
+    corresponding.set("endDate", endDate);
+    corresponding.set("duration", duration);
+    corresponding.set("route", route);
+}
+
+function savedEdit(row, drug, dosage, startDate, endDate, duration, route) {
+    document.getElementById("prescription-drug-" + row).innerHTML = drug;
+    document.getElementById("prescription-dosage-" + row).innerHTML = dosage;
+    document.getElementById("prescription-start-date-" + row).innerHTML = startDate;
+    document.getElementById("prescription-end-date-" + row).innerHTML = endDate;
+    document.getElementById("prescription-duration-" + row).innerHTML = duration;
+    document.getElementById("prescription-route-" + row).innerHTML = route;
+
+    // addPrescription(row, drug, dosage, startDate, endDate, duration, route);
+
+    document.getElementById("select-" + row).selectedIndex = 0;
+    document.getElementById("prescription-confirm-" + row).innerHTML = "Confirmed";
+}
+
+function changeEditable(row) {
+    // Create input elements
+    changePrescriptionInfoToEditable(row, "drug");
+    changePrescriptionInfoToEditable(row, "dosage");
+    changePrescriptionInfoToEditable(row, "start-date");
+    changePrescriptionInfoToEditable(row, "end-date");
+    changePrescriptionInfoToEditable(row, "duration");
+    changePrescriptionInfoToEditable(row, "route");
+    changePrescriptionInfoToEditable(row, "confirm");
+}
+
+function getToday() {
+    // Get today's date
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = String(today.getMonth() + 1).padStart(2, "0");
+    var day = String(today.getDate()).padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
+}
+
+function createAndInsertPrescriptionInfo(tableBody, row, type, data) {
+    let prescriptionInfo = document.createElement("div");
+    prescriptionInfo.classList.add("info-table-item");
+    if (type == "action") {
+        let selectElem = createActionPrescriptionElement(row);
+        prescriptionInfo.appendChild(selectElem);
+    } else if (type == "confirmation") {
+        let confirmBtnElem = createConfirmButtonElement(row);
+        prescriptionInfo.appendChild(confirmBtnElem);
+    } else {
+        prescriptionInfo.id = `prescription-${type}-${row}`;
+        prescriptionInfo.textContent = data;    
+    }
+    tableBody.appendChild(prescriptionInfo);
+}
+
+function createActionPrescriptionElement(row) {
+    // Create the <select> element for prescription action
     const selectElement = document.createElement('select');
     selectElement.classList.add("selection")
     selectElement.id = "select-" + row;
@@ -74,255 +236,54 @@ function addPrescription(row, drug, dosage, startDate, endDate, duration, route)
     selectElement.appendChild(editOption);
     selectElement.appendChild(deleteOption);
 
-    // Append the <select> element to the <div> element
-    prescriptionAction.appendChild(selectElement);
+    return selectElement;
+}
 
-    // Add class to element
-    prescriptionAction.classList.add("info-table-item");
-
-    const prescriptionDrug = document.createElement("div");
-    prescriptionDrug.classList.add("info-table-item");
-    prescriptionDrug.id = 'prescription-drug-' + row;
-    prescriptionDrug.textContent = drug;
-
-    const prescriptionDosage = document.createElement("div");
-    prescriptionDosage.classList.add("info-table-item");
-    prescriptionDosage.id = 'prescription-dosage-' + row;
-    prescriptionDosage.textContent = dosage;
-
-    const prescriptionStartDate = document.createElement("div");
-    prescriptionStartDate.classList.add("info-table-item");
-    prescriptionStartDate.id = 'prescription-start-date-' + row;
-    prescriptionStartDate.textContent = startDate;
-
-    const prescriptionEndDate = document.createElement("div");
-    prescriptionEndDate.classList.add("info-table-item");
-    prescriptionEndDate.id = 'prescription-end-date-' + row;
-    prescriptionEndDate.textContent = endDate;
-
-    const prescriptionDuration = document.createElement("div");
-    prescriptionDuration.classList.add("info-table-item");
-    prescriptionDuration.id = 'prescription-duration-' + row;
-    prescriptionDuration.textContent = duration;
-
-    const prescriptionRoute = document.createElement("div");
-    prescriptionRoute.classList.add("info-table-item");
-    prescriptionRoute.id = 'prescription-route-' + row;
-    prescriptionRoute.textContent = route;
-
-    // Create the confirm button element
+function createConfirmButtonElement(row) {
     const confirmButton = document.createElement('div');
     confirmButton.textContent = 'Confirmed';
-    confirmButton.id = 'confirm-' + row;
-    
-    // Create the div element
-    const prescriptionConfirm = document.createElement('div');
-    
-    // Add class to element
-    prescriptionConfirm.classList.add("info-table-item");
-
-    // Append the confirm button to the div element
-    prescriptionConfirm.appendChild(confirmButton);
-
-    tableBody.appendChild(prescriptionAction);
-    tableBody.appendChild(prescriptionDrug);
-    tableBody.appendChild(prescriptionDosage);
-    tableBody.appendChild(prescriptionStartDate);
-    tableBody.appendChild(prescriptionEndDate);
-    tableBody.appendChild(prescriptionDuration);
-    tableBody.appendChild(prescriptionRoute);
-    tableBody.appendChild(prescriptionConfirm);
-
-    // save value to hashmap
-    saveToHash(row, drug, dosage, startDate, endDate, duration, route);
+    confirmButton.id = 'prescription-confirm-' + row;
+    return confirmButton;
 }
 
-function assignEvent() {
-    const elements = document.getElementsByClassName("selection");
+function changePrescriptionInfoToEditable(row, type) {
+    const elem = document.getElementById(`prescription-${type}-${row}`);
 
-    // Iterate over the elements and attach the event listener
-    for (let i = 0; i < elements.length; i++) {
-        const elem = elements[i];
-        elem.addEventListener('change', (e) => {
-            e.preventDefault();
-            // Check the ID of the clicked element
-            // Get the selected option
-            const selectedOption = elem.options[elem.selectedIndex];
+    if (type == "confirm") {
+        const confirmation = document.createElement("button");
+        confirmation.textContent = "Save";
+        confirmation.id = "prescription-confirm-button-" + row;
+        elem.innerHTML = "";
+        elem.appendChild(confirmation);
+        return;
+    }
 
-            // Get the ID of the selected option
-            const selectedOptionId = selectedOption.id;
-            const name = selectedOptionId.match(/[a-zA-Z]+/)[0];
-            const row = selectedOptionId.match(/\d+/)[0];
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = `input-${type}-${row}`;
+    input.id = `input-${type}-${row}`;
+    if (type == "start-date" || type == "end-date") {
+        input.value = getToday();
+    } else {
+        input.value = elem.textContent;
+    }
+    elem.innerHTML = "";
+    elem.appendChild(input);
+}
 
-            // Perform specific actions based on the element's ID
-            if (name === 'edit') {
-                changeEditable(row);
-                document.getElementById("confirm-button-" + row).addEventListener("click", (e) => {
-                    e.preventDefault();
-
-                    let drug = document.getElementById("input-drug-" + row).value;
-                    let dosage = document.getElementById("input-dosage-" + row).value;
-                    let startDate = document.getElementById("input-start-date-" + row).value;
-                    let endDate = document.getElementById("input-end-date-" + row).value;
-                    let duration = document.getElementById("input-duration-" + row).value;
-                    let route = document.getElementById("input-route-" + row).value;
-
-                    const firstName = sessionStorage.getItem("patientFirstName");
-                    const lastName = sessionStorage.getItem("patientLastName");
-
-                    //compare to database
-                    $.ajax({
-                    type: "POST",
-                    url: base_url + "/api/doctor/patient-data/prescription/",
-                    data: {
-                        'patientID': sessionStorage.getItem("patientID"),
-                        'patientName': firstName + ' ' + lastName,
-                        'prescriptionDrug': drug, 
-                        'prescriptionDosage': dosage, 
-                        'prescriptionStartDate': startDate, 
-                        'prescriptionEndDate': endDate, 
-                        'prescriptionDuration': duration, 
-                        'prescriptionRoute': route
-                    },
-                    success: function (returned_value) {
-                        if (returned_value.ok == true) { 
-                            savedEdit(row, drug, dosage, startDate, endDate, duration, route)
-                            sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-                            console.log(returned_value)
-                        }
-                    },
-                    error: function () { }
-                    })
-                })
-            } 
-            else if (name === 'del') {
-                console.log("hi2");
-            }
-            else {
-                console.log(hashMap);
-                console.log(row);
-                console.log(hashMap.get("" + row))
-                document.getElementById("prescription-drug-" + row).innerHTML = hashMap.get("" + row).get("drug")
-                document.getElementById("prescription-dosage-" + row).innerHTML = hashMap.get("" + row).get("dosage")
-                document.getElementById("prescription-start-date-" + row).innerHTML = hashMap.get("" + row).get("startDate")
-                document.getElementById("prescription-end-date-" + row).innerHTML = hashMap.get("" + row).get("endDate")
-                document.getElementById("prescription-duration-" + row).innerHTML = hashMap.get("" + row).get("duration")
-                document.getElementById("prescription-route-" + row).innerHTML = hashMap.get("" + row).get("route")
-                document.getElementById("confirm-" + row).innerHTML = "Confirmed";
-            }
-        });
+function reloadPrescriptionInfo(row, type) {
+    if (type == "confirm") {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = "Confirmed"
+    } else if (type == "start-date") {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get("startDate");
+    } else if (type == "end-date") {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get("endDate");
+    } else {
+        document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get(type);
     }
 }
 
-function saveToHash(row, drug, dosage, startDate, endDate, duration, route) {
-    if (!hashMap.has("" + row)) {
-        hashMap.set("" + row, new Map());
-    }
-    corresponding = hashMap.get("" + row);
-    corresponding.set("drug", drug);
-    corresponding.set("dosage", dosage);
-    corresponding.set("startDate", startDate);
-    corresponding.set("endDate", endDate);
-    corresponding.set("duration", duration);
-    corresponding.set("route", route);
-}
-
-function savedEdit(row, drug, dosage, startDate, endDate, duration, route) {
-    document.getElementById("prescription-drug-" + row).innerHTML = drug;
-    document.getElementById("prescription-dosage-" + row).innerHTML = dosage;
-    document.getElementById("prescription-start-date-" + row).innerHTML = startDate;
-    document.getElementById("prescription-end-date-" + row).innerHTML = endDate;
-    document.getElementById("prescription-duration-" + row).innerHTML = duration;
-    document.getElementById("prescription-route-" + row).innerHTML = route;
-
-    // addPrescription(row, drug, dosage, startDate, endDate, duration, route);
-
-    document.getElementById("select-" + row).selectedIndex = 0;
-    document.getElementById("confirm-" + row).innerHTML = "Confirmed";
-}
-
-function changeEditable(row) {
-    // Create input elements
-    
-    const drug = document.getElementById("prescription-drug-" + row);
-    const dosage = document.getElementById("prescription-dosage-" + row);
-    const startDate = document.getElementById("prescription-start-date-" + row);
-    const endDate = document.getElementById("prescription-end-date-" + row);
-    const duration = document.getElementById("prescription-duration-" + row);
-    const route = document.getElementById("prescription-route-" + row);
-    const confirm = document.getElementById("confirm-" + row);
-
-    const inputDrug = document.createElement("input");
-    inputDrug.type = "text";
-    inputDrug.name = "input-drug-" + row;
-    inputDrug.id = "input-drug-" + row
-    inputDrug.value = drug.textContent; 
-
-    const inputDosage = document.createElement("input");
-    inputDosage.type = "text";
-    inputDosage.name = "input-dosage-" + row;
-    inputDosage.id = "input-dosage-" + row
-    inputDosage.value = dosage.textContent; 
-
-    const inputStartDate = document.createElement("input");
-    inputStartDate.type = "date";
-    inputStartDate.name = "input-start-date-" + row;
-    inputStartDate.id = "input-start-date-" + row
-    inputStartDate.value = getToday();
-
-    const inputEndDate = document.createElement("input");
-    inputEndDate.type = "date";
-    inputEndDate.name = "input-end-date-" + row;
-    inputEndDate.id = "input-end-date-" + row
-    inputEndDate.value = getToday(); 
-
-    const inputDuration = document.createElement("input");
-    inputDuration.type = "text";
-    inputDuration.name = "input-duration-" + row;
-    inputDuration.id = "input-duration-" + row
-    inputDuration.value = duration.textContent; 
-
-    const inputRoute = document.createElement("input");
-    inputRoute.type = "text";
-    inputRoute.name = "input-route-" + row;
-    inputRoute.id = "input-route-" + row
-    inputRoute.value = route.textContent; 
-
-    const confirmation = document.createElement("button");
-    confirmation.textContent = "Save";
-    confirmation.id = "confirm-button-" + row;
-
-    drug.innerHTML = "";
-    drug.appendChild(inputDrug);
-
-    dosage.innerHTML = "";
-    dosage.appendChild(inputDosage);
-    
-    startDate.innerHTML = "";
-    startDate.appendChild(inputStartDate);
-
-    endDate.innerHTML = "";
-    endDate.appendChild(inputEndDate);
-
-    duration.innerHTML = "";
-    duration.appendChild(inputDuration);
-
-    route.innerHTML = "";
-    route.appendChild(inputRoute);
-
-    confirm.innerHTML = "";
-    confirm.appendChild(confirmation);
-}
-
-function getToday() {
-    // Get today's date
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = String(today.getMonth() + 1).padStart(2, "0");
-    var day = String(today.getDate()).padStart(2, "0");
-
-    return year + "-" + month + "-" + day;
-}
+// TODO
 // document.getElementById("prescription-submit").addEventListener("click", (e) => {
 //     e.preventDefault();
 
