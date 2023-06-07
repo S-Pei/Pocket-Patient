@@ -21,10 +21,13 @@ var hashMap = new Map();
 })();
 
 
+/**
+ * Inserts all prescriptions into current prescription table
+ * @param {Dictionary} prescription list of prescriptions
+ */
 function insertPrescription(prescription) {
   var i = 0
   while (i < prescription.length) {
-    
       addPrescription(i, prescription[i]["drug"], 
                         prescription[i]["dosage"], 
                         prescription[i]["startDate"], 
@@ -35,103 +38,29 @@ function insertPrescription(prescription) {
   }
 }
 
+/**
+ * Adds a single prescription entry into current prescription table
+ * @param {int} row row index of prescription
+ * @param {string} drug name of drug
+ * @param {string} dosage drug dosage
+ * @param {string} startDate prescription start date
+ * @param {string} endDate prescription end date
+ * @param {string} duration prescription duration
+ * @param {string} route prescription route
+ */
 function addPrescription(row, drug, dosage, startDate, endDate, duration, route) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-prescription-box-table");
 
-    // Create the <div> element
-    const prescriptionAction = document.createElement('div');
-
-    // Create the <select> element
-    const selectElement = document.createElement('select');
-    selectElement.classList.add("selection")
-    selectElement.id = "select-" + row;
-
-    // Create the "Saved" option
-    const savedOption = document.createElement('option');
-    savedOption.classList.add("selection-option");
-    savedOption.id = 'saved-option-' + row;
-    savedOption.value = 'option1';
-    savedOption.selected = true;
-    savedOption.textContent = 'Saved';
-
-    // Create the "Edit" option
-    const editOption = document.createElement('option');
-    editOption.classList.add("selection-option");
-    editOption.id = 'edit-option-' + row;
-    editOption.value = 'option2';
-    editOption.textContent = 'Edit';
-
-    // Create the "Delete" option
-    const deleteOption = document.createElement('option');
-    deleteOption.classList.add("selection-option");
-    deleteOption.id = 'del-option-' + row;
-    deleteOption.value = 'option3';
-    deleteOption.textContent = 'Delete';
-
-    // Append the options to the <select> element
-    selectElement.appendChild(savedOption);
-    selectElement.appendChild(editOption);
-    selectElement.appendChild(deleteOption);
-
-    // Append the <select> element to the <div> element
-    prescriptionAction.appendChild(selectElement);
-
-    // Add class to element
-    prescriptionAction.classList.add("info-table-item");
-
-    const prescriptionDrug = document.createElement("div");
-    prescriptionDrug.classList.add("info-table-item");
-    prescriptionDrug.id = 'prescription-drug-' + row;
-    prescriptionDrug.textContent = drug;
-
-    const prescriptionDosage = document.createElement("div");
-    prescriptionDosage.classList.add("info-table-item");
-    prescriptionDosage.id = 'prescription-dosage-' + row;
-    prescriptionDosage.textContent = dosage;
-
-    const prescriptionStartDate = document.createElement("div");
-    prescriptionStartDate.classList.add("info-table-item");
-    prescriptionStartDate.id = 'prescription-start-date-' + row;
-    prescriptionStartDate.textContent = startDate;
-
-    const prescriptionEndDate = document.createElement("div");
-    prescriptionEndDate.classList.add("info-table-item");
-    prescriptionEndDate.id = 'prescription-end-date-' + row;
-    prescriptionEndDate.textContent = endDate;
-
-    const prescriptionDuration = document.createElement("div");
-    prescriptionDuration.classList.add("info-table-item");
-    prescriptionDuration.id = 'prescription-duration-' + row;
-    prescriptionDuration.textContent = duration;
-
-    const prescriptionRoute = document.createElement("div");
-    prescriptionRoute.classList.add("info-table-item");
-    prescriptionRoute.id = 'prescription-route-' + row;
-    prescriptionRoute.textContent = route;
-
-    // Create the confirm button element
-    const confirmButton = document.createElement('div');
-    confirmButton.textContent = 'Confirmed';
-    confirmButton.id = 'confirm-' + row;
-    
-    // Create the div element
-    const prescriptionConfirm = document.createElement('div');
-    
-    // Add class to element
-    prescriptionConfirm.classList.add("info-table-item");
-
-    // Append the confirm button to the div element
-    prescriptionConfirm.appendChild(confirmButton);
-
-    tableBody.appendChild(prescriptionAction);
-    tableBody.appendChild(prescriptionDrug);
-    tableBody.appendChild(prescriptionDosage);
-    tableBody.appendChild(prescriptionStartDate);
-    tableBody.appendChild(prescriptionEndDate);
-    tableBody.appendChild(prescriptionDuration);
-    tableBody.appendChild(prescriptionRoute);
-    tableBody.appendChild(prescriptionConfirm);
+    // Insert all information in prescription
+    createAndInsertPrescriptionInfo(tableBody, row, "action", null);
+    createAndInsertPrescriptionInfo(tableBody, row, "drug", drug);
+    createAndInsertPrescriptionInfo(tableBody, row, "dosage", dosage);
+    createAndInsertPrescriptionInfo(tableBody, row, "start-date", startDate);
+    createAndInsertPrescriptionInfo(tableBody, row, "end-date", endDate);
+    createAndInsertPrescriptionInfo(tableBody, row, "duration", duration);
+    createAndInsertPrescriptionInfo(tableBody, row, "route", route);
+    createAndInsertPrescriptionInfo(tableBody, row, "confirmation", null);
 
     // save value to hashmap
     saveToHash(row, drug, dosage, startDate, endDate, duration, route);
@@ -157,7 +86,7 @@ function assignEvent() {
             // Perform specific actions based on the element's ID
             if (name === 'edit') {
                 changeEditable(row);
-                document.getElementById("confirm-button-" + row).addEventListener("click", (e) => {
+                document.getElementById("prescription-confirm-button-" + row).addEventListener("click", (e) => {
                     e.preventDefault();
 
                     let drug = document.getElementById("input-drug-" + row).value;
@@ -208,7 +137,7 @@ function assignEvent() {
                 document.getElementById("prescription-end-date-" + row).innerHTML = hashMap.get("" + row).get("endDate")
                 document.getElementById("prescription-duration-" + row).innerHTML = hashMap.get("" + row).get("duration")
                 document.getElementById("prescription-route-" + row).innerHTML = hashMap.get("" + row).get("route")
-                document.getElementById("confirm-" + row).innerHTML = "Confirmed";
+                document.getElementById("prescription-confirm-" + row).innerHTML = "Confirmed";
             }
         });
     }
@@ -238,80 +167,18 @@ function savedEdit(row, drug, dosage, startDate, endDate, duration, route) {
     // addPrescription(row, drug, dosage, startDate, endDate, duration, route);
 
     document.getElementById("select-" + row).selectedIndex = 0;
-    document.getElementById("confirm-" + row).innerHTML = "Confirmed";
+    document.getElementById("prescription-confirm-" + row).innerHTML = "Confirmed";
 }
 
 function changeEditable(row) {
     // Create input elements
-    
-    const drug = document.getElementById("prescription-drug-" + row);
-    const dosage = document.getElementById("prescription-dosage-" + row);
-    const startDate = document.getElementById("prescription-start-date-" + row);
-    const endDate = document.getElementById("prescription-end-date-" + row);
-    const duration = document.getElementById("prescription-duration-" + row);
-    const route = document.getElementById("prescription-route-" + row);
-    const confirm = document.getElementById("confirm-" + row);
-
-    const inputDrug = document.createElement("input");
-    inputDrug.type = "text";
-    inputDrug.name = "input-drug-" + row;
-    inputDrug.id = "input-drug-" + row
-    inputDrug.value = drug.textContent; 
-
-    const inputDosage = document.createElement("input");
-    inputDosage.type = "text";
-    inputDosage.name = "input-dosage-" + row;
-    inputDosage.id = "input-dosage-" + row
-    inputDosage.value = dosage.textContent; 
-
-    const inputStartDate = document.createElement("input");
-    inputStartDate.type = "date";
-    inputStartDate.name = "input-start-date-" + row;
-    inputStartDate.id = "input-start-date-" + row
-    inputStartDate.value = getToday();
-
-    const inputEndDate = document.createElement("input");
-    inputEndDate.type = "date";
-    inputEndDate.name = "input-end-date-" + row;
-    inputEndDate.id = "input-end-date-" + row
-    inputEndDate.value = getToday(); 
-
-    const inputDuration = document.createElement("input");
-    inputDuration.type = "text";
-    inputDuration.name = "input-duration-" + row;
-    inputDuration.id = "input-duration-" + row
-    inputDuration.value = duration.textContent; 
-
-    const inputRoute = document.createElement("input");
-    inputRoute.type = "text";
-    inputRoute.name = "input-route-" + row;
-    inputRoute.id = "input-route-" + row
-    inputRoute.value = route.textContent; 
-
-    const confirmation = document.createElement("button");
-    confirmation.textContent = "Save";
-    confirmation.id = "confirm-button-" + row;
-
-    drug.innerHTML = "";
-    drug.appendChild(inputDrug);
-
-    dosage.innerHTML = "";
-    dosage.appendChild(inputDosage);
-    
-    startDate.innerHTML = "";
-    startDate.appendChild(inputStartDate);
-
-    endDate.innerHTML = "";
-    endDate.appendChild(inputEndDate);
-
-    duration.innerHTML = "";
-    duration.appendChild(inputDuration);
-
-    route.innerHTML = "";
-    route.appendChild(inputRoute);
-
-    confirm.innerHTML = "";
-    confirm.appendChild(confirmation);
+    changePrescriptionInfoToEditable(row, "drug");
+    changePrescriptionInfoToEditable(row, "dosage");
+    changePrescriptionInfoToEditable(row, "start-date");
+    changePrescriptionInfoToEditable(row, "end-date");
+    changePrescriptionInfoToEditable(row, "duration");
+    changePrescriptionInfoToEditable(row, "route");
+    changePrescriptionInfoToEditable(row, "confirm");
 }
 
 function getToday() {
@@ -323,6 +190,92 @@ function getToday() {
 
     return year + "-" + month + "-" + day;
 }
+
+function createAndInsertPrescriptionInfo(tableBody, row, type, data) {
+    let prescriptionInfo = document.createElement("div");
+    prescriptionInfo.classList.add("info-table-item");
+    if (type == "action") {
+        let selectElem = createActionPrescriptionElement(row);
+        prescriptionInfo.appendChild(selectElem);
+    } else if (type == "confirmation") {
+        let confirmBtnElem = createConfirmButtonElement(row);
+        prescriptionInfo.appendChild(confirmBtnElem);
+    } else {
+        prescriptionInfo.id = `prescription-${type}-${row}`;
+        prescriptionInfo.textContent = data;    
+    }
+    tableBody.appendChild(prescriptionInfo);
+}
+
+function createActionPrescriptionElement(row) {
+    // Create the <select> element for prescription action
+    const selectElement = document.createElement('select');
+    selectElement.classList.add("selection")
+    selectElement.id = "select-" + row;
+
+    // Create the "Saved" option
+    const savedOption = document.createElement('option');
+    savedOption.classList.add("selection-option");
+    savedOption.id = 'saved-option-' + row;
+    savedOption.value = 'option1';
+    savedOption.selected = true;
+    savedOption.textContent = 'Saved';
+
+    // Create the "Edit" option
+    const editOption = document.createElement('option');
+    editOption.classList.add("selection-option");
+    editOption.id = 'edit-option-' + row;
+    editOption.value = 'option2';
+    editOption.textContent = 'Edit';
+
+    // Create the "Delete" option
+    const deleteOption = document.createElement('option');
+    deleteOption.classList.add("selection-option");
+    deleteOption.id = 'del-option-' + row;
+    deleteOption.value = 'option3';
+    deleteOption.textContent = 'Delete';
+
+    // Append the options to the <select> element
+    selectElement.appendChild(savedOption);
+    selectElement.appendChild(editOption);
+    selectElement.appendChild(deleteOption);
+
+    return selectElement;
+}
+
+function createConfirmButtonElement(row) {
+    const confirmButton = document.createElement('div');
+    confirmButton.textContent = 'Confirmed';
+    confirmButton.id = 'prescription-confirm-' + row;
+    return confirmButton;
+}
+
+function changePrescriptionInfoToEditable(row, type) {
+    const elem = document.getElementById(`prescription-${type}-${row}`);
+
+    if (type == "confirm") {
+        const confirmation = document.createElement("button");
+        confirmation.textContent = "Save";
+        confirmation.id = "prescription-confirm-button-" + row;
+        elem.innerHTML = "";
+        elem.appendChild(confirmation);
+        return;
+    }
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = `input-${type}-${row}`;
+    input.id = `input-${type}-${row}`;
+    if (type == "start-date" || type == "end-date") {
+        input.value = getToday();
+    } else {
+        input.value = elem.textContent;
+    }
+    elem.innerHTML = "";
+    elem.appendChild(input);
+}
+
+// TODO
 // document.getElementById("prescription-submit").addEventListener("click", (e) => {
 //     e.preventDefault();
 
