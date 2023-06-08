@@ -20,4 +20,5 @@ urlpatterns = [
     path('doctor/patient-data/prescription/', views.addPrescription),
     # path('pageDoctor/', views.displayDoctor, name='index'),
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
+    path('doctor/patient-data/add-visit/', views.addVisit),
 ]

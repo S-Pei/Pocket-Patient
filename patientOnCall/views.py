@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from patientoncall_api.forms import AddVisitForm
 
 def index(request):
     return render(request, 'patientOnCall/index.html')

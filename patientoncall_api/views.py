@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.views import APIView
@@ -24,6 +25,7 @@ from .serializers import (
     PrescriptionSerializer
 )
 
+from .forms import AddVisitForm
 
 # @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
@@ -169,4 +171,24 @@ def calculate_age(birthdate):
         age -= 1
 
     return age
+
+@csrf_exempt
+def addVisit(request):
+    if request.method == "POST":
+        form = AddVisitForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            MedicalHistory.objects.create(
+                patient=user,
+                summary = request.POST.get("summary"),
+                consultant = request.POST.get("consultant"),
+                visitType = request.POST.get("visitType"),
+                letter=request.FILES["letter"]
+            )
+            return render(request, "patientOnCall/visit.html")
+    else:
+        form = AddVisitForm()
+    return render(request, "patientOnCall/add-visit.html", {'form': form})
 
