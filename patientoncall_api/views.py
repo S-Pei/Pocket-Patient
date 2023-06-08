@@ -53,7 +53,6 @@ class PatientMedicalHistoryApiView(APIView):
         
         user = matchPatientUser(12345, 'Bob Choy')
         request_data = JSONParser().parse(request)
-        # print(request_data)
         date_str = request_data['date']
         summary = request_data['summary']
         if not date_str or not summary:
@@ -109,9 +108,6 @@ def getAllPatientDataById(request, user, toHideIds=[]):
                         context={"request": request}, many=True)
     prescriptionSerializer = PrescriptionSerializer(prescription, many=True)
     sessionID = request.session.session_key
-    # print(sessionID)
-    # patientAge = calculate_age(date.fromisoformat(patientUserSerializer.data["patientBirthdate"]))
-    # print(patientUserSerializer.data["patientBirthdate"])
     return {
         'ok': True,
         'sessionId': sessionID,
@@ -166,10 +162,7 @@ def addPrescription(request):
 def updatePrescription(request):
     if request.method == "POST":
         json_data = json.loads(request.body)
-        print(json_data)
         user = matchPatientUser(json_data['patientId'], json_data['patientName'])
-        print(json_data["deleteIds"])
-        print(json_data["addItems"])
         for id in json_data["deleteIds"]:
             my_object = Prescription.objects.get(id=id)
             my_object.status = "past"
@@ -187,7 +180,6 @@ def updatePrescription(request):
         prescription = Prescription.objects.filter(patient=user.id, status="current")
         prescriptionSerializer = PrescriptionSerializer(prescription, 
                                                         many=True)
-        print(prescription)
         return JsonResponse({'ok': True,
                              'prescription': prescriptionSerializer.data},
                                status=status.HTTP_201_CREATED)
@@ -215,8 +207,6 @@ def pastEntry(request):
         prescription = Prescription.objects.filter(patient=user.id, status="current")
         prescriptionSerializer = PrescriptionSerializer(prescription, 
                                                         many=True)
-        print("is in delete")
-        print(prescription)
         return JsonResponse({'ok': True,
                              'prescription': prescriptionSerializer.data},
                                status=status.HTTP_201_CREATED)
@@ -224,12 +214,10 @@ def pastEntry(request):
 @csrf_exempt
 def getPrescription(request):
     if request.method == "POST":
-        print("here")
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
         prescription = Prescription.objects.filter(patient=user.id, status="current")
         prescriptionSerializer = PrescriptionSerializer(prescription, 
                                                         many=True)
-        print(prescription)
         return JsonResponse({'ok': True,
                              'prescription': prescriptionSerializer.data},
                                status=status.HTTP_201_CREATED)
