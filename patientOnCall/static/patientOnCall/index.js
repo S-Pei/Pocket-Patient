@@ -131,6 +131,7 @@ function api_fetch_patient_full_data(toHideIds) {
         sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
         sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+        console.log(toHideIds.length > 0)
         sessionStorage.setItem("displayDisclaimer", toHideIds.length > 0)
         sessionStorage.setItem("websocket", websocket);
 
