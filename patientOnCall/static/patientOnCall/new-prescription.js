@@ -98,7 +98,7 @@ function assignEvent() {
                     let durationMap = getDurationInfo(row);
                     let duration = durationMap["number"] + " " + durationMap["time"];
                     let route = document.getElementById("input-route-" + row).value;
-                    let comments = document.getElementById("input-route-" + row).value;
+                    let comments = document.getElementById("input-comments-" + row).value;
 
                     savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments);
 
