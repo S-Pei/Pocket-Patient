@@ -10,6 +10,8 @@ from rest_framework.parsers import JSONParser
 
 from datetime import datetime, date
 
+import json
+
 from .models import (
     PatientUser,
     MedicalHistory,
@@ -159,6 +161,37 @@ def addPrescription(request):
                              'prescription': prescriptionSerializer.data},
                                status=status.HTTP_201_CREATED)
 
+
+@csrf_exempt
+def updatePrescription(request):
+    if request.method == "POST":
+        json_data = json.loads(request.body)
+        print(json_data)
+        user = matchPatientUser(json_data['patientId'], json_data['patientName'])
+        print(json_data["deleteIds"])
+        print(json_data["addItems"])
+        for id in json_data["deleteIds"]:
+            my_object = Prescription.objects.get(id=id)
+            my_object.status = "past"
+            my_object.save()
+        
+        for new_medication in json_data["addItems"]:
+            Prescription.objects.create(patient=user, 
+                                        drug=new_medication['prescriptionDrug'], 
+                                        dosage=new_medication['prescriptionDosage'], 
+                                        startDate=new_medication['prescriptionStartDate'], 
+                                        endDate=new_medication['prescriptionEndDate'], 
+                                        duration=new_medication['prescriptionDuration'], 
+                                        route=new_medication['prescriptionRoute'],
+                                        comments=new_medication['prescriptionComments'])
+        prescription = Prescription.objects.filter(patient=user.id, status="current")
+        prescriptionSerializer = PrescriptionSerializer(prescription, 
+                                                        many=True)
+        print(prescription)
+        return JsonResponse({'ok': True,
+                             'prescription': prescriptionSerializer.data},
+                               status=status.HTTP_201_CREATED)
+
 def calculateAge(birthdate):
     # Get the current date
     current_date = date.today()
@@ -182,6 +215,21 @@ def pastEntry(request):
         prescription = Prescription.objects.filter(patient=user.id, status="current")
         prescriptionSerializer = PrescriptionSerializer(prescription, 
                                                         many=True)
+        print("is in delete")
+        print(prescription)
+        return JsonResponse({'ok': True,
+                             'prescription': prescriptionSerializer.data},
+                               status=status.HTTP_201_CREATED)
+    
+@csrf_exempt
+def getPrescription(request):
+    if request.method == "POST":
+        print("here")
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
+        prescription = Prescription.objects.filter(patient=user.id, status="current")
+        prescriptionSerializer = PrescriptionSerializer(prescription, 
+                                                        many=True)
+        print(prescription)
         return JsonResponse({'ok': True,
                              'prescription': prescriptionSerializer.data},
                                status=status.HTTP_201_CREATED)

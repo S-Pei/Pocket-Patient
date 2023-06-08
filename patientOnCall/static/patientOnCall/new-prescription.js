@@ -35,6 +35,7 @@ function insertPrescription(prescription) {
                         prescription[i]["endDate"], 
                         prescription[i]["duration"], 
                         prescription[i]["route"],
+                        prescription[i]["status"],
                         prescription[i]["comments"])
       i++;
   }
@@ -50,7 +51,7 @@ function insertPrescription(prescription) {
  * @param {string} duration prescription duration
  * @param {string} route prescription route
  */
-function addPrescription(row, id, drug, dosage, startDate, endDate, duration, route, comments) {
+function addPrescription(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-prescription-box-table");
 
@@ -66,7 +67,7 @@ function addPrescription(row, id, drug, dosage, startDate, endDate, duration, ro
     createAndInsertPrescriptionInfo(tableBody, row, "confirmation", null);
 
     // save value to hashmap
-    saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, comments);
+    saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, status, comments);
 }
 
 function assignEvent() {
@@ -122,7 +123,7 @@ function assignEvent() {
     }
 }
 
-function saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, comments) {
+function saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
     if (!hashMap.has("" + row)) {
         hashMap.set("" + row, new Map());
     }
@@ -134,6 +135,7 @@ function saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, 
     corresponding.set("endDate", endDate);
     corresponding.set("duration", duration);
     corresponding.set("route", route);
+    corresponding.set("status", status)
     corresponding.set("comments", comments);
 }
 
@@ -372,54 +374,88 @@ function getRowFromId(id) {
     return parseInt(ws[ws.length - 1]);
 }
 
-function updatePrescription(row) {
-    const selectElem = document.getElementById(`select-${row}`);
-    if (selectElem.value == "option1") {
-        let drug = document.getElementById(`prescription-drug-${row}`).innerHTML;
-        let dosage = document.getElementById(`prescription-dosage-${row}`).innerHTML;
-        let startDate = document.getElementById(`prescription-start-date-${row}`).innerHTML;
-        let endDate = document.getElementById(`prescription-end-date-${row}`).innerHTML;
-        let duration = document.getElementById(`prescription-duration-${row}`).innerHTML;
-        let route = document.getElementById(`prescription-route-${row}`).innerHTML;
-        let comments = document.getElementById(`prescription-comments-${row}`).innerHTML;
+function updatePrescription() {
+    let prescription = JSON.parse(sessionStorage.getItem("prescription"));
+    const firstName = sessionStorage.getItem("patientFirstName");
+    const lastName = sessionStorage.getItem("patientLastName");
 
-        const firstName = sessionStorage.getItem("patientFirstName");
-        const lastName = sessionStorage.getItem("patientLastName");
+    let updates = {
+        "patientId": sessionStorage.getItem("patientID"),
+        "patientName": firstName + ' ' + lastName,
+        "deleteIds": [],
+        "addItems": []
+    }
 
-        $.ajax({
-            type: "POST",
-            url: base_url + "/api/doctor/patient-data/prescription/",
-            data: {
+    for (i=0; i < prescription.length; i++) {
+        let currMap = hashMap.get("" + i)
+        if (currMap.get("status") == "past") {
+            updates["deleteIds"].push(currMap.get("id"));
+        } else {
+            let drug = document.getElementById(`prescription-drug-${i}`).innerHTML;
+            let dosage = document.getElementById(`prescription-dosage-${i}`).innerHTML;
+            let startDate = document.getElementById(`prescription-start-date-${i}`).innerHTML;
+            let endDate = document.getElementById(`prescription-end-date-${i}`).innerHTML;
+            let duration = document.getElementById(`prescription-duration-${i}`).innerHTML;
+            let route = document.getElementById(`prescription-route-${i}`).innerHTML;
+            let comments = document.getElementById(`prescription-comments-${i}`).innerHTML;
+
+            updates["addItems"].push({
                 'patientID': sessionStorage.getItem("patientID"),
                 'patientName': firstName + ' ' + lastName,
                 'prescriptionDrug': drug, 
-                'prescriptionDosage': dosage, 
+                'prescriptionDosage': dosage,
                 'prescriptionStartDate': startDate, 
                 'prescriptionEndDate': endDate, 
                 'prescriptionDuration': duration, 
                 'prescriptionRoute': route,
                 'prescriptionComments': comments,
-            },
-            success: function (returned_value) {
-                if (returned_value.ok == true) { 
-                    console.log(JSON.stringify(returned_value["prescription"]))
-                    savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments)
-                    sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-                }
-            },
-            error: function () { }
-            })
+            });
+        }
     }
+
+    console.log(updates)
+
+    $.ajax({
+      type: "POST",
+      url: base_url + "/api/doctor/patient-data/prescription/update/",
+      data: JSON.stringify(updates),
+      success: function (returned_value) {
+        if (returned_value.ok == true) { 
+          sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+          window.location.href = "/prescription"
+        }
+      },
+      error: function () { }
+    });
+
 }
 
 document.getElementById("save-prescription").addEventListener("click", (e) => {
-    var i = 0;
-    const prescription = JSON.parse(sessionStorage.getItem("prescription"));
-    while (i < prescription.length) {
-        updatePrescription(i);
-        i++;
-    }
-    window.location.href = "/prescription"
+    // var i = 0;
+    // const firstName = sessionStorage.getItem("patientFirstName");
+    // const lastName = sessionStorage.getItem("patientLastName");
+    // const prescription = JSON.parse(sessionStorage.getItem("prescription"));
+    updatePrescription();
+    // while (i < prescription.length) {
+    //     updatePrescription(i);
+    //     i++;
+    // }
+    // $.ajax({
+    //     type: "POST",
+    //     url: base_url + "/api/doctor/patient-data/get-prescription/",
+    //     data: {
+    //         'patientID': sessionStorage.getItem("patientID"),
+    //         'patientName': firstName + ' ' + lastName,
+    //     },
+    //     success: function (returned_value) {
+    //         if (returned_value.ok == true) {
+    //             console.log(returned_value["prescription"])
+    //             sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+    //         }
+    //     },
+    //     error: function () { }
+    // })
+    // window.location.href = "/prescription"
 })
 
 // DELETE PRESCRIPTION
@@ -430,28 +466,9 @@ function showDeleteButton(row) {
     deleteButton.addEventListener("click", (e) => { 
         e.preventDefault();
 
-        const firstName = sessionStorage.getItem("patientFirstName");
-        const lastName = sessionStorage.getItem("patientLastName");
-
-        console.log(hashMap.get("" + row).get("id"))
-
-        $.ajax({
-            type: "POST",
-            url: base_url + "/api/doctor/patient-data/delete-prescription/",
-            data: {
-                'patientID': sessionStorage.getItem("patientID"),
-                'patientName': firstName + ' ' + lastName,
-                'id': hashMap.get("" + row).get("id")
-            },
-            success: function (returned_value) {
-                if (returned_value.ok == true) { 
-                    deletePrescription(row);
-                    sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-                }
-            },
-            error: function () { }
-            })
+        deletePrescription(row);
         
+        hashMap.get("" + row).set("status", "past")
     });
     $(`#prescription-confirm-${row}`).html(deleteButton);
 }
