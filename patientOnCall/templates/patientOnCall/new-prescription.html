@@ -11,10 +11,26 @@
     <h1 id="patient-name">Bob Choy</h1>
     <h2 id="patient-id">12345</h2>
   </div>
+  <div id="new-prescription-headers-box">
+    <div class="back-button-box">
+      <a href="/prescription/">
+        <button class="green-btn">back</button>
+      </a>
+    </div>
+    <div id="new-prescription-headers">
+      <h1>New Prescription</h1>
+      <div class="main-current-prescription-foot-note">
+        prescription date: 1/1/2013
+      </div>
+      <div class="main-current-prescription-foot-note">
+        allergies: --
+      </div>
+    </div>
+  </div>
   <div class="p-3" id="main-prescription-box">
     <div id="main-current-prescription-box">
       <div id="main-current-prescription-box-headers">
-        <h2>Current Prescriptions:</h2>
+        <h4>Current Prescriptions:</h4>
         <button class="red-btn print-btn">print</button>
         <button class="green-btn prev-btn">prev</button>
       </div>
@@ -28,9 +44,6 @@
         <div class="info-table-item info-table-label">Route</div>
         <div class="info-table-item info-table-label">Comments</div>
         <div class="info-table-item info-table-label">Confirmation</div>
-      </div>
-      <div class="main-current-prescription-foot-note">
-        last prescription date: 1/1/2013
       </div>
       <div class="add-button-box"><button id="save-prescription" class="add-button">Save</button></div>
     </div>
