@@ -354,7 +354,7 @@ function addTime(dateStr, num, unit) {
     month = (date.getMonth() + 1).toString().padStart(2, '0');
     year = date.getFullYear();
 
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
 }
 
 function reloadPrescriptionInfo(row, type) {

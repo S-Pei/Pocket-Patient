@@ -5,11 +5,13 @@
 
 #main-current-prescription-box-headers {
   display: flex;
+  align-items: center;
 }
 
 #main-current-prescription-box h2 {
   flex: 4;
   margin-bottom: 0 !important;
+  text-align: left;
 }
 
 #main-current-prescription-box button {
@@ -34,7 +36,7 @@
 }
 
 #main-current-prescription-box-table {
-  grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 2fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 2fr 1fr;
 }
 
 #print-button {
