@@ -4,10 +4,10 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Prescription
+    Medication
 )
 
 admin.site.register(MedicalHistory)
 admin.site.register(LabHistory)
 admin.site.register(PatientUser)
-admin.site.register(Prescription)
+admin.site.register(Medication)

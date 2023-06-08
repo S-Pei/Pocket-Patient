@@ -67,22 +67,22 @@
   font-size: 1.1em;
 }
 
-#main-current-prescription-box {
+#main-current-medication-box {
   padding-top: 2em;
   max-height: 35vh;
   background-color: #FFFFFF;
 }
 
-#main-current-prescription-box-headers {
+#main-current-medication-box-headers {
   display: flex;
 }
 
-#main-current-prescription-box h2 {
+#main-current-medication-box h2 {
   flex: 4;
   margin-bottom: 0 !important;
 }
 
-#main-current-prescription-box button {
+#main-current-medication-box button {
   font-size: 1.2em;
   flex: 1;
   margin: 0 1%;

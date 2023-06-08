@@ -7,8 +7,8 @@ def index(request):
 def displayInfo(request):
     return render(request, 'patientOnCall/info.html')
 
-def displayPrescription(request):
-    return render(request, 'patientOnCall/prescription.html')
+def displayMedication(request):
+    return render(request, 'patientOnCall/medication.html')
 
 def displayVisit(request):
     return render(request, 'patientOnCall/visit.html')
@@ -16,8 +16,8 @@ def displayVisit(request):
 def displayAddVisit(request):
     return render(request, 'patientOnCall/add-visit.html')
 
-def newPrescription(request):
-    return render(request, 'patientOnCall/new-prescription.html')
+def newMedication(request):
+    return render(request, 'patientOnCall/edit-medication.html')
 
-def addPrescription(request):
-    return render(request, 'patientOnCall/add-prescription.html')
+def addMedication(request):
+    return render(request, 'patientOnCall/add-medication.html')

@@ -130,8 +130,8 @@ function api_fetch_patient_full_data(toHideIds) {
         sessionStorage.setItem("patientAddress", returned_value["patient-address"])
         sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
-        sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
-        console.log(toHideIds.length > 0)
+        sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
+        sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
         sessionStorage.setItem("displayDisclaimer", toHideIds.length > 0)
         sessionStorage.setItem("websocket", websocket);
 
