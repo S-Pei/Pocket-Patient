@@ -149,7 +149,8 @@ def addPrescription(request):
                                     startDate=request.POST['prescriptionStartDate'], 
                                     endDate=request.POST['prescriptionEndDate'], 
                                     duration=request.POST['prescriptionDuration'], 
-                                    route=request.POST['prescriptionRoute'])
+                                    route=request.POST['prescriptionRoute'],
+                                    comments=request.POST['prescriptionComments'])
         prescription = Prescription.objects.filter(patient=user.id)
         prescriptionSerializer = PrescriptionSerializer(prescription, 
                                                         many=True)
