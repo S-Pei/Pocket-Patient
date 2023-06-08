@@ -28,7 +28,8 @@ var hashMap = new Map();
 function insertPrescription(prescription) {
   var i = 0
   while (i < prescription.length) {
-      addPrescription(i, prescription[i]["drug"], 
+      addPrescription(i, prescription[i]["id"],
+                        prescription[i]["drug"], 
                         prescription[i]["dosage"], 
                         prescription[i]["startDate"], 
                         prescription[i]["endDate"], 
@@ -49,7 +50,7 @@ function insertPrescription(prescription) {
  * @param {string} duration prescription duration
  * @param {string} route prescription route
  */
-function addPrescription(row, drug, dosage, startDate, endDate, duration, route, comments) {
+function addPrescription(row, id, drug, dosage, startDate, endDate, duration, route, comments) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-prescription-box-table");
 
@@ -65,7 +66,7 @@ function addPrescription(row, drug, dosage, startDate, endDate, duration, route,
     createAndInsertPrescriptionInfo(tableBody, row, "confirmation", null);
 
     // save value to hashmap
-    saveToHash(row, drug, dosage, startDate, endDate, duration, route, comments);
+    saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, comments);
 }
 
 function assignEvent() {
@@ -121,11 +122,12 @@ function assignEvent() {
     }
 }
 
-function saveToHash(row, drug, dosage, startDate, endDate, duration, route, comments) {
+function saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, comments) {
     if (!hashMap.has("" + row)) {
         hashMap.set("" + row, new Map());
     }
     corresponding = hashMap.get("" + row);
+    corresponding.set("id", id);
     corresponding.set("drug", drug);
     corresponding.set("dosage", dosage);
     corresponding.set("startDate", startDate);
@@ -301,11 +303,7 @@ function addDurationInputsEventListener(row) {
         .on("change", function () {
             let durationInfo = getDurationInfo(row);
             let startDateStr = document.getElementById(`input-start-date-${row}`).value;
-            let newEndDate = new Date(startDateStr);
-            let dayMul = dayMultiplier(durationInfo["time"]);
-            newEndDate.setDate(newEndDate.getDate() 
-                                + parseInt(durationInfo["number"]) * dayMul);
-            $(`#prescription-end-date-${row}`).html(newEndDate.toISOString().slice(0, 10));
+            $(`#prescription-end-date-${row}`).html(addTime(startDateStr, parseInt(durationInfo["number"]), durationInfo["time"]));
         });
 }
 
@@ -319,17 +317,42 @@ function getDurationInfo(row) {
     }
 }
 
-function dayMultiplier(time) {
-    switch (time) {
-        case "day":
-            return 1;
-        case "week":
-            return 7;
-        case "month":
-            return 30;
-        case "year":
-            return 365;
+// function dayMultiplier(time) {
+//     switch (time) {
+//         case "day":
+//             return 1;
+//         case "week":
+//             return 7;
+//         case "month":
+//             return 30;
+//         case "year":
+//             return 365;
+//     }
+// }
+
+function addTime(dateStr, num, unit) {
+    const dateParts = dateStr.split('-');
+    var day = parseInt(dateParts[2], 10);
+    var month = parseInt(dateParts[1], 10) - 1;
+    var year = parseInt(dateParts[0], 10);
+
+    const date = new Date(year, month, day);
+
+    if (unit === 'day') {
+        date.setDate(date.getDate() + num);
+    } else if (unit === 'week') {
+        date.setDate(date.getDate() + (num * 7));
+    } else if (unit === 'month') {
+        date.setMonth(6);
+    } else if (unit === 'year') {
+        date.setFullYear(date.getFullYear() + num);
     }
+
+    day = date.getDate().toString().padStart(2, '0');
+    month = (date.getMonth() + 1).toString().padStart(2, '0');
+    year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
 }
 
 function reloadPrescriptionInfo(row, type) {
@@ -379,6 +402,7 @@ function updatePrescription(row) {
             },
             success: function (returned_value) {
                 if (returned_value.ok == true) { 
+                    console.log(JSON.stringify(returned_value["prescription"]))
                     savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments)
                     sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
                 }
@@ -405,7 +429,29 @@ function showDeleteButton(row) {
     deleteButton.innerHTML = "Delete";
     deleteButton.addEventListener("click", (e) => { 
         e.preventDefault();
-        deletePrescription(row);
+
+        const firstName = sessionStorage.getItem("patientFirstName");
+        const lastName = sessionStorage.getItem("patientLastName");
+
+        console.log(hashMap.get("" + row).get("id"))
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "/api/doctor/patient-data/delete-prescription/",
+            data: {
+                'patientID': sessionStorage.getItem("patientID"),
+                'patientName': firstName + ' ' + lastName,
+                'id': hashMap.get("" + row).get("id")
+            },
+            success: function (returned_value) {
+                if (returned_value.ok == true) { 
+                    deletePrescription(row);
+                    sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+                }
+            },
+            error: function () { }
+            })
+        
     });
     $(`#prescription-confirm-${row}`).html(deleteButton);
 }

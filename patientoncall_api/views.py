@@ -99,7 +99,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     patientUser = PatientUser.objects.get(patient=user.id)
     medicalHistories = MedicalHistory.objects.filter(patient=user.id).exclude(id__in=toHideIds)
     labHistories = LabHistory.objects.filter(patient=user.id)
-    prescription = Prescription.objects.filter(patient=user.id)
+    prescription = Prescription.objects.filter(patient=user.id, status="current")
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
@@ -152,14 +152,14 @@ def addPrescription(request):
                                     duration=request.POST['prescriptionDuration'], 
                                     route=request.POST['prescriptionRoute'],
                                     comments=request.POST['prescriptionComments'])
-        prescription = Prescription.objects.filter(patient=user.id)
+        prescription = Prescription.objects.filter(patient=user.id, status="current")
         prescriptionSerializer = PrescriptionSerializer(prescription, 
                                                         many=True)
         return JsonResponse({'ok': True,
                              'prescription': prescriptionSerializer.data},
                                status=status.HTTP_201_CREATED)
 
-def calculate_age(birthdate):
+def calculateAge(birthdate):
     # Get the current date
     current_date = date.today()
 
@@ -172,3 +172,16 @@ def calculate_age(birthdate):
 
     return age
 
+@csrf_exempt
+def pastEntry(request):
+    if request.method == "POST":
+        my_object = Prescription.objects.get(id=request.POST['id'])
+        my_object.status = "past"
+        my_object.save()
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
+        prescription = Prescription.objects.filter(patient=user.id, status="current")
+        prescriptionSerializer = PrescriptionSerializer(prescription, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'prescription': prescriptionSerializer.data},
+                               status=status.HTTP_201_CREATED)
