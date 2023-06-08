@@ -92,20 +92,17 @@ function assignEvent() {
                     let drug = document.getElementById("input-drug-" + row).value;
                     let dosage = document.getElementById("input-dosage-" + row).value;
                     let startDate = document.getElementById("input-start-date-" + row).value;
-                    let endDate = document.getElementById("input-end-date-" + row).value;
-                    let duration = document.getElementById("input-duration-" + row).value;
+                    let endDate = document.getElementById("prescription-end-date-" + row).innerHTML;
+                    let durationMap = getDurationInfo(row);
+                    let duration = durationMap["number"] + " " + durationMap["time"];
                     let route = document.getElementById("input-route-" + row).value;
-
-                    const firstName = sessionStorage.getItem("patientFirstName");
-                    const lastName = sessionStorage.getItem("patientLastName");
 
                     savedEdit(row, drug, dosage, startDate, endDate, duration, route);
 
                 })
             } 
             else if (name === 'del') {
-                // TODO
-                console.log("hi2");
+                showDeleteButton(row);
             }
             else {
                 reloadPrescriptionInfo(row, "drug");
@@ -150,10 +147,11 @@ function changeEditable(row) {
     changePrescriptionInfoToEditable(row, "drug");
     changePrescriptionInfoToEditable(row, "dosage");
     changePrescriptionInfoToEditable(row, "start-date");
-    changePrescriptionInfoToEditable(row, "end-date");
     changePrescriptionInfoToEditable(row, "duration");
     changePrescriptionInfoToEditable(row, "route");
     changePrescriptionInfoToEditable(row, "confirm");
+
+    addDurationInputsEventListener(row);
 }
 
 function getToday() {
@@ -169,6 +167,7 @@ function getToday() {
 function createAndInsertPrescriptionInfo(tableBody, row, type, data) {
     let prescriptionInfo = document.createElement("div");
     prescriptionInfo.classList.add("info-table-item");
+    prescriptionInfo.classList.add(`prescription-${row}`);
     if (type == "action") {
         let selectElem = createActionPrescriptionElement(row);
         prescriptionInfo.appendChild(selectElem);
@@ -227,27 +226,103 @@ function createConfirmButtonElement(row) {
 
 function changePrescriptionInfoToEditable(row, type) {
     const elem = document.getElementById(`prescription-${type}-${row}`);
+    let newChild = null;
 
     if (type == "confirm") {
-        const confirmation = document.createElement("button");
-        confirmation.textContent = "Save";
-        confirmation.id = "prescription-confirm-button-" + row;
-        elem.innerHTML = "";
-        elem.appendChild(confirmation);
-        return;
-    }
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.name = `input-${type}-${row}`;
-    input.id = `input-${type}-${row}`;
-    if (type == "start-date" || type == "end-date") {
-        input.value = getToday();
+        newChild = document.createElement("button");
+        newChild.textContent = "Save";
+        newChild.id = "prescription-confirm-button-" + row;
+    } else if (type == "duration") {
+        newChild = createDurationEditablesElement(elem, row);
     } else {
-        input.value = elem.textContent;
+        newChild = document.createElement("input");
+        newChild.type = (type == "start-date" || type == "end-date") ? "date": "text";
+        newChild.name = `input-${type}-${row}`;
+        newChild.id = `input-${type}-${row}`;
+        if (type == "start-date" || type == "end-date") {
+            newChild.value = getToday();
+        } else {
+            newChild.value = elem.textContent;
+        }
     }
     elem.innerHTML = "";
-    elem.appendChild(input);
+    elem.appendChild(newChild);
+}
+
+function createDurationEditablesElement(elem, row) {
+    let durationStr = elem.textContent
+    let durationNum = durationStr.split(" ")[0];
+    let durationTime = durationStr.split(" ")[1];
+
+    let editablesElem = document.createElement("div");
+    editablesElem.classList.add("input-duration-editables");
+    editablesElem.id =`input-duration-editables-${row}`;
+
+    let editNumber = document.createElement("div");
+    editNumber.classList.add("input-duration-number-wrapper");
+    let numberInput = document.createElement("input");
+    numberInput.type = "text";
+    numberInput.name = `input-duration-number-${row}`;
+    numberInput.id = `input-duration-number-${row}`;
+    numberInput.value = durationNum;
+    editNumber.appendChild(numberInput);
+
+    let editTime = document.createElement("div");
+    editTime.classList.add("input-duration-time-wrapper");
+    let timeSelect = document.createElement("select");
+    timeSelect.class = `input-duration-time`;
+    timeSelect.id = `input-duration-time-${row}`;
+    let times = ["day", "week", "month", "year"]
+    let optionIndex = times.indexOf(durationTime);
+    for (i in times) {
+        let newOption = document.createElement("option");
+        newOption.value = times[i];
+        newOption.innerHTML = `${times[i]}(s)`;
+        timeSelect.appendChild(newOption);
+    }
+    timeSelect.selectedIndex = optionIndex;
+    editTime.appendChild(timeSelect);
+
+    
+    editablesElem.appendChild(editNumber);
+    editablesElem.appendChild(editTime);
+    return editablesElem;
+}
+
+function addDurationInputsEventListener(row) {
+    $(`.input-duration-number-wrapper > input, .input-duration-time-wrapper > select, #input-start-date-${row}`)
+        .on("change", function () {
+            let durationInfo = getDurationInfo(row);
+            let startDateStr = document.getElementById(`input-start-date-${row}`).value;
+            let newEndDate = new Date(startDateStr);
+            let dayMul = dayMultiplier(durationInfo["time"]);
+            newEndDate.setDate(newEndDate.getDate() 
+                                + parseInt(durationInfo["number"]) * dayMul);
+            $(`#prescription-end-date-${row}`).html(newEndDate.toISOString().slice(0, 10));
+        });
+}
+
+function getDurationInfo(row) {
+    let number = document.getElementById(`input-duration-number-${row}`).value;
+    let time = document.getElementById(`input-duration-time-${row}`).value;
+
+    return {
+        "number": number,
+        "time": time
+    }
+}
+
+function dayMultiplier(time) {
+    switch (time) {
+        case "day":
+            return 1;
+        case "week":
+            return 7;
+        case "month":
+            return 30;
+        case "year":
+            return 365;
+    }
 }
 
 function reloadPrescriptionInfo(row, type) {
@@ -260,6 +335,11 @@ function reloadPrescriptionInfo(row, type) {
     } else {
         document.getElementById(`prescription-${type}-${row}`).innerHTML = hashMap.get("" + row).get(type);
     }
+}
+
+function getRowFromId(id) {
+    let ws = id.split("-");
+    return parseInt(ws[ws.length - 1]);
 }
 
 function updatePrescription(row) {
@@ -308,6 +388,22 @@ document.getElementById("save-prescription").addEventListener("click", (e) => {
     }
     window.location.href = "/prescription"
 })
+
+// DELETE PRESCRIPTION
+function showDeleteButton(row) {
+    let deleteButton = document.createElement("button");
+    deleteButton.id = `prescription-delete-button-${row}`;
+    deleteButton.innerHTML = "Delete";
+    deleteButton.addEventListener("click", (e) => { 
+        e.preventDefault();
+        deletePrescription(row);
+    });
+    $(`#prescription-confirm-${row}`).html(deleteButton);
+}
+
+function deletePrescription(row) { 
+    $(`.prescription-${row}`).remove();
+}
 
 // TODO
 // document.getElementById("prescription-submit").addEventListener("click", (e) => {

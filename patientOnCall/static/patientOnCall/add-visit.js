@@ -7,11 +7,22 @@ var base_url = window.location.origin;
   const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-  document.getElementById("patient-id").innerHTML = 'NHS Number:' + id  
+  document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
-  enterVisitEntry(); 
+  reconnectWebsocket();
+
+  enterVisitEntry();
 
 })();
+
+// function connect_and_send_websocket() { 
+//   let websocket = sessionStorage.getItem("websocket");
+//   console.log(websocket);
+//   if (websocket != null) { 
+//     websocket.connect();
+//     console.log("connecting websocket");
+//   }
+// }
 
 function enterVisitEntry() {
   document.getElementById("add-visit").addEventListener("click", (e) => {

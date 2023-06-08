@@ -16,8 +16,8 @@ class MedicalHistory(models.Model):
   admissionDate = models.DateField(blank=True, null=True)
   dischargeDate = models.DateField(blank=True, null=True)
   summary = models.TextField(max_length=2048, blank=True, null=True)
-  consultant = models.TextField(max_length=64, blank=True, null=True)
-  visitType = models.TextField(max_length=32, blank=True, null=True)
+  consultant = models.CharField(max_length=64, blank=True, null=True)
+  visitType = models.CharField(max_length=32, blank=True, null=True)
   letter = models.FileField(upload_to='letterattachments/', blank=True, null=True, default=True)
 
 

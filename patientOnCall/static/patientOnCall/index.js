@@ -10,6 +10,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
     // Skip verification in DEBUG mode
     sessionStorage.setItem("patientID", patientId);
     sessionStorage.setItem("patientName", patientName);
+    connect_to_websocket();
     api_fetch_patient_full_data();
   }
 })
@@ -56,7 +57,11 @@ function status_error(message) {
 
 function connect_to_websocket() {
   if (websocket == null) {
-    create_websocket();
+    websocket = create_websocket(function (event) {
+        websocket.send(JSON.stringify({
+            "event": "REQUEST_PATIENT_DATA_ACCESS"
+          }))
+      });
   }
 }
 
@@ -67,36 +72,36 @@ function disconnect_websocket() {
   }
 }
 
-function create_websocket() {
-  let connectionString = ''
-  if (window.location.protocol == "https:") {
-    connectionString += 'wss://';
-  } else {
-    connectionString += 'ws://';
-  }
-  connectionString += window.location.host + '/ws/patientoncall/'
-                      + sessionStorage.getItem("patientID") + '/'
-                      + sessionStorage.getItem("patientName") + '/'
+// function create_websocket() {
+//   let connectionString = ''
+//   if (window.location.protocol == "https:") {
+//     connectionString += 'wss://';
+//   } else {
+//     connectionString += 'ws://';
+//   }
+//   connectionString += window.location.host + '/ws/patientoncall/'
+//                       + sessionStorage.getItem("patientID") + '/'
+//                       + sessionStorage.getItem("patientName") + '/'
 
-  websocket = new WebSocket(connectionString);
+//   websocket = new WebSocket(connectionString);
 
-  websocket.onopen = function (event) {
-    websocket.send(JSON.stringify({
-        "event": "REQUEST_PATIENT_DATA_ACCESS"
-      }))
-  }
+//   websocket.onopen = function (event) {
+//     websocket.send(JSON.stringify({
+//         "event": "REQUEST_PATIENT_DATA_ACCESS"
+//       }))
+//   }
 
-  websocket.onmessage = function (response) {
-    let data = JSON.parse(response.data)
-    let event = data["event"]
+//   websocket.onmessage = function (response) {
+//     let data = JSON.parse(response.data)
+//     let event = data["event"]
 
-    if (event == "GRANT_PATIENT_DATA_ACCESS") {
-      let toHideIds = data["ids"];
-      console.log(toHideIds);
-      api_fetch_patient_full_data();
-    }
-  }
-}
+//     if (event == "GRANT_PATIENT_DATA_ACCESS") {
+//       let toHideIds = data["ids"];
+//       console.log(toHideIds);
+//       api_fetch_patient_full_data();
+//     }
+//   }
+// }
 
 
 // API Functions
@@ -146,6 +151,8 @@ function api_fetch_patient_full_data() {
         sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
         sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
+        sessionStorage.setItem("websocket", websocket);
+
         window.location.href = "main/"
       }
     },
