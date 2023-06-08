@@ -20,8 +20,7 @@ document.getElementById("visit-history").addEventListener("click", (e) => {
   })
 
 
-if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getItem("displayDisclaimer")) {
-  console.log(sessionStorage.getItem("displayDisclaimer"))
+if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getItem("displayDisclaimer") == "true") {
   $("#disclaimer-note").removeClass("invisible");
 } else {
   $("#disclaimer-note").addClass("invisible");
