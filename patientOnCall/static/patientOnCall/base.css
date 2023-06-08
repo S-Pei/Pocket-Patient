@@ -108,6 +108,9 @@
   text-align: center;
   background-color: var(--table-background-colour);
   border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .red-btn {

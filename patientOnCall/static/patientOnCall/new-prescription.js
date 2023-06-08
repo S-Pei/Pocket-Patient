@@ -33,7 +33,8 @@ function insertPrescription(prescription) {
                         prescription[i]["startDate"], 
                         prescription[i]["endDate"], 
                         prescription[i]["duration"], 
-                        prescription[i]["route"])
+                        prescription[i]["route"],
+                        prescription[i]["comments"])
       i++;
   }
 }
@@ -48,7 +49,7 @@ function insertPrescription(prescription) {
  * @param {string} duration prescription duration
  * @param {string} route prescription route
  */
-function addPrescription(row, drug, dosage, startDate, endDate, duration, route) {
+function addPrescription(row, drug, dosage, startDate, endDate, duration, route, comments) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-prescription-box-table");
 
@@ -60,10 +61,11 @@ function addPrescription(row, drug, dosage, startDate, endDate, duration, route)
     createAndInsertPrescriptionInfo(tableBody, row, "end-date", endDate);
     createAndInsertPrescriptionInfo(tableBody, row, "duration", duration);
     createAndInsertPrescriptionInfo(tableBody, row, "route", route);
+    createAndInsertPrescriptionInfo(tableBody, row, "comments", comments);
     createAndInsertPrescriptionInfo(tableBody, row, "confirmation", null);
 
     // save value to hashmap
-    saveToHash(row, drug, dosage, startDate, endDate, duration, route);
+    saveToHash(row, drug, dosage, startDate, endDate, duration, route, comments);
 }
 
 function assignEvent() {
@@ -96,8 +98,9 @@ function assignEvent() {
                     let durationMap = getDurationInfo(row);
                     let duration = durationMap["number"] + " " + durationMap["time"];
                     let route = document.getElementById("input-route-" + row).value;
+                    let comments = document.getElementById("input-route-" + row).value;
 
-                    savedEdit(row, drug, dosage, startDate, endDate, duration, route);
+                    savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments);
 
                 })
             } 
@@ -111,13 +114,14 @@ function assignEvent() {
                 reloadPrescriptionInfo(row, "end-date");
                 reloadPrescriptionInfo(row, "duration");
                 reloadPrescriptionInfo(row, "route");
+                reloadPrescriptionInfo(row, "comments");
                 reloadPrescriptionInfo(row, "confirm");
             }
         });
     }
 }
 
-function saveToHash(row, drug, dosage, startDate, endDate, duration, route) {
+function saveToHash(row, drug, dosage, startDate, endDate, duration, route, comments) {
     if (!hashMap.has("" + row)) {
         hashMap.set("" + row, new Map());
     }
@@ -128,15 +132,17 @@ function saveToHash(row, drug, dosage, startDate, endDate, duration, route) {
     corresponding.set("endDate", endDate);
     corresponding.set("duration", duration);
     corresponding.set("route", route);
+    corresponding.set("comments", comments);
 }
 
-function savedEdit(row, drug, dosage, startDate, endDate, duration, route) {
+function savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments) {
     document.getElementById("prescription-drug-" + row).innerHTML = drug;
     document.getElementById("prescription-dosage-" + row).innerHTML = dosage;
     document.getElementById("prescription-start-date-" + row).innerHTML = startDate;
     document.getElementById("prescription-end-date-" + row).innerHTML = endDate;
     document.getElementById("prescription-duration-" + row).innerHTML = duration;
     document.getElementById("prescription-route-" + row).innerHTML = route;
+    document.getElementById("prescription-comments-" + row).innerHTML = comments;
 
     document.getElementById("select-" + row).selectedIndex = 0;
     document.getElementById("prescription-confirm-" + row).innerHTML = "Confirmed";
@@ -149,6 +155,7 @@ function changeEditable(row) {
     changePrescriptionInfoToEditable(row, "start-date");
     changePrescriptionInfoToEditable(row, "duration");
     changePrescriptionInfoToEditable(row, "route");
+    changePrescriptionInfoToEditable(row, "comments");
     changePrescriptionInfoToEditable(row, "confirm");
 
     addDurationInputsEventListener(row);
@@ -351,6 +358,7 @@ function updatePrescription(row) {
         let endDate = document.getElementById(`prescription-end-date-${row}`).innerHTML;
         let duration = document.getElementById(`prescription-duration-${row}`).innerHTML;
         let route = document.getElementById(`prescription-route-${row}`).innerHTML;
+        let comments = document.getElementById(`prescription-comments-${row}`).innerHTML;
 
         const firstName = sessionStorage.getItem("patientFirstName");
         const lastName = sessionStorage.getItem("patientLastName");
@@ -366,11 +374,12 @@ function updatePrescription(row) {
                 'prescriptionStartDate': startDate, 
                 'prescriptionEndDate': endDate, 
                 'prescriptionDuration': duration, 
-                'prescriptionRoute': route
+                'prescriptionRoute': route,
+                'prescriptionComments': comments,
             },
             success: function (returned_value) {
                 if (returned_value.ok == true) { 
-                    savedEdit(row, drug, dosage, startDate, endDate, duration, route)
+                    savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments)
                     sessionStorage.setItem("prescription", JSON.stringify(returned_value["prescription"]))
                 }
             },
