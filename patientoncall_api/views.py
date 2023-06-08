@@ -16,14 +16,14 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Prescription
+    Medication
 )
 
 from .serializers import (
     PatientUserSerializer,
     MedicalHistorySerializer,
     LabHistorySerializer,
-    PrescriptionSerializer
+    MedicationSerializer
 )
 
 
@@ -100,13 +100,15 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     patientUser = PatientUser.objects.get(patient=user.id)
     medicalHistories = MedicalHistory.objects.filter(patient=user.id).exclude(id__in=toHideIds)
     labHistories = LabHistory.objects.filter(patient=user.id)
-    prescription = Prescription.objects.filter(patient=user.id, status="current")
+    currentMedication = Medication.objects.filter(patient=user.id, status="current")
+    previousMedication = Medication.objects.filter(patient=user.id, status="past")
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
-    prescriptionSerializer = PrescriptionSerializer(prescription, many=True)
+    currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
+    previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
     sessionID = request.session.session_key
     return {
         'ok': True,
@@ -117,7 +119,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'patient-address': patientUserSerializer.data["patientAddress"],
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data,
-        'prescription': prescriptionSerializer.data
+        'current-medication': currentMedicationSerializer.data,
+        'previous-medication': previousMedicationSerializer.data
     }
 
 @csrf_exempt
@@ -139,49 +142,56 @@ def addMedicalHistory(request):
                                status=status.HTTP_201_CREATED)
     
 @csrf_exempt
-def addPrescription(request):
+def addMedication(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
-        Prescription.objects.create(patient=user, 
-                                    drug=request.POST['prescriptionDrug'], 
-                                    dosage=request.POST['prescriptionDosage'], 
-                                    startDate=request.POST['prescriptionStartDate'], 
-                                    endDate=request.POST['prescriptionEndDate'], 
-                                    duration=request.POST['prescriptionDuration'], 
-                                    route=request.POST['prescriptionRoute'],
-                                    comments=request.POST['prescriptionComments'])
-        prescription = Prescription.objects.filter(patient=user.id, status="current")
-        prescriptionSerializer = PrescriptionSerializer(prescription, 
+        Medication.objects.create(patient=user, 
+                                    drug=request.POST['medicationDrug'], 
+                                    dosage=request.POST['medicationDosage'], 
+                                    startDate=request.POST['medicationStartDate'], 
+                                    endDate=request.POST['medicationEndDate'], 
+                                    duration=request.POST['medicationDuration'], 
+                                    route=request.POST['medicationRoute'],
+                                    comments=request.POST['medicationComment'])
+        currentMedication = Medication.objects.filter(patient=user.id, status="current")
+        currentMedicationSerializer = MedicationSerializer(currentMedication, 
                                                         many=True)
         return JsonResponse({'ok': True,
-                             'prescription': prescriptionSerializer.data},
+                             'medication': currentMedicationSerializer.data},
                                status=status.HTTP_201_CREATED)
 
 
 @csrf_exempt
-def updatePrescription(request):
+def updateMedication(request):
     if request.method == "POST":
         json_data = json.loads(request.body)
         user = matchPatientUser(json_data['patientId'], json_data['patientName'])
         for id in json_data["deleteIds"]:
-            my_object = Prescription.objects.get(id=id)
+            my_object = Medication.objects.get(id=id)
             my_object.status = "past"
             my_object.save()
         
-        for new_medication in json_data["addItems"]:
-            Prescription.objects.create(patient=user, 
-                                        drug=new_medication['prescriptionDrug'], 
-                                        dosage=new_medication['prescriptionDosage'], 
-                                        startDate=new_medication['prescriptionStartDate'], 
-                                        endDate=new_medication['prescriptionEndDate'], 
-                                        duration=new_medication['prescriptionDuration'], 
-                                        route=new_medication['prescriptionRoute'],
-                                        comments=new_medication['prescriptionComments'])
-        prescription = Prescription.objects.filter(patient=user.id, status="current")
-        prescriptionSerializer = PrescriptionSerializer(prescription, 
+        for new_medication in json_data["editItems"]:
+            my_object = Medication.objects.get(id=new_medication['medicationID'])
+            my_object.status = "past"
+            my_object.save()
+            Medication.objects.create(patient=user, 
+                                        drug=new_medication['medicationDrug'], 
+                                        dosage=new_medication['medicationDosage'], 
+                                        startDate=new_medication['medicationStartDate'], 
+                                        endDate=new_medication['medicationEndDate'], 
+                                        duration=new_medication['medicationDuration'], 
+                                        route=new_medication['medicationRoute'],
+                                        comments=new_medication['medicationComments'])
+        currentMedication = Medication.objects.filter(patient=user.id, status="current")
+        currentMedicationSerializer = MedicationSerializer(currentMedication, 
+                                                        many=True)
+        previousMedication = Medication.objects.filter(patient=user.id, status="past")
+        previousMedicationSerializer = MedicationSerializer(previousMedication, 
                                                         many=True)
         return JsonResponse({'ok': True,
-                             'prescription': prescriptionSerializer.data},
+                             'current-medication': currentMedicationSerializer.data,
+                             'previous-medication': previousMedicationSerializer.data},
                                status=status.HTTP_201_CREATED)
 
 def calculateAge(birthdate):
@@ -196,28 +206,3 @@ def calculateAge(birthdate):
         age -= 1
 
     return age
-
-@csrf_exempt
-def pastEntry(request):
-    if request.method == "POST":
-        my_object = Prescription.objects.get(id=request.POST['id'])
-        my_object.status = "past"
-        my_object.save()
-        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
-        prescription = Prescription.objects.filter(patient=user.id, status="current")
-        prescriptionSerializer = PrescriptionSerializer(prescription, 
-                                                        many=True)
-        return JsonResponse({'ok': True,
-                             'prescription': prescriptionSerializer.data},
-                               status=status.HTTP_201_CREATED)
-    
-@csrf_exempt
-def getPrescription(request):
-    if request.method == "POST":
-        user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
-        prescription = Prescription.objects.filter(patient=user.id, status="current")
-        prescriptionSerializer = PrescriptionSerializer(prescription, 
-                                                        many=True)
-        return JsonResponse({'ok': True,
-                             'prescription': prescriptionSerializer.data},
-                               status=status.HTTP_201_CREATED)

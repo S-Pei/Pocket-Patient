@@ -28,7 +28,7 @@ class LabHistory(models.Model):
     report = models.ImageField(blank=True, null=True)
 
 
-class Prescription(models.Model):
+class Medication(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     drug = models.CharField(max_length=256)
