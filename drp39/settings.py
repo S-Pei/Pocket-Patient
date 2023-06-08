@@ -102,6 +102,7 @@ WSGI_APPLICATION = 'drp39.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
+        'CONN_MAX_AGE': 0,
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
