@@ -187,8 +187,10 @@ def addVisit(request):
                 visitType = request.POST.get("visitType"),
                 letter=request.FILES["letter"]
             )
-            return render(request, "patientOnCall/visit.html")
+            print("is valid")
+            return render(request, "patientOnCall/visit.html", {'created': True})
     else:
         form = AddVisitForm()
-    return render(request, "patientOnCall/add-visit.html", {'form': form})
+        print("add visit")
+        return render(request, "patientOnCall/add-visit.html", {'form': form})
 
