@@ -1,3 +1,44 @@
+#new-prescription-headers-box {
+  display: flex;
+}
+
+.back-button-box {
+  width: 15%;
+  text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-button-box > a > button {
+  font-weight: 700;
+  color: white;
+  border: none;
+  padding: 5px 2em;
+  box-shadow: 1px 1px 4px var(--dark-shade-color);
+}
+
+#new-prescription-headers {
+  width: 85%;
+  padding-left: 20%;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+  margin-bottom: 1em;
+}
+
+#new-prescription-headers > h1{
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+#new-prescription-headers > .main-current-prescription-foot-note{
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 300;
+}
+
 #main-current-prescription-box {
     padding-top: 2em;
     max-height: 60vh;
@@ -8,7 +49,7 @@
 display: flex;
 }
 
-#main-current-prescription-box h2 {
+#main-current-prescription-box h4 {
 flex: 4;
 margin-bottom: 0 !important;
 }
