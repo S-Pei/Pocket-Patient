@@ -8,11 +8,17 @@ var base_url = window.location.origin;
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
+
+  const admissionDate = document.getElementById('#id_admissionDate')
+  const dischargeDate = document.getElementById('#id_dischargeDate')
+
   $(document).ready(function() {
-    $('#id_admissionDate').datepicker({dateFormat: "yy-mm-dd"});
+    $('#id_admissionDate').datepicker({dateFormat: "yy-mm-dd", onSelect: function(dateText, inst){
+      $('#id_dischargeDate').datepicker('option', 'minDate', new Date(dateText))}});
   });
   $(document).ready(function() {
-    $('#id_dischargeDate').datepicker({dateFormat: "yy-mm-dd"});
+    $('#id_dischargeDate').datepicker({dateFormat: "yy-mm-dd", onSelect: function(dateText, inst){
+      $('#id_admissionDate').datepicker('option', 'maxDate', new Date(dateText))}});
   });
   let inputs = $("p input, p textarea, p select")
 
