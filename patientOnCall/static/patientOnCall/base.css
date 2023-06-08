@@ -4,6 +4,7 @@
   --info-lighter-bg-color: #CBEDF4;
   --dark-shade-color: rgba(0, 0, 0, 0.7);
   --table-background-colour: #DBE2E3;
+  --dark-red-colour: #D91313;
 }
 
 .window-box {
@@ -89,6 +90,18 @@
   color: white;
   text-decoration: underline;
   transition: all 0.1s;
+}
+
+#disclaimer-note {
+  max-width: 100%;
+  padding: .5em;
+  border-radius: 15px;
+  border: 3px solid var(--dark-red-colour);
+  color: var(--dark-red-colour);
+  margin: 1em;
+  margin-top: 35%;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .info-table {

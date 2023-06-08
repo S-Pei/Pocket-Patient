@@ -18,3 +18,10 @@ document.getElementById("visit-history").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/visit"
   })
+
+
+if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getItem("displayDisclaimer")) {
+  $("#disclaimer-note").removeClass("invisible");
+} else {
+  $("#disclaimer-note").addClass("invisible");
+}
