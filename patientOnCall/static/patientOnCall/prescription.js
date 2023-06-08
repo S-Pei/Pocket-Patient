@@ -23,12 +23,13 @@ function insertPrescription(prescription) {
                         prescription[i]["startDate"], 
                         prescription[i]["endDate"], 
                         prescription[i]["duration"], 
-                        prescription[i]["route"])
+                        prescription[i]["route"],
+                        prescription[i]["comments"])
       i++;
   }
 }
 
-function addPrescription(drug, dosage, startDate, endDate, duration, route) {
+function addPrescription(drug, dosage, startDate, endDate, duration, route, comments) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-prescription-box-table");
 
@@ -56,12 +57,17 @@ function addPrescription(drug, dosage, startDate, endDate, duration, route) {
     prescriptionRoute.classList.add("info-table-item");
     prescriptionRoute.textContent = route;
 
+    const prescriptionComments = document.createElement("div");
+    prescriptionComments.classList.add("info-table-item");
+    prescriptionComments.textContent = comments;
+
     tableBody.appendChild(prescriptionDrug);
     tableBody.appendChild(prescriptionDosage);
     tableBody.appendChild(prescriptionStartDate);
     tableBody.appendChild(prescriptionEndDate);
     tableBody.appendChild(prescriptionDuration);
     tableBody.appendChild(prescriptionRoute);
+    tableBody.appendChild(prescriptionComments);
 }
 
 document.getElementById("new-prescription").addEventListener("click", (e) => {

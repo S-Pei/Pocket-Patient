@@ -33,6 +33,10 @@
   width: 100%;
 }
 
+#main-current-prescription-box-table {
+  grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 2fr;
+}
+
 #print-button {
   background-color: #E27CA1;
 }
