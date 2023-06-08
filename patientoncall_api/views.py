@@ -182,15 +182,17 @@ def addVisit(request):
             user = matchPatientUser(patientId, patientName)
             MedicalHistory.objects.create(
                 patient=user,
+                admissionDate=request.POST.get("admissionDate"),
+                dischargeDate=request.POST.get("dischargeDate"),
                 summary = request.POST.get("summary"),
                 consultant = request.POST.get("consultant"),
                 visitType = request.POST.get("visitType"),
                 letter=request.FILES["letter"]
             )
-            print("is valid")
+            # print("is valid")
             return render(request, "patientOnCall/visit.html", {'created': True})
     else:
         form = AddVisitForm()
-        print("add visit")
+        # print("add visit")
         return render(request, "patientOnCall/add-visit.html", {'form': form})
 
