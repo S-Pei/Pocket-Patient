@@ -7,6 +7,8 @@ var base_url = window.location.origin;
     const patientID = sessionStorage.getItem("patientID")
     const prescription = JSON.parse(sessionStorage.getItem("prescription"))
 
+    console.log(prescription)
+
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + patientID
 
