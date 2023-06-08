@@ -28,4 +28,4 @@ class LabHistorySerializer(serializers.ModelSerializer):
 class PrescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prescription
-        fields = ('drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'comments')
+        fields = ('id', 'drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'comments')
