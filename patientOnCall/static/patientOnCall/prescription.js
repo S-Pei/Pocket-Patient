@@ -59,9 +59,9 @@ function addPrescription(drug, dosage, startDate, endDate, duration, route, comm
     prescriptionRoute.classList.add("info-table-item");
     prescriptionRoute.textContent = route;
 
-    const prescriptionComments = document.createElement("div");
-    prescriptionComments.classList.add("info-table-item");
-    prescriptionComments.textContent = comments;
+    // const prescriptionComments = document.createElement("div");
+    // prescriptionComments.classList.add("info-table-item");
+    // prescriptionComments.textContent = comments;
 
     tableBody.appendChild(prescriptionDrug);
     tableBody.appendChild(prescriptionDosage);
@@ -69,7 +69,7 @@ function addPrescription(drug, dosage, startDate, endDate, duration, route, comm
     tableBody.appendChild(prescriptionEndDate);
     tableBody.appendChild(prescriptionDuration);
     tableBody.appendChild(prescriptionRoute);
-    tableBody.appendChild(prescriptionComments);
+    // tableBody.appendChild(prescriptionComments);
 }
 
 document.getElementById("new-prescription").addEventListener("click", (e) => {
