@@ -1,4 +1,4 @@
-function create_websocket(openFunction) {
+function create_websocket(openFunction, messageFunction) {
   let connectionString = ''
   if (window.location.protocol == "https:") {
     connectionString += 'wss://';
@@ -13,16 +13,7 @@ function create_websocket(openFunction) {
 
   websocket.onopen = openFunction
 
-  websocket.onmessage = function (response) {
-    let data = JSON.parse(response.data)
-    let event = data["event"]
-
-    if (event == "GRANT_PATIENT_DATA_ACCESS") {
-      let toHideIds = data["ids"];
-      console.log(toHideIds);
-      api_fetch_patient_full_data();
-    }
-  }
+  websocket.onmessage = messageFunction;
 
   return websocket;
 }
