@@ -79,7 +79,8 @@ def getPatientData(request):
         if not user:
             return JsonResponse({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
         if user:
-            data = getAllPatientDataById(request, user)
+            toHideIds = request.POST.getlist('toHideIds[]')
+            data = getAllPatientDataById(request, user, toHideIds)
             return JsonResponse(data, status=status.HTTP_200_OK)
 
 
@@ -94,9 +95,9 @@ def matchPatientUser(patientId, patientName):
     except:
         return None
 
-def getAllPatientDataById(request, user):
+def getAllPatientDataById(request, user, toHideIds=[]):
     patientUser = PatientUser.objects.get(patient=user.id)
-    medicalHistories = MedicalHistory.objects.filter(patient=user.id)
+    medicalHistories = MedicalHistory.objects.filter(patient=user.id).exclude(id__in=toHideIds)
     labHistories = LabHistory.objects.filter(patient=user.id)
     prescription = Prescription.objects.filter(patient=user.id)
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)

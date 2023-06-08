@@ -11,7 +11,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
     sessionStorage.setItem("patientID", patientId);
     sessionStorage.setItem("patientName", patientName);
     connect_to_websocket();
-    api_fetch_patient_full_data();
+    api_fetch_patient_full_data([]);
   }
 })
 
@@ -57,10 +57,21 @@ function status_error(message) {
 
 function connect_to_websocket() {
   if (websocket == null) {
-    websocket = create_websocket(function (event) {
+    websocket = create_websocket(
+      function (event) {
         websocket.send(JSON.stringify({
             "event": "REQUEST_PATIENT_DATA_ACCESS"
           }))
+      },
+      function (response) {
+        let data = JSON.parse(response.data)
+        let event = data["event"]
+    
+        if (event == "GRANT_PATIENT_DATA_ACCESS") {
+          let toHideIds = data["ids"];
+          console.log(toHideIds);
+          api_fetch_patient_full_data(toHideIds);
+        }
       });
   }
 }
@@ -68,41 +79,9 @@ function connect_to_websocket() {
 function disconnect_websocket() {
   if (websocket != null) {
     websocket.close();
-    websocket = null;    
+    websocket = null;
   }
 }
-
-// function create_websocket() {
-//   let connectionString = ''
-//   if (window.location.protocol == "https:") {
-//     connectionString += 'wss://';
-//   } else {
-//     connectionString += 'ws://';
-//   }
-//   connectionString += window.location.host + '/ws/patientoncall/'
-//                       + sessionStorage.getItem("patientID") + '/'
-//                       + sessionStorage.getItem("patientName") + '/'
-
-//   websocket = new WebSocket(connectionString);
-
-//   websocket.onopen = function (event) {
-//     websocket.send(JSON.stringify({
-//         "event": "REQUEST_PATIENT_DATA_ACCESS"
-//       }))
-//   }
-
-//   websocket.onmessage = function (response) {
-//     let data = JSON.parse(response.data)
-//     let event = data["event"]
-
-//     if (event == "GRANT_PATIENT_DATA_ACCESS") {
-//       let toHideIds = data["ids"];
-//       console.log(toHideIds);
-//       api_fetch_patient_full_data();
-//     }
-//   }
-// }
-
 
 // API Functions
 
@@ -131,14 +110,15 @@ function api_verify_valid_patient_credentials(patientId, patientName) {
   });
 }
 
-function api_fetch_patient_full_data() {
+function api_fetch_patient_full_data(toHideIds) {
   console.log('Trying to get patient full data...')
   $.ajax({
     type: "POST",
     url: "api/doctor/patient-data/",
     data: {
         'patientId': sessionStorage.getItem("patientID"),
-        'patientName': sessionStorage.getItem("patientName")
+        'patientName': sessionStorage.getItem("patientName"),
+        'toHideIds': toHideIds
     },
     success: function (returned_value) {
       if (returned_value.ok == true) {
