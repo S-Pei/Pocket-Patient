@@ -15,6 +15,7 @@
     text-align: left;
     padding: 10px;
     clear: both;
+    border: 0px; 
 }
 
 #add-visit-wrapper {

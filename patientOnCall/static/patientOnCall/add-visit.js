@@ -8,21 +8,27 @@ var base_url = window.location.origin;
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
-  let inputs = $("p input, p textarea")
+  $(document).ready(function() {
+    $('#id_admissionDate').datepicker({dateFormat: "yy-mm-dd"});
+  });
+  $(document).ready(function() {
+    $('#id_dischargeDate').datepicker({dateFormat: "yy-mm-dd"});
+  });
+  let inputs = $("p input, p textarea, p select")
 
   $("#patient-medical-history-add-entry").submit(function(eventObj) {
     let newMedicalHistory = {}
-    console.log(inputs)
+    // console.log(inputs)
     inputs.each(function () {
-      console.log($(this))
+      // console.log($(this))
       let attr = $(this).attr("name");
-      console.log(attr)
+      // console.log(attr)
       let value = $(this).val();
       let valid_attrs = ["admissionDate", "dischargeDate", "summary", "consultant", "visitType","letter"]
-      console.log(valid_attrs.includes(attr))
+      // console.log(valid_attrs.includes(attr))
       if (valid_attrs.includes(attr)) {
         newMedicalHistory[attr] = value;
-        console.log(newMedicalHistory)
+        // console.log(newMedicalHistory)
       }
     })
     // valid_attrs.forEach

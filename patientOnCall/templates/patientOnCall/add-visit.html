@@ -4,6 +4,7 @@
 {% block content %}
 <head>
    <link rel="stylesheet" href="{% static 'patientOnCall/add-visit.css' %}"></link>  
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 </head>
 <body> 
   {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
@@ -13,7 +14,7 @@
   </div>
 
   <h4 class="section-header">Add Visit Entry</h4>
-    <form class="add-entry-form" id="patient-medical-history-add-entry" method="POST" enctype ="multipart/form-data">
+    <form action="" class="add-entry-form" id="patient-medical-history-add-entry" method="POST" enctype ="multipart/form-data">
       {% csrf_token %}
       <div class="add-history pt-1">
         <label class="mr-2" for="entry-admission-date">Admission Date:</label>
@@ -28,6 +29,10 @@
         <p class="form-control" name="entry-visit-type">{{form.visitType}}</p>   
       </div>
       <div class="add-history pt-1">
+        <label for="entry-consultant">Consultant:</label>
+        <p>John Lee</p>   
+      </div>
+      <div class="add-history pt-1">
         <label for="entry-practice-name">Name of practice:</label> 
          <p>St Mary's Hospital</p>  
       </div>
@@ -40,17 +45,15 @@
         <p class="form-control" name="entry-summary">{{form.summary}}</p>   
       </div>
       <div class="add-history pt-1">
-        <label for="entry-consultant">Consultant:</label>
-        <p class="form-control" name="entry-consultant">{{form.consultant}}</p>   
-      </div>
-      <div class="add-history pt-1">
-        <label for="entry-letter">Letter:</label>
+        <label for="entry-letter">Upload Letter:</label>
         <p class="form-control" name="entry-letter">{{form.letter}}</p>   
       </div>
-
       <input class="add-button" type="submit" value="Save" id="add-visit">
     </form> 
     
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
     <script src="{% static 'patientOnCall/add-visit.js' %}"></script> 
   </body>  
   {% endblock %}

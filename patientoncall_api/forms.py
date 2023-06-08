@@ -6,4 +6,4 @@ class AddVisitForm(ModelForm):
   class Meta:
       model = MedicalHistory
       exclude = ('id', 'patient')
-      admissionDate = forms.DateField(widget=forms.SelectDateWidget())
+

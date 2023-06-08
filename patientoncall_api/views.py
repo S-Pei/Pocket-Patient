@@ -187,7 +187,7 @@ def addVisit(request):
                 summary = request.POST.get("summary"),
                 consultant = request.POST.get("consultant"),
                 visitType = request.POST.get("visitType"),
-                letter=request.FILES["letter"]
+                letter=request.FILES["letter"] if 'letter' in request.FILES else False
             )
             # print("is valid")
             return render(request, "patientOnCall/visit.html", {'created': True})
