@@ -144,11 +144,11 @@ def addMedicalHistory(request):
                              'medical-history': medicalHistorySerializer.data},
                                status=status.HTTP_201_CREATED)
     
-csrf_exempt
+@csrf_exempt
 def addMedication(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
-        Medication.objects.create(patient=user, 
+        obj = Medication.objects.create(patient=user, 
                                     drug=request.POST['medicationDrug'], 
                                     dosage=request.POST['medicationDosage'], 
                                     startDate=request.POST['medicationStartDate'], 
@@ -160,6 +160,7 @@ def addMedication(request):
         currentMedicationSerializer = MedicationSerializer(currentMedication, 
                                                         many=True)
         return JsonResponse({'ok': True,
+                             'objID': obj.id,
                              'medication': currentMedicationSerializer.data},
                                status=status.HTTP_201_CREATED)
 

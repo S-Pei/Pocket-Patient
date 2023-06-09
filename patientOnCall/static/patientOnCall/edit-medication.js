@@ -1,21 +1,43 @@
 var base_url = window.location.origin;
 
-var hashMap = new Map();
+var dict = {};
 
 (function() {
-  
-    const firstName = sessionStorage.getItem("patientFirstName")
-    const lastName = sessionStorage.getItem("patientLastName")
-    const patientID = sessionStorage.getItem("patientID")
-    const medication = JSON.parse(sessionStorage.getItem("currentMedication"))
+    const value = sessionStorage.getItem('medicationDict');
+    if (value !== null && value !== undefined) {
+        dict = JSON.parse(sessionStorage.getItem("medicationDict"))
+        console.log(dict)
+        var i = 0
+        while (i < Object.keys(dict).length) {
+            const status = dict["" + i]["status"];
+            if (status != "delete") {
+                insertFromDict(i, dict["" + i]["drug"], 
+                                dict["" + i]["dosage"], 
+                                dict["" + i]["startDate"], 
+                                dict["" + i]["endDate"], 
+                                dict["" + i]["duration"], 
+                                dict["" + i]["route"],
+                                dict["" + i]["comments"])
+            }
+            i++;
+        }
+        assignEvent();
+    }
+    else {
+        console.log("not stored")
+        const firstName = sessionStorage.getItem("patientFirstName")
+        const lastName = sessionStorage.getItem("patientLastName")
+        const patientID = sessionStorage.getItem("patientID")
+        const medication = JSON.parse(sessionStorage.getItem("currentMedication"))
 
-    document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-id").innerHTML 
-      = "Patient ID: " + patientID
+        document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
+        document.getElementById("patient-id").innerHTML 
+        = "Patient ID: " + patientID
 
-    insertMedication(medication);
+        insertMedication(medication);
 
-    assignEvent();
+        assignEvent();
+    }
 })();
 
 
@@ -64,8 +86,24 @@ function addMedication(row, id, drug, dosage, startDate, endDate, duration, rout
     createAndInsertMedicationInfo(tableBody, row, "comments", comments);
     createAndInsertMedicationInfo(tableBody, row, "confirmation", null);
 
-    // save value to hashmap
-    saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, status, comments);
+    // save value to dict
+    saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, status, comments);
+}
+
+function insertFromDict(row, drug, dosage, startDate, endDate, duration, route, comments) {
+    var tableBody = document.getElementById("main-current-medication-box-table");
+
+    console.log("attempt insert")
+    // Insert all information in medication
+    createAndInsertMedicationInfo(tableBody, row, "action", null);
+    createAndInsertMedicationInfo(tableBody, row, "drug", drug);
+    createAndInsertMedicationInfo(tableBody, row, "dosage", dosage);
+    createAndInsertMedicationInfo(tableBody, row, "start-date", startDate);
+    createAndInsertMedicationInfo(tableBody, row, "end-date", endDate);
+    createAndInsertMedicationInfo(tableBody, row, "duration", duration);
+    createAndInsertMedicationInfo(tableBody, row, "route", route);
+    createAndInsertMedicationInfo(tableBody, row, "comments", comments);
+    createAndInsertMedicationInfo(tableBody, row, "confirmation", null);
 }
 
 function assignEvent() {
@@ -95,8 +133,8 @@ function assignEvent() {
                     let dosage = document.getElementById("input-dosage-" + row).value;
                     let startDate = document.getElementById("input-start-date-" + row).value;
                     let endDate = document.getElementById("medication-end-date-" + row).innerHTML;
-                    let durationMap = getDurationInfo(row);
-                    let duration = durationMap["number"] + " " + durationMap["time"];
+                    let durationDict = getDurationInfo(row);
+                    let duration = durationDict["number"] + " " + durationDict["time"];
                     let route = document.getElementById("input-route-" + row).value;
                     let comments = document.getElementById("input-comments-" + row).value;
 
@@ -111,7 +149,6 @@ function assignEvent() {
             else {
                 reloadUnEditedContent(row)
             }
-            console.log(hashMap)
         });
     }
 }
@@ -127,20 +164,19 @@ function reloadUnEditedContent(row) {
     reloadMedicationInfo(row, "confirm");
 }
 
-function saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
-    if (!hashMap.has("" + row)) {
-        hashMap.set("" + row, new Map());
+function saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
+    if (!dict.hasOwnProperty("" + row)) {
+        dict["" + row] = {};
     }
-    corresponding = hashMap.get("" + row);
-    corresponding.set("id", id);
-    corresponding.set("drug", drug);
-    corresponding.set("dosage", dosage);
-    corresponding.set("startDate", startDate);
-    corresponding.set("endDate", endDate);
-    corresponding.set("duration", duration);
-    corresponding.set("route", route);
-    corresponding.set("status", status)
-    corresponding.set("comments", comments);
+    dict["" + row]["id"] = id;
+    dict["" + row]["drug"] = drug;
+    dict["" + row]["dosage"] = dosage;
+    dict["" + row]["startDate"] = startDate;
+    dict["" + row]["endDate"] = endDate;
+    dict["" + row]["duration"] = duration;
+    dict["" + row]["route"] = route;
+    dict["" + row]["status"] = status;
+    dict["" + row]["comments"] = comments;
 }
 
 function savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments) {
@@ -152,22 +188,21 @@ function savedEdit(row, drug, dosage, startDate, endDate, duration, route, comme
     document.getElementById("medication-route-" + row).innerHTML = route;
     document.getElementById("medication-comments-" + row).innerHTML = comments;
 
-    updateHash(row, drug, dosage, startDate, endDate, duration, route, "edited", comments)
+    updateDict(row, drug, dosage, startDate, endDate, duration, route, "edited", comments)
 
     document.getElementById("select-" + row).selectedIndex = 0;
     document.getElementById("medication-confirm-" + row).innerHTML = "Confirmed";
 }
 
-function updateHash(row, drug, dosage, startDate, endDate, duration, route, status, comments) {
-    corresponding = hashMap.get("" + row);
-    corresponding.set("drug", drug);
-    corresponding.set("dosage", dosage);
-    corresponding.set("startDate", startDate);
-    corresponding.set("endDate", endDate);
-    corresponding.set("duration", duration);
-    corresponding.set("route", route);
-    corresponding.set("status", status)
-    corresponding.set("comments", comments);
+function updateDict(row, drug, dosage, startDate, endDate, duration, route, status, comments) {
+    dict["" + row]["drug"] =  drug;
+    dict["" + row]["dosage"] =  dosage;
+    dict["" + row]["startDate"] =  startDate;
+    dict["" + row]["endDate"] =  endDate;
+    dict["" + row]["duration"] =  duration;
+    dict["" + row]["route"] =  route;
+    dict["" + row]["status"] =  status
+    dict["" + row]["comments"] =  comments;
 }
 
 function changeEditable(row) {
@@ -393,12 +428,13 @@ function updateMedication() {
     }
 
     for (i=0; i < medication.length; i++) {
-        let currMap = hashMap.get("" + i)
-        if (currMap.get("status") == "delete") {
-            updates["deleteIds"].push({'medicationID': currMap.get("id"),
-                                        'medicationComments': currMap.get("comments")});
+        
+        let currDict = dict["" + i]
+        if (currDict["status"] == "delete") {
+            updates["deleteIds"].push({'medicationID': currDict["id"],
+                                        'medicationComments': currDict["comments"]});
         } else {
-            if (currMap.get("status") == "edited") {
+            if (currDict["status"] == "edited") {
                 let drug = document.getElementById(`medication-drug-${i}`).innerHTML;
                 let dosage = document.getElementById(`medication-dosage-${i}`).innerHTML;
                 let startDate = document.getElementById(`medication-start-date-${i}`).innerHTML;
@@ -410,7 +446,7 @@ function updateMedication() {
                 updates["editItems"].push({
                     'patientID': sessionStorage.getItem("patientID"),
                     'patientName': firstName + ' ' + lastName,
-                    'medicationID': currMap.get("id"),
+                    'medicationID': currDict["id"],
                     'medicationDrug': drug, 
                     'medicationDosage': dosage,
                     'medicationStartDate': startDate, 
@@ -423,7 +459,6 @@ function updateMedication() {
         }
     }
 
-    console.log(updates)
 
     $.ajax({
       type: "POST",
@@ -446,7 +481,12 @@ document.getElementById("save-medication").addEventListener("click", (e) => {
 })
 
 document.getElementById("add-medication-button").addEventListener("click", (e) => {
+    sessionStorage.setItem("medicationDict", JSON.stringify(dict));
     window.location.href = "/add-medication"
+    // console.log(dict)
+    // console.log(sessionStorage.getItem("medicationDict"))
+    // console.log(JSON.parse(sessionStorage.getItem("medicationDict")))
+
 })
 
 // DELETE PRESCRIPTION
@@ -496,8 +536,9 @@ function showCommentSection(row) {
 
             popUpMask.remove();
         
-            hashMap.get("" + row).set("status", "delete");
-            hashMap.get("" + row).set("comments", commentPopUp.value);
+            const key = "" + row
+            dict["" + row]["status"] = "delete";
+            dict["" + row]["comments"] = commentPopUp.value;
         }
     })
 

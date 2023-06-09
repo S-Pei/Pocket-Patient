@@ -4,16 +4,15 @@ document.getElementById("medication-submit").addEventListener("click", (e) => {
     let drug = document.getElementById("medication-drug").value;
     let dosage = document.getElementById("medication-dosage").value;
     let startDate = document.getElementById("medication-start-date").value;
-    // let endDate = document.getElementById("medication-end-date").value;
     let durationNum = document.getElementById("medication-duration-num").value;
     let durationUnit = document.getElementById("medication-duration-unit").value;
+    let endDate = addTime(startDate, parseInt(durationNum), durationUnit);
+    let duration = `${durationNum} ${durationUnit}`;
     let route = document.getElementById("medication-route").value;
     let comment = document.getElementById("medication-comment").value;
 
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
-  
-    console.log("hello")
 
     //compare to database
     $.ajax({
@@ -25,15 +24,21 @@ document.getElementById("medication-submit").addEventListener("click", (e) => {
         'medicationDrug': drug, 
         'medicationDosage': dosage, 
         'medicationStartDate': startDate, 
-        'medicationEndDate': addTime(startDate, parseInt(durationNum), durationUnit), 
-        'medicationDuration': `${durationNum} ${durationUnit}`, 
+        'medicationEndDate': endDate, 
+        'medicationDuration': duration, 
         'medicationRoute': route,
         'medicationComment': comment
       },
       success: function (returned_value) {
         if (returned_value.ok == true) {
-          sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["medication"]))
-          window.location.href = "/medication"
+          const currentMedication = returned_value["medication"];
+          sessionStorage.setItem("currentMedication", JSON.stringify(currentMedication));
+          const currentDict = JSON.parse(sessionStorage.getItem("medicationDict"));
+          console.log(sessionStorage.getItem("medicationDict"))
+          addHash(currentDict, currentMedication.length - 1, returned_value["objID"], drug, dosage, startDate, endDate, duration, route, "current", comment);
+          sessionStorage.setItem("medicationDict", JSON.stringify(currentDict));
+          console.log(currentDict);
+          window.location.href = "/edit-medication"
         }
       },
       error: function () { }
@@ -64,4 +69,17 @@ function addTime(dateStr, num, unit) {
     year = date.getFullYear();
 
     return `${year}-${month}-${day}`;
+}
+
+function addHash(dict, row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
+  dict["" + row] = {};
+  dict["" + row]["id"] = id;
+  dict["" + row]["drug"] = drug;
+  dict["" + row]["dosage"] = dosage;
+  dict["" + row]["startDate"] = startDate;
+  dict["" + row]["endDate"] = endDate;
+  dict["" + row]["duration"] = duration;
+  dict["" + row]["route"] = route;
+  dict["" + row]["status"] = status;
+  dict["" + row]["comments"] = comments;
 }

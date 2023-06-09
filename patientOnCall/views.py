@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from patientoncall_api.forms import AddVisitForm
 
 def index(request):
+    request.session.clear()
     return render(request, 'patientOnCall/index.html')
 
 def displayInfo(request):
