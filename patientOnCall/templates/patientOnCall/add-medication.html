@@ -5,9 +5,17 @@
 <head>
   <link rel="stylesheet" href="{% static 'patientOnCall/add-medication.css' %}"></link>
 </head>
-<body>   
-    <h4>Add New Medication</h4>
-    <form class="add-entry-form d-flex flex-row justify-content-between" id="medication-add-entry">
+<body>
+  <div class="back-button-box">
+    <a href="/edit-medication/">
+      <button class="green-btn">back</button>
+    </a>
+  </div>
+  <div id="main-box-wrapper">
+    <div id="add-new-medication-title">
+      <h1 class="p-3">Add New Medication</h1>
+    </div>
+    <form class="add-entry-form p-3 d-flex flex-column justify-content-between" id="medication-add-entry">
         <div class="add-medication pt-1">
         <label class="mr-2" for="medication-drug">Drug</label>
         <input type="text"  name="medication-drug" id="medication-drug"></input>
@@ -24,15 +32,17 @@
         <label for="medication-end-date">End Date</label>
         <input type="date" name="medication-end-date" id="medication-end-date"></input>
         </div> -->
-        <div class="add-medication pt-1">
+        <div class="add-medication pt-1" id="add-medication-duration">
           <label>Duration</label>
-          <input type="number" name="medication-duration" id="medication-duration-num" required min="1" step="1"></input>
-          <select id="medication-duration-unit">
-            <option value="day">Day(s)</option>
-            <option value="week">Week(s)</option>
-            <option value="month">Month(s)</option>
-            <option value="year">Year(s)</option>
-          </select>
+          <div id="duration-inputs">
+            <input type="number" name="medication-duration" id="medication-duration-num" required min="1" step="1"></input>
+            <select id="medication-duration-unit">
+              <option value="day">Day(s)</option>
+              <option value="week">Week(s)</option>
+              <option value="month">Month(s)</option>
+              <option value="year">Year(s)</option>
+            </select>  
+          </div>
         </div>
         <div class="add-medication pt-1">
           <label for="medication-route">Route</label>
@@ -43,9 +53,10 @@
           <input type="text" name="medication-comment" id="medication-comment"></input>
         </div>  
         <div class="add-precription">
-        <input class="btn btn-primary" type="submit" value="Submit" id="medication-submit">
+        <input class="add-button" type="submit" value="Submit" id="medication-submit">
         </div>
     </form>
+  </div>
     <script src="{% static 'patientOnCall/add-medication.js' %}"></script>
 
 </body>

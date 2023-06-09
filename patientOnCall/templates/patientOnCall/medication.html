@@ -6,13 +6,12 @@
   <link rel="stylesheet" href="{% static 'patientOnCall/medication.css' %}"></link>
 </head>
 <body>
-  {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
   <div class="container-fluid p-3 mb-3 patient-identity">
     <h1 id="patient-name"></h1>
     <h2 id="patient-id"></h2>
   </div>
   <div class="p-3" id="main-medication-box">
-    <div class="p-3" id="main-current-medication-box">
+    <div class="p-3 medication-box" id="main-current-medication-box">
       <div id="main-current-medication-box-headers">
         <h2 class="section-header">Current Medications:</h2>
         <button class="" id="print-button">print</button>
@@ -30,9 +29,9 @@
       <div class="main-current-medication-foot-note">
         last medication date: 1/1/2013
       </div>
-      <div class="add-button-box"><button id="edit-medication" class="add-button">New medication</button></div>
+      <div class="add-button-box"><button id="edit-medication" class="add-button">Edit medication</button></div>
     </div>
-    <div class="p-3" id="main-current-medication-box">
+    <div class="p-3 medication-box" id="main-past-medication-box">
       <div id="main-current-medication-box-headers">
         <h2 class="section-header">Previous Medications:</h2>
       </div>
@@ -46,36 +45,6 @@
         <div class="info-table-item info-table-label">Comments</div>
       </div>
     </div>
-    <!-- <h4>Add New Medication</h4>
-    <form class="add-entry-form d-flex flex-row justify-content-between" id="medication-add-entry">
-      <div class="add-medication pt-1">
-        <label class="mr-2" for="medication-drug">Drug</label>
-        <input type="text"  name="medication-drug" id="medication-drug"></input>
-      </div>
-      <div class="add-medication pt-1">
-        <label for="medication-dosage">Dosage</label>
-        <input type="text" name="medication-dosage" id="medication-dosage"></input>
-      </div>
-      <div class="add-medication pt-1">
-        <label for="medication-start-date">Start Date</label>
-        <input type="date" name="medication-start-date" id="medication-start-date"></input>
-      </div>
-      <div class="add-medication pt-1">
-        <label for="medication-end-date">End Date</label>
-        <input type="date" name="medication-end-date" id="medication-end-date"></input>
-      </div>
-      <div class="add-medication pt-1">
-        <label for="medication-duration">Duration</label>
-        <input type="text" name="medication-duration" id="medication-duration"></input>
-      </div>
-      <div class="add-medication pt-1">
-        <label for="medication-route">Route</label>
-        <input type="text" name="medication-route" id="medication-route"></input>
-      </div>
-      <div class="add-precription">
-        <input class="btn btn-primary" type="submit" value="Submit" id="medication-submit">
-      </div>
-    </form> -->
   </div>
   <script src="{% static 'patientOnCall/medication.js' %}"></script>
 </body>

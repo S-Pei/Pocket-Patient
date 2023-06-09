@@ -1,14 +1,19 @@
-#main-current-medication-box {
+.medication-box {
   padding-top: 2em;
-  max-height: 35vh;
 }
+
+#main-current-medication-box {
+  max-height: 40vh;
+  margin-bottom: 1em;
+}
+
 
 #main-current-medication-box-headers {
   display: flex;
   align-items: center;
 }
 
-#main-current-medication-box h2 {
+.medication-box h2 {
   flex: 4;
   margin-bottom: 0 !important;
   text-align: left;
