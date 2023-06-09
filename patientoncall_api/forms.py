@@ -1,7 +1,8 @@
-
 from django.forms import ModelForm      
-from .models import Photo
+from .models import MedicalHistory
 
-class PhotoForm(ModelForm):
+class AddVisitForm(ModelForm):
   class Meta:
-      model = Photo
+      model = MedicalHistory
+      exclude = ('id', 'patient')
+

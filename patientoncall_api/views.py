@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -26,6 +27,7 @@ from .serializers import (
     MedicationSerializer
 )
 
+from .forms import AddVisitForm
 
 # @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
@@ -53,6 +55,7 @@ class PatientMedicalHistoryApiView(APIView):
         
         user = matchPatientUser(12345, 'Bob Choy')
         request_data = JSONParser().parse(request)
+        # print(request_data)
         date_str = request_data['date']
         summary = request_data['summary']
         if not date_str or not summary:
@@ -141,7 +144,7 @@ def addMedicalHistory(request):
                              'medical-history': medicalHistorySerializer.data},
                                status=status.HTTP_201_CREATED)
     
-@csrf_exempt
+csrf_exempt
 def addMedication(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
@@ -194,7 +197,7 @@ def updateMedication(request):
                              'previous-medication': previousMedicationSerializer.data},
                                status=status.HTTP_201_CREATED)
 
-def calculateAge(birthdate):
+def calculate_age(birthdate):
     # Get the current date
     current_date = date.today()
 
@@ -206,3 +209,28 @@ def calculateAge(birthdate):
         age -= 1
 
     return age
+
+@csrf_exempt
+def addVisit(request):
+    if request.method == "POST":
+        form = AddVisitForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            MedicalHistory.objects.create(
+                patient=user,
+                admissionDate=request.POST.get("admissionDate"),
+                dischargeDate=request.POST.get("dischargeDate"),
+                summary = request.POST.get("summary"),
+                consultant = request.POST.get("consultant"),
+                visitType = request.POST.get("visitType"),
+                letter=request.FILES["letter"] if 'letter' in request.FILES else False
+            )
+            # print("is valid")
+            return render(request, "patientOnCall/visit.html", {'created': True})
+    else:
+        form = AddVisitForm()
+        # print("add visit")
+        return render(request, "patientOnCall/add-visit.html", {'form': form})
+
