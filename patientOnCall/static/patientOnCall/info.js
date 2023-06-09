@@ -23,8 +23,9 @@ var base_url = window.location.origin;
 
 function insertMedHistoryEntries(medicalHistory) {
   var i = 0
-  var maxLines = 6 
-  while (i < maxLines) {
+  var maxLines = 6
+  while (i < maxLines && i < medicalHistory.length) {
+    console.log(medicalHistory[i])
       addMedHistoryEntry(
       medicalHistory[i]["dischargeDate"],
        medicalHistory[i]["summary"],
@@ -36,7 +37,7 @@ function insertMedHistoryEntries(medicalHistory) {
 function addMedHistoryEntry(dischargeDate, summary, addToMedicalHistory) {
     // Create a new entry for the table
     var tableBody = document.getElementById("past-medical-history-entries");
-    if (addToMedicalHistory){
+    if (addToMedicalHistory == true){
         const newEntry = document.createElement("li");
         newEntry.classList.add("past-medical-history-entry", "p-1", "d-flex", 
             "flex-row", "w-100", "mb-2", "rounded-3", "border", "text-black-50")
@@ -53,5 +54,7 @@ function addMedHistoryEntry(dischargeDate, summary, addToMedicalHistory) {
         newEntry.appendChild(entrySummary);
         
         tableBody.appendChild(newEntry);
+
+        console.log(tableBody);
     }
 }
