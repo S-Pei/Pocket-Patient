@@ -7,7 +7,23 @@ from .models import (
     Medication
 )
 
-admin.site.register(MedicalHistory)
-admin.site.register(LabHistory)
-admin.site.register(PatientUser)
-admin.site.register(Medication)
+class PatientUserAdmin(admin.ModelAdmin):
+    list_display = ('patientId', 'patient', 
+                    'patientBirthdate', 'patientAddress')
+
+class MedicalHistoryAdmin(admin.ModelAdmin):
+    list_display = ('patient', 'admissionDate', 'dischargeDate', 
+                    'consultant', 'summary', 'visitType', 'letter', 
+                    'addToMedicalHistory')
+    
+class LabHistoryAdmin(admin.ModelAdmin):
+    list_display = ('patient', 'date', 'report')
+
+class MedicationAdmin(admin.ModelAdmin):
+    list_display = ('patient', 'drug', 'dosage', 'startDate', 'endDate', 
+                    'duration', 'route', 'status', 'comments')
+
+admin.site.register(MedicalHistory, MedicalHistoryAdmin)
+admin.site.register(LabHistory, LabHistoryAdmin)
+admin.site.register(PatientUser, PatientUserAdmin)
+admin.site.register(Medication, MedicationAdmin)
