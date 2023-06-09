@@ -30,7 +30,7 @@ var base_url = window.location.origin;
       let attr = $(this).attr("name");
       // console.log(attr)
       let value = $(this).val();
-      let valid_attrs = ["admissionDate", "dischargeDate", "summary", "consultant", "visitType","letter"]
+      let valid_attrs = ["admissionDate", "dischargeDate", "summary", "consultant", "visitType","letter", "addToMedicalHistory"]
       // console.log(valid_attrs.includes(attr))
       if (valid_attrs.includes(attr)) {
         newMedicalHistory[attr] = value;

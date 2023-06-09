@@ -24,7 +24,7 @@ class MedicalHistory(models.Model):
   consultant =models.CharField(max_length=64, default="", blank=True, null=True)
   visitType = models.CharField(max_length=20, choices=VISIT_TYPE, default='Hospital Visit')
   letter = models.FileField(upload_to='letterattachments/', blank=True, null=True, default=True)
-
+  addToMedicalHistory = models.BooleanField(default=True)
 
 class LabHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
