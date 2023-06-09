@@ -10,6 +10,8 @@ var base_url = window.location.origin;
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
+
+    console.log(medicalHistory)
     insertMedHistoryEntries(medicalHistory);
 })();
 

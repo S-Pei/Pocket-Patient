@@ -431,7 +431,7 @@ document.getElementById("save-medication").addEventListener("click", (e) => {
     updateMedication();
 })
 
-document.getElementById("add-medication").addEventListener("click", (e) => {
+document.getElementById("add-medication-button").addEventListener("click", (e) => {
     window.location.href = "/add-medication"
 })
 
