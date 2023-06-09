@@ -144,7 +144,7 @@ def addMedicalHistory(request):
                              'medical-history': medicalHistorySerializer.data},
                                status=status.HTTP_201_CREATED)
     
-csrf_exempt
+@csrf_exempt
 def addMedication(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
