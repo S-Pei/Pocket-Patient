@@ -32,8 +32,8 @@
               <li class="sidebar-option" id="personal-information">
                 <a href="#">Patient Personal Information</a>
               </li>
-              <li class="sidebar-option" id="prescription">
-                <a href="#">Prescriptions</a>
+              <li class="sidebar-option" id="medication">
+                <a href="#">Medication</a>
               </li>
               <li class="sidebar-option" id="visit-history">
                 <a href="#">Healthcare Visit History</a>
@@ -46,7 +46,12 @@
               </li>
           </ul>
 
+          <div class="invisible" id="disclaimer-note">
+            DISCLAIMER: This patient only disclosed selected medical data.
+            Please seek necessary clarification from the patient.
+          </div>
         </nav>
+        <script src="{% static 'patientOnCall/websocket_utils.js' %}"></script>
         <script src="{% static 'patientOnCall/base.js' %}"></script>
         <div class="main-box">
           {% block content %} {% endblock %} 

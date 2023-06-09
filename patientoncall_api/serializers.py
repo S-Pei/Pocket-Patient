@@ -4,7 +4,7 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Prescription
+    Medication
 )
 
 class PatientUserSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class LabHistorySerializer(serializers.ModelSerializer):
         model = LabHistory
         fields = ('date', 'report')
 
-class PrescriptionSerializer(serializers.ModelSerializer):
+class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Prescription
-        fields = ('drug', 'dosage', 'startDate', 'endDate', 'duration', 'route')
+        model = Medication
+        fields = ('id', 'drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'status', 'comments')

@@ -4,6 +4,7 @@
   --info-lighter-bg-color: #CBEDF4;
   --dark-shade-color: rgba(0, 0, 0, 0.7);
   --table-background-colour: #DBE2E3;
+  --dark-red-colour: #D91313;
 }
 
 .window-box {
@@ -91,12 +92,25 @@
   transition: all 0.1s;
 }
 
+#disclaimer-note {
+  max-width: 100%;
+  padding: .5em;
+  border-radius: 15px;
+  border: 3px solid var(--dark-red-colour);
+  color: var(--dark-red-colour);
+  margin: 1em;
+  margin-top: 35%;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 .info-table {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr 1fr 2fr 1fr;
   margin-top: 1em;
   margin-bottom: .3em;
   border: 1px solid black;
+  max-width: 100%;
 }
 
 .info-table-label {
@@ -107,6 +121,9 @@
   text-align: center;
   background-color: var(--table-background-colour);
   border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .red-btn {

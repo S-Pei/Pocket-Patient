@@ -9,12 +9,19 @@ document.getElementById("patient-summary").addEventListener("click", (e) => {
   window.location.href = base_url + "/main"  
 })
 
-document.getElementById("prescription").addEventListener("click", (e) => {
+document.getElementById("medication").addEventListener("click", (e) => {
     e.preventDefault();
-    window.location.href = base_url + "/prescription"
+    window.location.href = base_url + "/medication"
   })
 
 document.getElementById("visit-history").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/visit"
   })
+
+
+if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getItem("displayDisclaimer") == "true") {
+  $("#disclaimer-note").removeClass("invisible");
+} else {
+  $("#disclaimer-note").addClass("invisible");
+}

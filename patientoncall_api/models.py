@@ -33,7 +33,7 @@ class LabHistory(models.Model):
     report = models.ImageField(blank=True, null=True)
 
 
-class Prescription(models.Model):
+class Medication(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     drug = models.CharField(max_length=256)
@@ -43,3 +43,4 @@ class Prescription(models.Model):
     duration = models.CharField(max_length=1024)
     route = models.CharField(max_length=1024)
     status = models.CharField(max_length=32, default="current")
+    comments = models.CharField(max_length=2048, blank=True, null=True)
