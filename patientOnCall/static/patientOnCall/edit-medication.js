@@ -105,20 +105,25 @@ function assignEvent() {
                 })
             } 
             else if (name === 'del') {
+                reloadUnEditedContent(row);
                 showDeleteButton(row);
             }
             else {
-                reloadMedicationInfo(row, "drug");
-                reloadMedicationInfo(row, "dosage");
-                reloadMedicationInfo(row, "start-date");
-                reloadMedicationInfo(row, "end-date");
-                reloadMedicationInfo(row, "duration");
-                reloadMedicationInfo(row, "route");
-                reloadMedicationInfo(row, "comments");
-                reloadMedicationInfo(row, "confirm");
+                reloadUnEditedContent(row)
             }
         });
     }
+}
+
+function reloadUnEditedContent(row) {
+    reloadMedicationInfo(row, "drug");
+    reloadMedicationInfo(row, "dosage");
+    reloadMedicationInfo(row, "start-date");
+    reloadMedicationInfo(row, "end-date");
+    reloadMedicationInfo(row, "duration");
+    reloadMedicationInfo(row, "route");
+    reloadMedicationInfo(row, "comments");
+    reloadMedicationInfo(row, "confirm");
 }
 
 function saveToHash(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
@@ -319,19 +324,6 @@ function getDurationInfo(row) {
     }
 }
 
-// function dayMultiplier(time) {
-//     switch (time) {
-//         case "day":
-//             return 1;
-//         case "week":
-//             return 7;
-//         case "month":
-//             return 30;
-//         case "year":
-//             return 365;
-//     }
-// }
-
 function addTime(dateStr, num, unit) {
     const dateParts = dateStr.split('-');
     var day = parseInt(dateParts[2], 10);
@@ -389,7 +381,8 @@ function updateMedication() {
     for (i=0; i < medication.length; i++) {
         let currMap = hashMap.get("" + i)
         if (currMap.get("status") == "past") {
-            updates["deleteIds"].push(currMap.get("id"));
+            updates["deleteIds"].push({'medicationID': currMap.get("id"),
+                                        'medicationComments': currMap.get("comments")});
         } else {
             if (currMap.get("status") == "edited") {
                 let drug = document.getElementById(`medication-drug-${i}`).innerHTML;
@@ -450,13 +443,70 @@ function showDeleteButton(row) {
     deleteButton.addEventListener("click", (e) => { 
         e.preventDefault();
 
-        deleteMedication(row);
-        
-        hashMap.get("" + row).set("status", "past")
+        showCommentSection(row);
     });
     $(`#medication-confirm-${row}`).html(deleteButton);
 }
 
 function deleteMedication(row) { 
     $(`.medication-${row}`).remove();
+}
+
+function showCommentSection(row) {
+    const elem = document.getElementById(`medication-comments-${row}`);
+
+    let popUpMask = document.createElement("div");
+    popUpMask.classList.add("white-fade-mask");
+    popUpMask.id = "pop-up-mask";
+
+    let confirmComment = document.createElement("div");
+    
+    confirmComment.id = "confirm-comment";
+    let commentPopUp = document.createElement("textarea");
+    commentPopUp.type = "text";
+    commentPopUp.name = `comment-pop-up`;
+    commentPopUp.id = `comment-pop-up`;
+    commentPopUp.placeholder = 'Please state the reason why this medication is to be deleted.';
+    commentPopUp.value = elem.textContent
+
+    confirmComment.appendChild(commentPopUp);
+
+    popUpMask.addEventListener("click", (e) => { 
+        e.preventDefault();
+        // Remove the element
+        if (e.target.id == "pop-up-mask" || e.target.id == "delete-cancel-button") {
+            popUpMask.remove();
+        }
+        else if (e.target.id == "delete-confirm-button") {
+            deleteMedication(row);
+
+            popUpMask.remove();
+        
+            hashMap.get("" + row).set("status", "past");
+            hashMap.get("" + row).set("comments", commentPopUp.value);
+        }
+    })
+
+    let buttonsContainer = document.createElement("div");
+    buttonsContainer.id = "delete-buttons-container"
+
+    confirmButton = document.createElement("button");
+    confirmButton.textContent = "Save Comment";
+    confirmButton.id = "delete-confirm-button";
+
+    cancelButton = document.createElement("button");
+    cancelButton.textContent = "Cancel";
+    cancelButton.id = "delete-cancel-button";
+
+    
+    buttonsContainer.appendChild(confirmButton);
+    buttonsContainer.appendChild(cancelButton);
+
+    confirmComment.appendChild(buttonsContainer);
+
+    document.getElementsByTagName("body")[0].appendChild(popUpMask);
+
+    document.getElementById("pop-up-mask").appendChild(confirmComment);
+    
+
 }
