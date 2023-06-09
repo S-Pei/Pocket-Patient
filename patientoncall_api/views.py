@@ -169,9 +169,10 @@ def updateMedication(request):
     if request.method == "POST":
         json_data = json.loads(request.body)
         user = matchPatientUser(json_data['patientId'], json_data['patientName'])
-        for id in json_data["deleteIds"]:
-            my_object = Medication.objects.get(id=id)
+        for deleted_medication in json_data["deleteIds"]:
+            my_object = Medication.objects.get(id=deleted_medication['medicationID'])
             my_object.status = "past"
+            my_object.comments = deleted_medication['medicationComments']
             my_object.save()
         
         for new_medication in json_data["editItems"]:
