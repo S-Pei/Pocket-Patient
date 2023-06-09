@@ -43,4 +43,4 @@ class Medication(models.Model):
     duration = models.CharField(max_length=1024)
     route = models.CharField(max_length=1024)
     status = models.CharField(max_length=32, default="current")
-    comments = models.CharField(max_length=2048, blank=True, null=True)
+    comments = models.CharField(max_length=1024, blank=True, null=True)
