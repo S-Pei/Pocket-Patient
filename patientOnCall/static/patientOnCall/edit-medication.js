@@ -111,6 +111,7 @@ function assignEvent() {
             else {
                 reloadUnEditedContent(row)
             }
+            console.log(hashMap)
         });
     }
 }
@@ -151,10 +152,22 @@ function savedEdit(row, drug, dosage, startDate, endDate, duration, route, comme
     document.getElementById("medication-route-" + row).innerHTML = route;
     document.getElementById("medication-comments-" + row).innerHTML = comments;
 
-    hashMap.get("" + row).set("status", "edited")
+    updateHash(row, drug, dosage, startDate, endDate, duration, route, "edited", comments)
 
     document.getElementById("select-" + row).selectedIndex = 0;
     document.getElementById("medication-confirm-" + row).innerHTML = "Confirmed";
+}
+
+function updateHash(row, drug, dosage, startDate, endDate, duration, route, status, comments) {
+    corresponding = hashMap.get("" + row);
+    corresponding.set("drug", drug);
+    corresponding.set("dosage", dosage);
+    corresponding.set("startDate", startDate);
+    corresponding.set("endDate", endDate);
+    corresponding.set("duration", duration);
+    corresponding.set("route", route);
+    corresponding.set("status", status)
+    corresponding.set("comments", comments);
 }
 
 function changeEditable(row) {
@@ -350,14 +363,15 @@ function addTime(dateStr, num, unit) {
 }
 
 function reloadMedicationInfo(row, type) {
+    const medication = JSON.parse(sessionStorage.getItem("currentMedication"));
     if (type == "confirm") {
         document.getElementById(`medication-${type}-${row}`).innerHTML = "Confirmed"
     } else if (type == "start-date") {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = hashMap.get("" + row).get("startDate");
+        document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row]["startDate"];
     } else if (type == "end-date") {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = hashMap.get("" + row).get("endDate");
+        document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row]["endDate"];
     } else {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = hashMap.get("" + row).get(type);
+        document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row][`${type}`];
     }
 }
 
@@ -380,7 +394,7 @@ function updateMedication() {
 
     for (i=0; i < medication.length; i++) {
         let currMap = hashMap.get("" + i)
-        if (currMap.get("status") == "past") {
+        if (currMap.get("status") == "delete") {
             updates["deleteIds"].push({'medicationID': currMap.get("id"),
                                         'medicationComments': currMap.get("comments")});
         } else {
@@ -482,7 +496,7 @@ function showCommentSection(row) {
 
             popUpMask.remove();
         
-            hashMap.get("" + row).set("status", "past");
+            hashMap.get("" + row).set("status", "delete");
             hashMap.get("" + row).set("comments", commentPopUp.value);
         }
     })
