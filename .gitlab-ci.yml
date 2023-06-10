@@ -24,9 +24,9 @@ deploy-heroku-job:
     - gem install dpl
     - dpl --provider=heroku --app=patientoncall --api-key=$HEROKU_AUTH_TOKEN
     # - heroku run python manage.py migrate --app patientoncall --api-key=$HEROKU_AUTH_TOKEN
-  only:
-    refs:
-      - tags
+  # only:
+    # refs:
+      # - tags
       # - master
   environment:
     name: deployment
