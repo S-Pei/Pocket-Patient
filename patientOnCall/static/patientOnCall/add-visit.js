@@ -33,7 +33,13 @@ var base_url = window.location.origin;
       let valid_attrs = ["admissionDate", "dischargeDate", "summary", "consultant", "visitType","letter", "addToMedicalHistory"]
       // console.log(valid_attrs.includes(attr))
       if (valid_attrs.includes(attr)) {
-        newMedicalHistory[attr] = value;
+        if (attr === "letter") {
+          newMedicalHistory[attr] = value.replace(/C:\\fakepath\\/, '/media/letterattachments/');
+          console.log(base_url)
+          console.log(newMedicalHistory[attr])
+        } else {
+          newMedicalHistory[attr] = value;
+        }
         // console.log(newMedicalHistory)
       }
     })
@@ -49,6 +55,11 @@ var base_url = window.location.origin;
     return true;
 });
 })();
+
+// function storeFileInSession () {
+//   var file = document.getElementById('#id_letter').files[0];
+//   sessionStorage.input = JSON.stringify(file)
+// }
 
 // function enterVisitEntry() {
 //   document.getElementById("add-visit").addEventListener("click", (e) => {
