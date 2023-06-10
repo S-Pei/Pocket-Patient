@@ -26,6 +26,9 @@ class MedicalHistory(models.Model):
   letter = models.FileField(upload_to='letterattachments/', blank=True, null=True, default=True)
   addToMedicalHistory = models.BooleanField(default=True)
 
+  class Meta:
+     ordering = ('-admissionDate',)
+
 class LabHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)

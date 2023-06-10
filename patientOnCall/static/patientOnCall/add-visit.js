@@ -49,7 +49,8 @@ var base_url = window.location.origin;
     $(this).append(`<input type="hidden" name="patientId" value=${patientId} /> `);
     $(this).append(`<input type="hidden" name="patientName" value=${patientName} /> `);
     console.log(newMedicalHistory)
-    medicalHistory.push(newMedicalHistory)
+    // medicalHistory.push(newMedicalHistory)
+    medicalHistory.unshift(newMedicalHistory)
     console.log(medicalHistory)
     sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
     return true;
