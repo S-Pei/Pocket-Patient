@@ -50,7 +50,7 @@ var base_url = window.location.origin;
     $(this).append(`<input type="hidden" name="patientName" value=${patientName} /> `);
     console.log(newMedicalHistory)
     // medicalHistory.push(newMedicalHistory)
-    // medicalHistory.unshift(newMedicalHistory)
+    medicalHistory.unshift(newMedicalHistory)
     // console.log(medicalHistory)
     medicalHistory.sort((a, b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
     console.log(medicalHistory)
