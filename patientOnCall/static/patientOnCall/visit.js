@@ -63,9 +63,10 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, visitType, le
     const entryLetter = document.createElement("a");
     entryLetter.classList.add("info-table-item");
     entryLetter.classList.add("entry-letter");
-    console.log(letter)
-    if (letter !== '/media/False' ||  letter !== '') {
+    // console.log(letter)
+    if  (letter === '' || letter === '/media/False') {
         console.log("NOOOOO")
+    } else {
         entryLetter.href = base_url + letter;
         if (visitType == "GP Consultation") {
             entryLetter.textContent = "GP Letter";
@@ -73,8 +74,7 @@ function addMedHistoryEntry(admissionDate, dischargeDate, summary, visitType, le
         else {
             entryLetter.textContent = "Discharge Letter";
         }
-    }  
-    // console.log(entryLetter)
+    } 
 
     const entryLabandImaging = document.createElement("div");
     entryLabandImaging.classList.add("info-table-item");
