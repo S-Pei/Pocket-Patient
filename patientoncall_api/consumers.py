@@ -2,6 +2,7 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from push_notifications.models import GCMDevice
 
 
 class EditConsumer(WebsocketConsumer):
@@ -68,3 +69,7 @@ class EditConsumer(WebsocketConsumer):
             "event": res["event"],
             "ids": res["ids"] if "ids" in res else []
         }))
+        device = GCMDevice.objects.get(registration_id=42771713357)
+        device.send_message(title="Authorisation Notification",
+                            body="Your medical data has been requested. Click for more info",
+                            sound=True)

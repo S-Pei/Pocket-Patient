@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'patientOnCall',
     'patientoncall_api',
     'channels',
-    'storages'
+    'storages',
+    'push_notifications',
 ]
 
 MIDDLEWARE = [
@@ -221,3 +222,8 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+        "FCM_API_KEY": "AAAACfVkjU0:APA91bFzdYQd9nxzaQT00Rger-vsclAmAtJLlAgsLf4aPYLwIAAJ4L1nWO2vYwS4BFhKooSYoQG2hS1SlS73jcikxWkmV3jfgsR9DHekoqlvHpSTxSja01K0pTTjuGlxs4fS-jUdLod6",
+        "GCM_API_KEY": "AAAACfVkjU0:APA91bFzdYQd9nxzaQT00Rger-vsclAmAtJLlAgsLf4aPYLwIAAJ4L1nWO2vYwS4BFhKooSYoQG2hS1SlS73jcikxWkmV3jfgsR9DHekoqlvHpSTxSja01K0pTTjuGlxs4fS-jUdLod6",
+}

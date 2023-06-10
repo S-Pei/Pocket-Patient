@@ -27,7 +27,7 @@ deploy-heroku-job:
   only:
     refs:
       - tags
-      - master
+      # - master
   environment:
     name: deployment
     url: HEROKU_URL
