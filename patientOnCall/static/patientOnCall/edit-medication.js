@@ -4,9 +4,8 @@ var dict = {};
 
 (function() {
     const value = sessionStorage.getItem('medicationDict');
-    if (value !== null && value !== undefined) {
+    if (value !== "No data") {
         dict = JSON.parse(sessionStorage.getItem("medicationDict"))
-        console.log(dict)
         var i = 0
         while (i < Object.keys(dict).length) {
             const status = dict["" + i]["status"];
