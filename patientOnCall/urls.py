@@ -12,5 +12,6 @@ urlpatterns = [
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
     path('edit-medication/', views.newMedication, name='edit-medication'),
     path('add-medication/', views.addMedication, name='add-medication'),
-    path('lab-history/', views.displayHistory, name='lab-history')
+    path('lab-history/', views.displayHistory, name='lab-history'),
+    path('imaging/', views.displayImaging, name='imaging')
 ]

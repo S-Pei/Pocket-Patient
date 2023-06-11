@@ -1,0 +1,16 @@
+.scan-name{
+    width: 45%;
+    height: 10vh; 
+    background-color: #239DB8;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 10px;
+    margin-left: 25px;
+    margin-bottom: 20px;
+    color: white; 
+    font-weight: bold;
+    font-size: x-large;
+    padding: 2.5vh;
+    box-shadow: 2px 2px 4px var(--dark-shade-color);
+}

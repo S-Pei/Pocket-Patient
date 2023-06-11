@@ -19,6 +19,11 @@ document.getElementById("visit-history").addEventListener("click", (e) => {
     window.location.href = base_url + "/visit"
   })
 
+document.getElementById("imaging-history").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = base_url + "/imaging"
+  })
+
 
 if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getItem("displayDisclaimer") == "true") {
   $("#disclaimer-note").removeClass("invisible");
