@@ -1,0 +1,63 @@
+{% extends "patientOnCall/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+   <link rel="stylesheet" href="{% static 'patientOnCall/add-visit.css' %}"></link>  
+   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+</head>
+<body> 
+  {% comment %} <div class="invisible" id="patient-data-box"></div> {% endcomment %}
+  <div class="container-fluid p-3 mb-3 patient-identity">
+    <h1 id="patient-name"></h1>
+    <h2 id="patient-id"></h2>
+  </div>
+
+  <h4 class="section-header">Visit Entry: (admission date)</h4>
+    <form action="" class="add-entry-form" id="patient-medical-history-add-entry" method="POST" enctype ="multipart/form-data">
+      {% csrf_token %}
+      <div class="add-history pt-1">
+        <label class="mr-2" for="entry-admission-date">Admission Date:</label>
+        <p name="entry-admission-date" type="date"></p>
+      </div>
+      <div class="add-history pt-1">
+        <label class="mr-2" for="entry-discharge-date">Discharge Date:</label>
+        <p name="entry-discharge-date" type="date"></p>
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-visit-type">Visit Type:</label>
+        <p name="entry-visit-type"></p>   
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-consultant">Consultant:</label>
+        <p>John Lee</p>   
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-practice-name">Name of practice:</label> 
+         <p>St Mary's Hospital</p>  
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-address">Address of practice:</label> 
+          <p>12 Smith Street, AB 321 London.</p>  
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-summary">Summary:</label>
+        <p name="entry-summary"></p>   
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-letter">Upload Letter:</label>
+        <p name="entry-letter"></p>   
+      </div>
+      <div class="add-history pt-1">
+        <p id="add-to-medical-history">Add discharge summary to medical history: </p>   
+      </div>
+      <input class="add-button" type="submit" value="Save" id="add-visit">
+    </form> 
+    
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
+    <script src="{% static 'patientOnCall/add-visit.js' %}"></script> 
+  </body>  
+  {% endblock %}
+
