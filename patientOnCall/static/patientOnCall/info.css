@@ -46,7 +46,8 @@
 }
 
 .past-medical-history-entry {
-  background-color: var(--info-bg-color);
+  background-color: #BFE2F1;
+  color: black;
 }
 
 .past-medical-history-discharge-date {
