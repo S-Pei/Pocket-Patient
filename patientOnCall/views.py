@@ -22,3 +22,6 @@ def newMedication(request):
 
 def addMedication(request):
     return render(request, 'patientOnCall/add-medication.html')
+
+def displayHistory(request):
+    return render(request, 'patientOnCall/lab-history.html')

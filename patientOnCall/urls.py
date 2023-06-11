@@ -10,5 +10,6 @@ urlpatterns = [
     path('add-visit/', addVisit, name='patient-add-visit'),
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
     path('edit-medication/', views.newMedication, name='edit-medication'),
-    path('add-medication/', views.addMedication, name='add-medication')
+    path('add-medication/', views.addMedication, name='add-medication'),
+    path('lab-history/', views.displayHistory, name='lab-history')
 ]
