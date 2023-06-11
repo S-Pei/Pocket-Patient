@@ -23,8 +23,7 @@ var base_url = window.location.origin;
 
 function insertMedHistoryEntries(medicalHistory) {
   var i = 0
-  var maxLines = 6
-  while (i < maxLines && i < medicalHistory.length) {
+  while (i < medicalHistory.length) {
     console.log(medicalHistory[i])
       addMedHistoryEntry(
       medicalHistory[i]["dischargeDate"],
