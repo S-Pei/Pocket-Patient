@@ -27,11 +27,13 @@
 #past-medical-history-and-presentation-box {
   height: 40vh;
   width: 100%;
-  display: flex;
+  display: flex;  
 }
 
 #main-past-medical-history-box {
   width: 65%;
+  height: 100%; 
+  overflow-y: scroll;
 }
 
 #main-past-medical-history-box ul {
@@ -44,7 +46,8 @@
 }
 
 .past-medical-history-entry {
-  background-color: var(--info-bg-color);
+  background-color: #BFE2F1;
+  color: black;
 }
 
 .past-medical-history-discharge-date {
