@@ -27,6 +27,19 @@ function getVisitEntry(entryNum) {
     document.getElementById("entry-discharge-date").innerHTML = dischargeDate
     document.getElementById("entry-visit-type").innerHTML = visitType
     document.getElementById("entry-summary").innerHTML = summary
-    document.getElementById("entry-letter").innerHTML = letter
-    document.getElementById("entry-add-to-medical-history").innerHTML = addToMedicalHistory
+    const entryLetter = document.getElementById("entry-letter")
+
+    if  (letter === '' || letter === '/media/False') {
+       entryLetter.textContent = ""
+    } else {
+        entryLetter.href = base_url + letter;
+        if (visitType == "GP Consultation") {
+            entryLetter.textContent = "GP Letter";
+        }
+        else {
+            entryLetter.textContent = "Discharge Letter";
+        }
+    } 
+    console.log(addToMedicalHistory)
+    document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
 }
