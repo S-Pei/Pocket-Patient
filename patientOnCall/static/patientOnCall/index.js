@@ -1,3 +1,5 @@
+sessionStorage.clear();
+
 document.getElementById("patient-search-submit").addEventListener("click", (e) => {
   e.preventDefault();
   
