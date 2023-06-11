@@ -124,7 +124,7 @@ function row_click(rowNum){
     var n = row.length;
     for(var i = 0; i < n; i ++) {
         row[i].onclick = function() {
-            window.location.href = base_url + "/edit-visit"
+            window.location.href = base_url + "/edit-visit/" + rowNum
         };
     }
 }
