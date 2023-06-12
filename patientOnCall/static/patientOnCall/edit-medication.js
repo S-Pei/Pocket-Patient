@@ -2,6 +2,8 @@ var base_url = window.location.origin;
 
 var dict = {};
 
+var websocket;
+
 (function() {
     const value = sessionStorage.getItem('medicationDict');
     if (value !== "No data") {
@@ -477,6 +479,7 @@ function updateMedication() {
 
 document.getElementById("save-medication").addEventListener("click", (e) => {
     updateMedication();
+    connect_to_websocket();
 })
 
 document.getElementById("add-medication-button").addEventListener("click", (e) => {
@@ -561,6 +564,23 @@ function showCommentSection(row) {
     document.getElementsByTagName("body")[0].appendChild(popUpMask);
 
     document.getElementById("pop-up-mask").appendChild(confirmComment);
-    
-
 }
+
+function connect_to_websocket() {
+    if (websocket == null) {
+      websocket = create_websocket(
+        function (event) {
+          websocket.send(JSON.stringify({
+              "event": "CHANGE-IN-MEDICATION",
+              "currentMedication": sessionStorage.getItem("currentMedication"),
+              "pastMedication": sessionStorage.getItem("pastMedication")
+            }))
+        },
+        function (response) {
+            console.log("got message")
+            websocket.close();
+            websocket = null;
+        });
+    }
+  }
+  
