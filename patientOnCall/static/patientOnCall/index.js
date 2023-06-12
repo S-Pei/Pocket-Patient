@@ -12,6 +12,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
     // Skip verification in DEBUG mode
     sessionStorage.setItem("patientID", patientId);
     sessionStorage.setItem("patientName", patientName);
+    sessionStorage.setItem("patientUsername", 'bobchoy');
     connect_to_websocket();
     api_fetch_patient_full_data([]);
   }
@@ -99,6 +100,7 @@ function api_verify_valid_patient_credentials(patientId, patientName) {
       if (returned_value.ok == true) {
         sessionStorage.setItem("patientID", patientId)
         sessionStorage.setItem("patientName", patientName)
+        sessionStorage.setItem("patientUsername", returned_value['username'])
 
         // Wait for patient approval
         wait_for_patient_approval();
