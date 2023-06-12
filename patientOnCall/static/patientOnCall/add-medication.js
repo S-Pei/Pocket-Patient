@@ -15,34 +15,34 @@ document.getElementById("medication-submit").addEventListener("click", (e) => {
     const lastName = sessionStorage.getItem("patientLastName")
 
     //compare to database
-    $.ajax({
-      type: "POST",
-      url: base_url + "/api/doctor/patient-data/medication/",
-      data: {
-        'patientID': sessionStorage.getItem("patientID"),
-        'patientName': firstName + ' ' + lastName,
-        'medicationDrug': drug, 
-        'medicationDosage': dosage, 
-        'medicationStartDate': startDate, 
-        'medicationEndDate': endDate, 
-        'medicationDuration': duration, 
-        'medicationRoute': route,
-        'medicationComment': comment
-      },
-      success: function (returned_value) {
-        if (returned_value.ok == true) {
-          const currentMedication = returned_value["medication"];
-          sessionStorage.setItem("currentMedication", JSON.stringify(currentMedication));
-          const currentDict = JSON.parse(sessionStorage.getItem("medicationDict"));
-          console.log(sessionStorage.getItem("medicationDict"))
-          addHash(currentDict, currentMedication.length - 1, returned_value["objID"], drug, dosage, startDate, endDate, duration, route, "current", comment);
-          sessionStorage.setItem("medicationDict", JSON.stringify(currentDict));
-          console.log(currentDict);
-          window.location.href = "/edit-medication"
-        }
-      },
-      error: function () { }
-    });
+    // $.ajax({
+    //   type: "POST",
+    //   url: base_url + "/api/doctor/patient-data/medication/",
+    //   data: {
+    //     'patientID': sessionStorage.getItem("patientID"),
+    //     'patientName': firstName + ' ' + lastName,
+    //     'medicationDrug': drug, 
+    //     'medicationDosage': dosage, 
+    //     'medicationStartDate': startDate, 
+    //     'medicationEndDate': endDate, 
+    //     'medicationDuration': duration, 
+    //     'medicationRoute': route,
+    //     'medicationComment': comment
+    //   },
+    //   success: function (returned_value) {
+    //     if (returned_value.ok == true) {
+    //       const currentMedication = returned_value["medication"];
+    //       sessionStorage.setItem("currentMedication", JSON.stringify(currentMedication));
+    const currentDict = JSON.parse(sessionStorage.getItem("medicationDict"));
+          // console.log(sessionStorage.getItem("medicationDict"))
+    addHash(currentDict, Object.keys(currentDict).length, "0", drug, dosage, startDate, endDate, duration, route, "added", comment);
+    sessionStorage.setItem("medicationDict", JSON.stringify(currentDict));
+          // console.log(currentDict);
+    window.location.href = "/edit-medication"
+    //     }
+    //   },
+    //   error: function () { }
+    // });
   })
 
   

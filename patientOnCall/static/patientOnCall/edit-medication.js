@@ -6,6 +6,7 @@ var websocket;
 
 (function() {
     const value = sessionStorage.getItem('medicationDict');
+    console.log(dict)
     if (value !== "No data") {
         dict = JSON.parse(sessionStorage.getItem("medicationDict"))
         var i = 0
@@ -178,6 +179,7 @@ function saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, 
     dict["" + row]["route"] = route;
     dict["" + row]["status"] = status;
     dict["" + row]["comments"] = comments;
+    sessionStorage.setItem("medicationDict", JSON.stringify(dict));
 }
 
 function savedEdit(row, drug, dosage, startDate, endDate, duration, route, comments) {
@@ -189,7 +191,12 @@ function savedEdit(row, drug, dosage, startDate, endDate, duration, route, comme
     document.getElementById("medication-route-" + row).innerHTML = route;
     document.getElementById("medication-comments-" + row).innerHTML = comments;
 
-    updateDict(row, drug, dosage, startDate, endDate, duration, route, "edited", comments)
+    if (dict["" + row]["status"] == "added") {
+        updateDict(row, drug, dosage, startDate, endDate, duration, route, "added", comments)
+    }
+    else {
+        updateDict(row, drug, dosage, startDate, endDate, duration, route, "edited", comments)
+    }
 
     document.getElementById("select-" + row).selectedIndex = 0;
     document.getElementById("medication-confirm-" + row).innerHTML = "Confirmed";
@@ -204,6 +211,7 @@ function updateDict(row, drug, dosage, startDate, endDate, duration, route, stat
     dict["" + row]["route"] =  route;
     dict["" + row]["status"] =  status
     dict["" + row]["comments"] =  comments;
+    sessionStorage.setItem("medicationDict", JSON.stringify(dict));
 }
 
 function changeEditable(row) {
@@ -399,15 +407,29 @@ function addTime(dateStr, num, unit) {
 }
 
 function reloadMedicationInfo(row, type) {
-    const medication = JSON.parse(sessionStorage.getItem("currentMedication"));
-    if (type == "confirm") {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = "Confirmed"
-    } else if (type == "start-date") {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row]["startDate"];
-    } else if (type == "end-date") {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row]["endDate"];
-    } else {
-        document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row][`${type}`];
+    if (dict["" + row]["id"] == 0) {
+        const medication = dict["" + row];
+        if (type == "confirm") {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = "Confirmed"
+        } else if (type == "start-date") {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = medication["startDate"];
+        } else if (type == "end-date") {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = medication["endDate"];
+        } else {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = medication[`${type}`];
+        }
+    }
+    else {
+        const medication = JSON.parse(sessionStorage.getItem("currentMedication"));
+        if (type == "confirm") {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = "Confirmed"
+        } else if (type == "start-date") {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row]["startDate"];
+        } else if (type == "end-date") {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row]["endDate"];
+        } else {
+            document.getElementById(`medication-${type}-${row}`).innerHTML = medication[row][`${type}`];
+        }
     }
 }
 
@@ -425,12 +447,15 @@ function updateMedication() {
         "patientId": sessionStorage.getItem("patientID"),
         "patientName": firstName + ' ' + lastName,
         "deleteIds": [],
-        "editItems": []
+        "editItems": [],
+        "addedItems": []
     }
 
-    for (i=0; i < medication.length; i++) {
+    for (i=0; i < Object.keys(dict).length; i++) {
         
         let currDict = dict["" + i]
+        // console.log(currDict["status"])
+        // console.log(currDict)
         if (currDict["status"] == "delete") {
             updates["deleteIds"].push({'medicationID': currDict["id"],
                                         'medicationComments': currDict["comments"]});
@@ -457,6 +482,28 @@ function updateMedication() {
                     'medicationComments': comments,
                 });
             }
+            else if (currDict["status"] == "added") {
+                let drug = document.getElementById(`medication-drug-${i}`).innerHTML;
+                console.log(drug)
+                let dosage = document.getElementById(`medication-dosage-${i}`).innerHTML;
+                let startDate = document.getElementById(`medication-start-date-${i}`).innerHTML;
+                let endDate = document.getElementById(`medication-end-date-${i}`).innerHTML;
+                let duration = document.getElementById(`medication-duration-${i}`).innerHTML;
+                let route = document.getElementById(`medication-route-${i}`).innerHTML;
+                let comments = document.getElementById(`medication-comments-${i}`).innerHTML;
+
+                updates["addedItems"].push({
+                    'patientID': sessionStorage.getItem("patientID"),
+                    'patientName': firstName + ' ' + lastName,
+                    'medicationDrug': drug, 
+                    'medicationDosage': dosage,
+                    'medicationStartDate': startDate, 
+                    'medicationEndDate': endDate, 
+                    'medicationDuration': duration, 
+                    'medicationRoute': route,
+                    'medicationComments': comments,
+                });
+            }
         }
     }
 
@@ -469,7 +516,7 @@ function updateMedication() {
         if (returned_value.ok == true) { 
             sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
             sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
-            window.location.href = "/medication"
+            connect_to_websocket();
         }
       },
       error: function () { }
@@ -479,7 +526,6 @@ function updateMedication() {
 
 document.getElementById("save-medication").addEventListener("click", (e) => {
     updateMedication();
-    connect_to_websocket();
 })
 
 document.getElementById("add-medication-button").addEventListener("click", (e) => {
@@ -498,8 +544,15 @@ function showDeleteButton(row) {
     deleteButton.innerHTML = "Delete";
     deleteButton.addEventListener("click", (e) => { 
         e.preventDefault();
-
-        showCommentSection(row);
+        if (dict[`${row}`]["id"] == "0") {
+            console.log("delete newly added");
+            delete dict["" + row];
+            sessionStorage.setItem("medicationDict", JSON.stringify(dict));
+            deleteMedication(row);
+        }
+        else {
+            showCommentSection(row);
+        }
     });
     $(`#medication-confirm-${row}`).html(deleteButton);
 }
@@ -568,18 +621,24 @@ function showCommentSection(row) {
 
 function connect_to_websocket() {
     if (websocket == null) {
+        console.log(sessionStorage.getItem("currentMedication"))
       websocket = create_websocket(
         function (event) {
           websocket.send(JSON.stringify({
               "event": "CHANGE-IN-MEDICATION",
-              "currentMedication": sessionStorage.getItem("currentMedication"),
-              "pastMedication": sessionStorage.getItem("pastMedication")
+              "currentMedication": sessionStorage.getItem("currentMedication")
+            //   "pastMedication": sessionStorage.getItem("pastMedication")
             }))
         },
         function (response) {
-            console.log("got message")
-            websocket.close();
-            websocket = null;
+            let data = JSON.parse(response.data)
+            console.log(data)
+            if (data["event"] == "CHANGE-IN-MEDICATION") {
+                console.log("Change in medication has been sent successfully");
+                websocket.close();
+                websocket = null;
+                window.location.href = "/medication"
+            }
         });
     }
   }
