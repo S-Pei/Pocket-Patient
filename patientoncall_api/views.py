@@ -30,7 +30,7 @@ from .serializers import (
 
 from .forms import AddVisitForm, AddImagingForm
 
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
     # add permission to check if user is authenticated
     # permission_classes = [permissions.IsAuthenticated]
@@ -39,12 +39,12 @@ class PatientApiView(APIView):
         '''
         List all data for given requested patient user
         '''
-        user = matchPatientUser(12345, 'Bob Choy')
+        user = request.user
         result = getAllPatientDataById(request, user)
         return Response(result, status=status.HTTP_200_OK)
     
 
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 class PatientMedicalHistoryApiView(APIView):
     # add permission to check if user is authenticated
 
@@ -53,7 +53,6 @@ class PatientMedicalHistoryApiView(APIView):
         '''
         List all data for given requested patient user
         '''
-        
         user = matchPatientUser(12345, 'Bob Choy')
         request_data = JSONParser().parse(request)
         # print(request_data)
@@ -75,7 +74,7 @@ def verifyPatientCredentials(request):
         if not user:
             return JsonResponse({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return JsonResponse({'ok': True}, status=status.HTTP_200_OK)
+            return JsonResponse({'ok': True, 'username': user.username}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def getPatientData(request):
@@ -117,6 +116,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     return {
         'ok': True,
         'sessionId': sessionID,
+        'patient-id': patientUser.patientId,
+        'patient-name-small': user.first_name.lower().replace(" ", "") + user.last_name.lower().replace(" ", ""),
         'patient-first-name': user.first_name,
         'patient-last-name': user.last_name,
         'patient-dob': patientUserSerializer.data["patientBirthdate"],

@@ -7,9 +7,8 @@ from .models import Medication
 class EditConsumer(WebsocketConsumer):
 
     def connect(self):
-        self.patient_id = self.scope['url_route']['kwargs']['patient_id']
-        self.patient_name = self.scope['url_route']['kwargs']['patient_name']
-        self.room_group_name = 'connection_%s' % (self.patient_id + '_' + self.patient_name)
+        self.username = self.scope['url_route']['kwargs']['username']
+        self.room_group_name = 'connection_%s' % (self.username)
         print('consumer connected to %s' % self.room_group_name)
         # print('consumer connected')
 
