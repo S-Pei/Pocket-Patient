@@ -1,3 +1,5 @@
+sessionStorage.clear();
+
 document.getElementById("patient-search-submit").addEventListener("click", (e) => {
   e.preventDefault();
   
@@ -135,7 +137,6 @@ function api_fetch_patient_full_data(toHideIds) {
         sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
         sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
         sessionStorage.setItem("displayDisclaimer", toHideIds.length > 0)
-        sessionStorage.setItem("websocket", websocket);
 
         window.location.href = "main/"
       }

@@ -17,8 +17,14 @@ def displayVisit(request):
 def displayAddVisit(request):
     return render(request, 'patientOnCall/add-visit.html')
 
+def displayEditVisit(request, id):
+    return render(request, 'patientOnCall/edit-visit.html')
+
 def newMedication(request):
     return render(request, 'patientOnCall/edit-medication.html')
 
 def addMedication(request):
     return render(request, 'patientOnCall/add-medication.html')
+
+def displayHistory(request):
+    return render(request, 'patientOnCall/lab-history.html')

@@ -2,7 +2,7 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-
+from .models import Medication
 
 class EditConsumer(WebsocketConsumer):
 
@@ -47,6 +47,14 @@ class EditConsumer(WebsocketConsumer):
                 'type': 'patient_data_access_authentication',
                 'event': "GRANT_PATIENT_DATA_ACCESS",
                 'ids': ids
+            })
+        elif event == "CHANGE-IN-MEDICATION":
+            print("CHANGE-IN-MEDICATION")
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'patient_data_access_authentication',
+                'event': "CHANGE-IN-MEDICATION",
+                'currentMedication': response.get("currentMedication"),
+                'currentMedication': response.get("pastMedication")
             })
         else:
             print("UNKNOWN EVENT")
