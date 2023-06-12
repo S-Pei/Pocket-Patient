@@ -151,9 +151,9 @@ document.getElementById("add-visit").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/add-visit"
   })
-  
-document.getElementsByClassName("add-lab-button").addEventListener("click", (e) => {
-    e.preventDefault();
+
+
+document.getElementsByClassName("add-lab-button").onclick = function() {
     window.location.href = base_url + "/add-imaging"
-  })
+};
 
