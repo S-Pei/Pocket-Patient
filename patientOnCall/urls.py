@@ -15,4 +15,5 @@ urlpatterns = [
     path('lab-history/', views.displayHistory, name='lab-history'),
     path('imaging/', views.displayImaging, name='imaging'),
     path('add-imaging/', addImaging, name='patient-add-imaging'),
+    path('scan-type/<str:id>/', views.displayScanType, name='patient-scan-type')
 ]

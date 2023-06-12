@@ -4,7 +4,8 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Medication
+    Medication,
+    ImagingHistory
 )
 
 class PatientUserSerializer(serializers.ModelSerializer):
@@ -30,3 +31,9 @@ class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
         fields = ('id', 'drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'status', 'comments')
+
+class ImagingHistorySerializer(serializers.ModelSerializer):
+    report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
+    class Meta:
+        model = ImagingHistory
+        fields = ['patient','date','scanType','region','indication','report']

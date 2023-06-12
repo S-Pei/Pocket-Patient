@@ -31,3 +31,6 @@ def displayHistory(request):
 
 def displayImaging(request):
     return render(request, 'patientOnCall/imaging.html')
+
+def displayScanType(request, id):
+    return render(request, 'patientOnCall/scan-type.html')

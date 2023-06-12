@@ -26,8 +26,7 @@ class MedicationAdmin(admin.ModelAdmin):
                     'duration', 'route', 'status', 'comments')
 
 class ImagingHistoryAdmin(admin.ModelAdmin):
-    list_display = ('patient','date','region','indication','report',
-                    'visitEntry')
+    list_display = ('patient','date','scanType','region','indication','report')
 
 class ImagingUploadAdmin(admin.ModelAdmin):
     list_display = ('image', 'imagingEntry')

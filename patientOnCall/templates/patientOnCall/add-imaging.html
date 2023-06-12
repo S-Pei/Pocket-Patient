@@ -17,26 +17,32 @@
     <form action="" class="add-entry-form" id="patient-imaging-history-add-entry" method="POST" enctype ="multipart/form-data">
       {% csrf_token %}
       <div class="add-history pt-1">
-        <label class="mr-2" for="entry-report-date">Date of report:</label>
+        <label class="mr-2" for="entry-report-date">Date of Report:</label>
         <p class="form-control" name="entry-report-date" type="date">{{form.date}}</p>
       </div>
       <div class="add-history pt-1">
-        <label for="entry-visit-type">Region:</label>
-        <p class="form-control" name="entry-visit-type">{{form.region}}</p>   
+        <label for="entry-scan-type">Scan Type:</label>
+        <p class="form-control" name="entry-scan-type">{{form.scanType}}</p>   
       </div>
       <div class="add-history pt-1">
-        <label for="entry-consultant">Indication:</label>
+        <label for="entry-region">Region:</label>
+        <p class="form-control" name="entry-region">{{form.region}}</p>   
+      </div>
+      <div class="add-history pt-1">
+        <label for="entry-indication">Indication:</label>
         <p class="form-control">{{form.indication}}</p>   
       </div>
       <div class="add-history pt-1">
-        <label for="entry-letter">Upload Report:</label>
-        <p class="form-control" name="entry-letter">{{form.report}}</p>   
+        <label for="entry-report">Upload Report:</label>
+        <p class="form-control" name="entry-report">{{form.report}}</p>   
       </div>
       <div class="add-history pt-1">
         <label for="entry-letter">Upload Images:</label>
         <p class="form-control" name="entry-letter"></p>   
       </div>
-      <input class="add-button" type="submit" value="Save" id="add-visit">
+      <div id="add-button-wrapper"></div>
+        <input class="add-button" type="submit" value="Save" id="add-visit">
+      </div>
     </form> 
     
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"

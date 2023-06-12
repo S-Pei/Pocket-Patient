@@ -26,6 +26,7 @@ from .serializers import (
     MedicalHistorySerializer,
     LabHistorySerializer,
     MedicationSerializer,
+    ImagingHistorySerializer
 )
 
 from .forms import AddVisitForm, AddImagingForm
@@ -103,12 +104,15 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     patientUser = PatientUser.objects.get(patient=user.id)
     medicalHistories = MedicalHistory.objects.filter(patient=user.id).exclude(id__in=toHideIds)
     labHistories = LabHistory.objects.filter(patient=user.id)
+    imagingHistories = ImagingHistory.objects.filter(patient=user.id)
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
     labHistorySerializer = LabHistorySerializer(labHistories, 
+                        context={"request": request}, many=True)
+    imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
@@ -124,6 +128,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'patient-address': patientUserSerializer.data["patientAddress"],
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data,
+        'imaging-history': imagingHistorySerializer.data,
         'current-medication': currentMedicationSerializer.data,
         'previous-medication': previousMedicationSerializer.data
     }
@@ -251,15 +256,35 @@ def addImaging(request):
             ImagingHistory.objects.create(
                 patient=user,
                 date=request.POST.get("date"),
-                region = request.POST.get("summary"),
-                indication = request.POST.get("consultant"),
-                visitType = request.POST.get("visitType"),
+                scanType=request.POST.get("scanType"),
+                region = request.POST.get("region"),
+                indication = request.POST.get("indication"),
+                # visitType = request.POST.get("visitType"),
                 report=request.FILES["report"] if 'report' in request.FILES else False,
-                visitEntry=request.POST.get("visitEntry")
+                # visitEntry=request.POST.get("visitEntry")
             )
             # print("is valid")
-            return render(request, "patientOnCall/add-visit.html", {'form': form})
+            return render(request, "patientOnCall/scan-type.html", {'form': form})
     else:
         form = AddImagingForm()
         # print("add visit")
         return render(request, "patientOnCall/add-imaging.html", {'form': form})
+
+@csrf_exempt
+def addImagingHistory(request):
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName']) 
+        ImagingHistory.objects.create(patient=user, 
+                                      date=request.POST.get("date"),
+                                      scanType=request.POST.get("scanType"),
+                                      region = request.POST.get("region"),
+                                      indication = request.POST.get("indication"),
+                                      # visitType = request.POST.get("visitType"),
+                                      report=request.FILES["report"] if 'report' in request.FILES else False)
+                                      # visitEntry=request.POST.get("visitEntry"))
+        imagingHistories = ImagingHistory.objects.filter(patient=user.id)
+        imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'imaging-history': imagingHistorySerializer.data},
+                               status=status.HTTP_201_CREATED)
