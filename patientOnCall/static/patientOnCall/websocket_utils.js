@@ -6,8 +6,7 @@ function create_websocket(openFunction, messageFunction) {
     connectionString += 'ws://';
   }
   connectionString += window.location.host + '/ws/patientoncall/'
-                      + sessionStorage.getItem("patientID") + '/'
-                      + sessionStorage.getItem("patientName") + '/'
+                      + sessionStorage.getItem("patientUsername") + '/'
 
   let websocket = new WebSocket(connectionString);
 
