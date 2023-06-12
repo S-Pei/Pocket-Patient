@@ -17,17 +17,18 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Medication
+    Medication,
+    ImagingHistory
 )
 
 from .serializers import (
     PatientUserSerializer,
     MedicalHistorySerializer,
     LabHistorySerializer,
-    MedicationSerializer
+    MedicationSerializer,
 )
 
-from .forms import AddVisitForm
+from .forms import AddVisitForm, AddImagingForm
 
 # @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
@@ -237,3 +238,27 @@ def addVisit(request):
         # print("add visit")
         return render(request, "patientOnCall/add-visit.html", {'form': form})
 
+
+@csrf_exempt
+def addImaging(request):
+    if request.method == "POST":
+        form = AddImagingForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            ImagingHistory.objects.create(
+                patient=user,
+                date=request.POST.get("date"),
+                region = request.POST.get("summary"),
+                indication = request.POST.get("consultant"),
+                visitType = request.POST.get("visitType"),
+                report=request.FILES["report"] if 'report' in request.FILES else False,
+                visitEntry=request.POST.get("visitEntry")
+            )
+            # print("is valid")
+            return render(request, "patientOnCall/add-visit.html", {'form': form})
+    else:
+        form = AddImagingForm()
+        # print("add visit")
+        return render(request, "patientOnCall/add-imaging.html", {'form': form})

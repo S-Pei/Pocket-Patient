@@ -16,3 +16,7 @@
   font-weight: bold;
 }
 
+.add-lab-button {
+  min-width: 90%;
+  height: 4vh;
+}

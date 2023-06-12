@@ -47,3 +47,18 @@ class Medication(models.Model):
     route = models.CharField(max_length=1024)
     status = models.CharField(max_length=32, default="current")
     comments = models.CharField(max_length=1024, blank=True, null=True)
+
+class ImagingHistory(models.Model):
+   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+   patient = models.ForeignKey(User, on_delete=models.CASCADE)
+   date = models.DateField(default=datetime.today, blank=True, null=True)
+   region = models.CharField(max_length=256)
+   indication = models.CharField(max_length=1024)
+   report = models.FileField(upload_to='imagingreports/', blank=True, null=True, default=True)
+   visitEntry = models.ForeignKey(MedicalHistory, on_delete=models.CASCADE)
+
+
+class ImagingUpload(models.Model): 
+   image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
+   imagingEntry = models.ForeignKey(ImagingHistory, on_delete=models.CASCADE)
+   

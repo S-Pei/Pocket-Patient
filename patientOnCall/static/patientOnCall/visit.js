@@ -83,6 +83,16 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     } 
 
     const entryLabandImaging = document.createElement("div");
+    const entryLabAdd = document.createElement("button")
+    entryLabAdd.innerText = "Lab"
+    entryLabAdd.classList.add("add-lab-button")
+    entryLabandImaging.appendChild(entryLabAdd)
+
+    const entryImagingAdd = document.createElement("button")
+    entryImagingAdd.innerText = "Imaging"
+    entryImagingAdd.classList.add("add-lab-button")
+    entryLabandImaging.appendChild(entryImagingAdd)
+
     entryLabandImaging.classList.add("info-table-item");
     entryLabandImaging.classList.add(row);
 
