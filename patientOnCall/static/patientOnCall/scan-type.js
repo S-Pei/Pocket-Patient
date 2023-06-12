@@ -10,6 +10,14 @@ var base_url = window.location.origin;
 
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
+    // console.log(window.location.href.split('/')[4])
+    const scanName = window.location.href.split('/')[4] 
+    if (scanName === "Medical-Photography"){
+        const medicalPhotography = scanName.replace(/-/g, " ");
+        $(".section-header").html(medicalPhotography)
+    } else {
+        $(".section-header").html(scanName + ' Scans')
+    }
 
     console.log(imagingHistory);
     // insertImagingHistoryEntries(imagingHistory);
