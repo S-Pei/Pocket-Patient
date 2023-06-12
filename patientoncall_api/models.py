@@ -50,7 +50,13 @@ class Medication(models.Model):
 
 SCAN_TYPE = (
    ('MRI', 'MRI'),
-   ('PET', 'PET')
+   ('PET', 'PET'),
+   ('X-Ray', 'X-Ray'),
+   ('ECG', 'ECG'),
+   ('CT', 'CT'),
+   ('Ultrasound', 'Ultrasound'),
+   ('Medical Photography', 'Medical Photography'),
+
 )
 
 class ImagingHistory(models.Model):

@@ -20,26 +20,27 @@ var base_url = window.location.origin;
     }
 
     console.log(imagingHistory);
-    // insertImagingHistoryEntries(imagingHistory);
-    // for(var i = 1; i <= imagingHistory.length; i ++) {
-    //     row_hover(i, imagingHistory[i-1]["visitType"]);
-    //     row_click(i);
-    // }
+    insertImagingHistoryEntries(imagingHistory, scanName);
+    for(var i = 1; i <= imagingHistory.length; i ++) {
+        row_hover(i, imagingHistory[i-1]["visitType"]);
+        row_click(i);
+    }
 
 })();
 
-function insertImagingHistoryEntries(imagingHistory) {
+function insertImagingHistoryEntries(imagingHistory, scanName) {
   var i = 0
   while (i < imagingHistory.length) {
-      addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
-      imagingHistory[i]["dischargeDate"],
-       imagingHistory[i]["summary"],
-       imagingHistory[i]["visitType"],
-       imagingHistory[i]["letter"])
-      i++;
+    if (imagingHistory[i]["scanType"] === scanName) {
+        addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
+        imagingHistory[i]["region"],
+         imagingHistory[i]["indication"],
+         imagingHistory[i]["report"])
+    }
+    i++;
   }
 }
-function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visitType, letter) {
+function addImagingHistoryEntry(rowNum, date, region, indication, report) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
@@ -48,79 +49,42 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     const entryDate = document.createElement("div");
     entryDate.classList.add("info-table-item");
     entryDate.classList.add(row);
-    entryDate.textContent = admissionDate + "\n" + "-\n" + dischargeDate;
+    entryDate.textContent = date;
 
-    // const entryAdmissionDate = document.createElement("div");
-    // entryAdmissionDate.classList.add("info-table-item");
-    // entryAdmissionDate.classList.add(row);
-    // entryAdmissionDate.textContent = admissionDate;
+    const entryRegion = document.createElement("div");
+    entryRegion.classList.add("info-table-item");
+    entryRegion.classList.add(row);
+    entryRegion.textContent = region;
 
-    // const entryDischargeDate = document.createElement("div");
-    // entryDischargeDate.classList.add("info-table-item");
-    // entryDischargeDate.classList.add(row);
-    // entryDischargeDate.textContent = dischargeDate;
-
-    const entrySummary = document.createElement("div");
-    entrySummary.classList.add("info-table-item");
-    entrySummary.classList.add(row);
-    entrySummary.textContent = summary;
-
-    // const entryConsultant = document.createElement("div");
-    // entryConsultant.classList.add("info-table-item");
-    // entryConsultant.textContent = consultant;
-
-    const entryVisitType = document.createElement("div");
-    entryVisitType.classList.add("info-table-item");
-    entryVisitType.classList.add(row);
-    entryVisitType.classList.add("visit-type");
-    entryVisitType.textContent = visitType;
-    if (visitType == "GP Consultation") {
-        entryVisitType.style.backgroundColor = "#C55252";
-    }
-    else {
-        entryVisitType.style.backgroundColor = "#6BC4EB";
-    }
+    const entryIndication = document.createElement("div");
+    entryIndication.classList.add("info-table-item");
+    entryIndication.classList.add(row);
+    entryIndication.textContent = indication;
     
-    const entryLetter = document.createElement("a");
-    entryLetter.classList.add("info-table-item");
-    entryLetter.classList.add(row);
+    const entryReport = document.createElement("a");
+    entryReport.classList.add("info-table-item");
+    entryReport.classList.add(row);
     // console.log(letter)
-    if  (letter === '' || letter === '/media/False') {
+    if  (report === '' || report === (base_url + '/media/False')) {
         console.log("NOOOOO")
     } else {
-        entryLetter.href = base_url + letter;
-        if (visitType == "GP Consultation") {
-            entryLetter.textContent = "GP Letter";
-        }
-        else {
-            entryLetter.textContent = "Discharge Letter";
-        }
+        entryReport.href = report;
+        console.log(entryReport.href)
+        entryReport.textContent = "Imaging Report";
     } 
 
-    const entryLab = document.createElement("a");
-    entryLab.classList.add("info-table-item");
-    entryLab.classList.add(row);
-    entryLab.classList.add("add-lab-button");
-    entryLab.textContent = "Add Lab"
-
-    const entryImaging = document.createElement("a");
-    entryImaging.classList.add("info-table-item");
-    entryImaging.classList.add(row);
-    entryImaging.classList.add("add-lab-button");
-    entryImaging.textContent = "Add Imaging"
-    entryImaging.href = base_url + '/add-imaging'
+    const entryImages = document.createElement("div");
+    entryImages.classList.add("info-table-item");
+    entryImages.classList.add(row);
 
     tableBody.appendChild(entryDate);
-    // tableBody.appendChild(entryAdmissionDate);
-    // tableBody.appendChild(entryDischargeDate);
-    tableBody.appendChild(entrySummary);
-    tableBody.appendChild(entryVisitType);
-    tableBody.appendChild(entryLetter);
-    tableBody.appendChild(entryLab);
-    tableBody.appendChild(entryImaging);
+    tableBody.appendChild(entryRegion);
+    tableBody.appendChild(entryIndication);
+    tableBody.appendChild(entryReport);
+    tableBody.appendChild(entryImages);
 }
 
-function row_hover(rowNum, visitType){
+function row_hover(rowNum){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
@@ -136,11 +100,6 @@ function row_hover(rowNum, visitType){
         };
         row[i].onmouseout = function() {
             changeColor("");
-            if (visitType== "GP Consultation"){
-                row[2].style.backgroundColor = "#C55252";
-            } else {
-                row[2].style.backgroundColor = "#6BC4EB";
-            }
         };   
     }
 }
@@ -151,7 +110,7 @@ function row_click(rowNum){
     var n = row.length;
     for(var i = 0; i < n; i ++) {
         row[i].onclick = function() {
-            window.location.href = base_url + "/edit-visit/" + rowNum
+            // window.location.href = base_url + "/edit-visit/" + rowNum
         };
     }
 }
