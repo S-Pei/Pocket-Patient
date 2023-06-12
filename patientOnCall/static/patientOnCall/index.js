@@ -6,16 +6,16 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
   let patientId = document.getElementById("patient-id").value;
   let patientName = document.getElementById("patient-name").value;
 
-  if (window.location.protocol == "https:") {
+  // if (window.location.protocol == "https:") {
     api_verify_valid_patient_credentials(patientId, patientName);
-  } else {
-    // Skip verification in DEBUG mode
-    sessionStorage.setItem("patientID", patientId);
-    sessionStorage.setItem("patientName", patientName);
-    sessionStorage.setItem("patientUsername", 'bobchoy');
-    connect_to_websocket();
-    api_fetch_patient_full_data([]);
-  }
+  // } else {
+  //   // Skip verification in DEBUG mode
+  //   sessionStorage.setItem("patientID", patientId);
+  //   sessionStorage.setItem("patientName", patientName);
+  //   sessionStorage.setItem("patientUsername", 'bobchoy');
+  //   connect_to_websocket();
+  //   api_fetch_patient_full_data([]);
+  // }
 })
 
 var websocket = null;

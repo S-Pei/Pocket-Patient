@@ -149,19 +149,19 @@ def addMedicalHistory(request):
 def addMedication(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName'])
-        obj = Medication.objects.create(patient=user, 
-                                    drug=request.POST['medicationDrug'], 
-                                    dosage=request.POST['medicationDosage'], 
-                                    startDate=request.POST['medicationStartDate'], 
-                                    endDate=request.POST['medicationEndDate'], 
-                                    duration=request.POST['medicationDuration'], 
-                                    route=request.POST['medicationRoute'],
-                                    comments=request.POST['medicationComment'])
+        # obj = Medication.objects.create(patient=user, 
+        #                             drug=request.POST['medicationDrug'], 
+        #                             dosage=request.POST['medicationDosage'], 
+        #                             startDate=request.POST['medicationStartDate'], 
+        #                             endDate=request.POST['medicationEndDate'], 
+        #                             duration=request.POST['medicationDuration'], 
+        #                             route=request.POST['medicationRoute'],
+        #                             comments=request.POST['medicationComment'])
         currentMedication = Medication.objects.filter(patient=user.id, status="current")
         currentMedicationSerializer = MedicationSerializer(currentMedication, 
                                                         many=True)
         return JsonResponse({'ok': True,
-                             'objID': obj.id,
+                            #  'objID': obj.id,
                              'medication': currentMedicationSerializer.data},
                                status=status.HTTP_201_CREATED)
 
@@ -176,6 +176,17 @@ def updateMedication(request):
             my_object.status = "past"
             my_object.comments = deleted_medication['medicationComments']
             my_object.save()
+
+        for added_medication in json_data["addedItems"]:
+            obj = Medication.objects.create(patient=user, 
+                            drug=added_medication['medicationDrug'], 
+                            dosage=added_medication['medicationDosage'], 
+                            startDate=added_medication['medicationStartDate'], 
+                            endDate=added_medication['medicationEndDate'], 
+                            duration=added_medication['medicationDuration'], 
+                            route=added_medication['medicationRoute'],
+                            comments=added_medication['medicationComments'])
+
         
         for new_medication in json_data["editItems"]:
             my_object = Medication.objects.get(id=new_medication['medicationID'])

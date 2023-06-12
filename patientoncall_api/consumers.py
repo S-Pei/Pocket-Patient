@@ -51,10 +51,10 @@ class EditConsumer(WebsocketConsumer):
         elif event == "CHANGE-IN-MEDICATION":
             print("CHANGE-IN-MEDICATION")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
-                'type': 'patient_data_access_authentication',
+                'type': 'send_current_medication_data',
                 'event': "CHANGE-IN-MEDICATION",
                 'currentMedication': response.get("currentMedication"),
-                'currentMedication': response.get("pastMedication")
+                # 'currentMedication': response.get("pastMedication")
             })
         else:
             print("UNKNOWN EVENT")
@@ -65,9 +65,10 @@ class EditConsumer(WebsocketConsumer):
 
 
     # Send data to Websocket functions
-    def send_data(self, res):
+    def send_current_medication_data(self, res):
         self.send(text_data=json.dumps({
-            "payload": res
+            "event": res["event"],
+            "currentMedication": res["currentMedication"]
         }))
     
     def patient_data_access_authentication(self, res):
