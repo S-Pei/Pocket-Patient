@@ -48,18 +48,10 @@
         <label for="entry-letter">Upload Letter:</label>
         <p class="form-control" name="entry-letter">{{form.letter}}</p>   
       </div>
-      <div class="add-history pt-1">
+      <!-- <div class="add-history pt-1">
         <label for="entry-lab-report">Upload Lab Reports:</label>  
         <p class="form-control" name="entry-lab-report"></p>   
-      </div>
-      <div class="add-history pt-1">
-        <label for="entry-imaging">Upload Imaging Reports:</label>
-        <div class="add-imaging-box">
-            <a href = "/add-imaging/"></a>
-              <button class="green-btn">Add Imaging</button>
-            </a>
-          </div>
-      </div>
+      </div> -->
       <div class="add-history pt-1">
         <p id="add-to-medical-history">Add discharge summary to medical history: {{form.addToMedicalHistory}}</p>   
       </div>
@@ -67,6 +59,12 @@
         <input class="add-button" type="submit" value="Save" id="add-visit"/>
       </div>
     </form> 
+    <!-- <div class="add-history pt-1">
+      <label for="entry-imaging">Upload Imaging Reports:</label>
+      <div class="add-imaging-box">
+        <button class="green-btn" onclick="window.location.href =window.location.origin + '/add-imaging'">Add Imaging</button>
+      </div>
+    </div> -->
     
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="

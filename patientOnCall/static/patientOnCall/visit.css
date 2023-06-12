@@ -17,6 +17,9 @@
 }
 
 .add-lab-button {
-  min-width: 90%;
-  height: 4vh;
+  color: black;
+}
+
+.add-lab-button a :hover{
+  color: white;
 }

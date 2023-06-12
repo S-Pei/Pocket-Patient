@@ -35,15 +35,21 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
     console.log(row)
-    const entryAdmissionDate = document.createElement("div");
-    entryAdmissionDate.classList.add("info-table-item");
-    entryAdmissionDate.classList.add(row);
-    entryAdmissionDate.textContent = admissionDate;
 
-    const entryDischargeDate = document.createElement("div");
-    entryDischargeDate.classList.add("info-table-item");
-    entryDischargeDate.classList.add(row);
-    entryDischargeDate.textContent = dischargeDate;
+    const entryDate = document.createElement("div");
+    entryDate.classList.add("info-table-item");
+    entryDate.classList.add(row);
+    entryDate.textContent = admissionDate + "\n" + "-\n" + dischargeDate;
+
+    // const entryAdmissionDate = document.createElement("div");
+    // entryAdmissionDate.classList.add("info-table-item");
+    // entryAdmissionDate.classList.add(row);
+    // entryAdmissionDate.textContent = admissionDate;
+
+    // const entryDischargeDate = document.createElement("div");
+    // entryDischargeDate.classList.add("info-table-item");
+    // entryDischargeDate.classList.add(row);
+    // entryDischargeDate.textContent = dischargeDate;
 
     const entrySummary = document.createElement("div");
     entrySummary.classList.add("info-table-item");
@@ -82,26 +88,27 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
         }
     } 
 
-    const entryLabandImaging = document.createElement("div");
-    const entryLabAdd = document.createElement("button")
-    entryLabAdd.innerText = "Lab"
-    entryLabAdd.classList.add("add-lab-button")
-    entryLabandImaging.appendChild(entryLabAdd)
+    const entryLab = document.createElement("a");
+    entryLab.classList.add("info-table-item");
+    entryLab.classList.add(row);
+    entryLab.classList.add("add-lab-button");
+    entryLab.textContent = "Add Lab"
 
-    const entryImagingAdd = document.createElement("button")
-    entryImagingAdd.innerText = "Imaging"
-    entryImagingAdd.classList.add("add-lab-button")
-    entryLabandImaging.appendChild(entryImagingAdd)
+    const entryImaging = document.createElement("a");
+    entryImaging.classList.add("info-table-item");
+    entryImaging.classList.add(row);
+    entryImaging.classList.add("add-lab-button");
+    entryImaging.textContent = "Add Imaging"
+    entryImaging.href = base_url + '/add-imaging'
 
-    entryLabandImaging.classList.add("info-table-item");
-    entryLabandImaging.classList.add(row);
-
-    tableBody.appendChild(entryAdmissionDate);
-    tableBody.appendChild(entryDischargeDate);
+    tableBody.appendChild(entryDate);
+    // tableBody.appendChild(entryAdmissionDate);
+    // tableBody.appendChild(entryDischargeDate);
     tableBody.appendChild(entrySummary);
     tableBody.appendChild(entryVisitType);
     tableBody.appendChild(entryLetter);
-    tableBody.appendChild(entryLabandImaging);
+    tableBody.appendChild(entryLab);
+    tableBody.appendChild(entryImaging);
 }
 
 function row_hover(rowNum, visitType){
@@ -116,13 +123,14 @@ function row_hover(rowNum, visitType){
     for(var i = 0; i < n; i ++) {
         row[i].onmouseover = function() {
             changeColor("#73C1D2");
+
         };
         row[i].onmouseout = function() {
             changeColor("");
             if (visitType== "GP Consultation"){
-                row[3].style.backgroundColor = "#C55252";
+                row[2].style.backgroundColor = "#C55252";
             } else {
-                row[3].style.backgroundColor = "#6BC4EB";
+                row[2].style.backgroundColor = "#6BC4EB";
             }
         };   
     }
@@ -143,3 +151,9 @@ document.getElementById("add-visit").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/add-visit"
   })
+  
+document.getElementsByClassName("add-lab-button").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = base_url + "/add-imaging"
+  })
+
