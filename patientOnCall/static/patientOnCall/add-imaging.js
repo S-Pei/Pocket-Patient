@@ -16,6 +16,10 @@ var base_url = window.location.origin;
     $('#id_date').datepicker({dateFormat: "yy-mm-dd"});
   });
 
+  $(document).ready(function(){
+    $('#id_image').attr("multiple","true");
+  });
+
   let inputs = $("p input, p textarea, p select")
 
   $("#patient-imaging-history-add-entry").submit(function(eventObj) {
