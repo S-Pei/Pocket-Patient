@@ -24,7 +24,7 @@ var base_url = window.location.origin;
     insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName);
     for(var i = 1; i <= imagingHistory.length; i ++) {
         row_hover(i, imagingHistory[i-1]["visitType"]);
-        row_click(i);
+        row_click(i,scanName);
     }
 
 })();
@@ -129,13 +129,13 @@ function row_hover(rowNum){
     }
 }
 
-function row_click(rowNum){
+function row_click(rowNum, scanType){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
     for(var i = 0; i < n; i ++) {
         row[i].onclick = function() {
-            // window.location.href = base_url + "/edit-visit/" + rowNum
+            window.location.href = base_url + "/edit-scan/" + scanType + '/' + rowNum
         };
     }
 }
