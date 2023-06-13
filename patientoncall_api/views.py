@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser 
+from django.views.generic.edit import FormView
 
 from datetime import datetime, date
 
@@ -18,6 +19,8 @@ from .models import (
     MedicalHistory,
     LabHistory,
     Medication,
+    ImagingHistory,
+    ImagingUpload,
     Diary
 )
 
@@ -26,10 +29,12 @@ from .serializers import (
     MedicalHistorySerializer,
     LabHistorySerializer,
     MedicationSerializer,
+    ImagingHistorySerializer,
+    ImagingUploadSerializer,
     DiarySerializer
 )
 
-from .forms import AddVisitForm
+from .forms import AddVisitForm, AddImagingForm, ImagesUploadForm
 
 @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
@@ -104,6 +109,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     patientUser = PatientUser.objects.get(patient=user.id)
     medicalHistories = MedicalHistory.objects.filter(patient=user.id).exclude(id__in=toHideIds)
     labHistories = LabHistory.objects.filter(patient=user.id)
+    imagingHistories = ImagingHistory.objects.filter(patient=user.id)
+    imagingUploads = ImagingUpload.objects
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
     diary = Diary.objects.filter(patient=user.id)
@@ -111,6 +118,10 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
     labHistorySerializer = LabHistorySerializer(labHistories, 
+                        context={"request": request}, many=True)
+    imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
+                        context={"request": request}, many=True)
+    imagingUploadSerializer = ImagingUploadSerializer(imagingUploads, 
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
@@ -127,6 +138,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'patient-address': patientUserSerializer.data["patientAddress"],
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data,
+        'imaging-history': imagingHistorySerializer.data,
+        'imaging-uploads': imagingUploadSerializer.data,
         'current-medication': currentMedicationSerializer.data,
         'previous-medication': previousMedicationSerializer.data,
         'diary': diarySerializer.data
@@ -237,6 +250,8 @@ def addVisit(request):
             patientId = request.POST.get("patientId");
             patientName = request.POST.get("patientName");
             user = matchPatientUser(patientId, patientName)
+            print(request.POST)
+            print(user)
             MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=request.POST.get("admissionDate"),
@@ -245,7 +260,7 @@ def addVisit(request):
                 consultant = request.POST.get("consultant"),
                 visitType = request.POST.get("visitType"),
                 letter=request.FILES["letter"] if 'letter' in request.FILES else False,
-                addToMedicalHistory=True if (request.POST.get("addToMedicalHistory")=="on") else False
+                addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             )
             # print("is valid")
             return render(request, "patientOnCall/visit.html", {'created': True})
@@ -254,3 +269,75 @@ def addVisit(request):
         # print("add visit")
         return render(request, "patientOnCall/add-visit.html", {'form': form})
 
+
+
+@csrf_exempt
+def addImaging(request):
+    if request.method == "POST":
+        # form = AddImagingForm(request.POST, request.FILES or None)
+        form = ImagesUploadForm(request.POST, request.FILES or None)
+        images = request.FILES.getlist('image')
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            imagingEntry = ImagingHistory.objects.create(
+                patient=user,
+                date=request.POST.get("date"),
+                scanType=request.POST.get("scanType"),
+                region = request.POST.get("region"),
+                indication = request.POST.get("indication"),
+                # visitType = request.POST.get("visitType"),
+                report=request.FILES["report"] if 'report' in request.FILES else False,
+                # visitEntry=request.POST.get("visitEntry")
+            )
+            for i in images:
+                ImagingUpload.objects.create(
+                    imagingEntry=imagingEntry,
+                    image=i
+                )
+            # print("is valid")
+            return render(request, "patientOnCall/scan-type.html")
+    else:
+        # form = AddImagingForm()
+        form = ImagesUploadForm()
+        # print("add visit")
+        return render(request, "patientOnCall/add-imaging.html", {'form': form})
+
+@csrf_exempt
+def addImagingHistory(request):
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName']) 
+        entry = ImagingHistory.objects.create(patient=user, 
+                                      date=request.POST.get("date"),
+                                      scanType=request.POST.get("scanType"),
+                                      region = request.POST.get("region"),
+                                      indication = request.POST.get("indication"),
+                                      # visitType = request.POST.get("visitType"),
+                                      report=request.FILES["report"] if 'report' in request.FILES else False)
+                                      # visitEntry=request.POST.get("visitEntry"))
+        imageList = addImagingUploads(request, entry)
+        imagingHistories = ImagingHistory.objects.filter(patient=user.id)
+        imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'imaging-history': imagingHistorySerializer.data,
+                             'imaging-uploads': imageList},
+                               status=status.HTTP_201_CREATED)
+    
+@csrf_exempt
+def addImagingUploads(request, entry):
+    if request.method == "POST":
+        images = request.FILES.getlist('image')
+        imageList = []
+        for i in images:
+            ImagingUpload.objects.create(
+                                        image=i,
+                                        imagingEntry=entry
+                                        )
+                                        # visitEntry=request.POST.get("visitEntry"))
+            imagingUploads = ImagingUpload.objects.filter(imagingEntry=entry)
+            imagingUploadSerializer = ImagingUploadSerializer(imagingUploads, 
+                                                            many=True)
+            imageList.append(imagingUploadSerializer.data)
+        return imageList

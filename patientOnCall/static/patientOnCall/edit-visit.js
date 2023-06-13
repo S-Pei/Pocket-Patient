@@ -7,7 +7,7 @@ var base_url = window.location.origin;
     
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
-    
+
     rowNum = window.location.href.split('/')[4]
     getVisitEntry(rowNum-1)
 })();
@@ -27,6 +27,7 @@ function getVisitEntry(entryNum) {
     document.getElementById("entry-discharge-date").innerHTML = dischargeDate
     document.getElementById("entry-visit-type").innerHTML = visitType
     document.getElementById("entry-summary").innerHTML = summary
+    
     const entryLetter = document.getElementById("entry-letter")
 
     if  (letter === '' || letter === '/media/False') {
@@ -43,3 +44,7 @@ function getVisitEntry(entryNum) {
     console.log(addToMedicalHistory)
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
 }
+
+document.getElementById("add-imaging").onclick = function() {
+    window.location.href = base_url + "/add-imaging"
+};

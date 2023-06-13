@@ -16,3 +16,10 @@
   font-weight: bold;
 }
 
+.add-lab-button {
+  color: black;
+}
+
+.add-lab-button a :hover{
+  color: white;
+}
