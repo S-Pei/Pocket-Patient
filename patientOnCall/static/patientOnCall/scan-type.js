@@ -7,7 +7,8 @@ var base_url = window.location.origin;
     const id = sessionStorage.getItem("patientID")
     // const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
     const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
-
+    const imagingUploads = JSON.parse(sessionStorage.getItem("imagingUploads"))
+    
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
     // console.log(window.location.href.split('/')[4])
@@ -19,8 +20,8 @@ var base_url = window.location.origin;
         $(".section-header").html(scanName + ' Scans')
     }
 
-    console.log(imagingHistory);
-    insertImagingHistoryEntries(imagingHistory, scanName);
+    // console.log(imagingHistory);
+    insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName);
     for(var i = 1; i <= imagingHistory.length; i ++) {
         row_hover(i, imagingHistory[i-1]["visitType"]);
         row_click(i);
@@ -28,23 +29,31 @@ var base_url = window.location.origin;
 
 })();
 
-function insertImagingHistoryEntries(imagingHistory, scanName) {
+function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
   var i = 0
   while (i < imagingHistory.length) {
+    const entryID = imagingHistory[i]["id"]
+    // console.log(imagingUploads.filter(function(item){
+    //     return item.imagingEntry == entryID;         
+    // }));
+    const images = imagingUploads.filter(function(item){
+        return item.imagingEntry == entryID;         
+    });
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
         imagingHistory[i]["region"],
          imagingHistory[i]["indication"],
-         imagingHistory[i]["report"])
+         imagingHistory[i]["report"], 
+         images)
     }
     i++;
   }
 }
-function addImagingHistoryEntry(rowNum, date, region, indication, report) {
+function addImagingHistoryEntry(rowNum, date, region, indication, report, images) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
-    console.log(row)
+    // console.log(row)
 
     const entryDate = document.createElement("div");
     entryDate.classList.add("info-table-item");
@@ -69,13 +78,22 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report) {
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
-        console.log(entryReport.href)
+        // console.log(entryRe port.href)
         entryReport.textContent = "Imaging Report";
     } 
 
     const entryImages = document.createElement("div");
     entryImages.classList.add("info-table-item");
     entryImages.classList.add(row);
+    for(var i = 0; i < images.length; i ++) {
+        console.log(images[i])
+        var entryImage = "entryImage-" + i 
+        entryImage = document.createElement("a");
+        entryImage.classList.add("add-lab-button");
+        entryImage.textContent = "Image" + i
+        entryImage.href = images[i]["image"]
+        entryImages.appendChild(entryImage)
+    }
 
     tableBody.appendChild(entryDate);
     tableBody.appendChild(entryRegion);
