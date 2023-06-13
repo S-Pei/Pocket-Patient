@@ -42,7 +42,7 @@ var base_url = window.location.origin;
           // console.log($(this)[0].files);
           const arr = Array.from($(this)[0].files)
           var imageNames = []
-          arr.forEach(f => imageNames.push(f.name))
+          arr.forEach(f => imageNames.push('/media/imagingattachments/' + f.name))
           // console.log(imageNames)
           newImagingHistory[attr] = imageNames;
         } else {

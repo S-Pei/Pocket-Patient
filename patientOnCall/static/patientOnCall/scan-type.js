@@ -34,14 +34,16 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
   while (i < imagingHistory.length) {
     const entryID = imagingHistory[i]["id"]
     // console.log(entryID === undefined)
+    var images = []
     if (entryID === undefined) {
-        const newImagingHistory = imagingHistory[i]
-        console.log(newImagingHistory)
+        images = imagingHistory[i]['image']
+    } else {
+        imagesEntries = imagingUploads.filter(function(item){
+            return item.imagingEntry == entryID;         
+        });
+        imagesEntries.forEach(f => images.push(f['image']))
     }
 
-    const images = imagingUploads.filter(function(item){
-        return item.imagingEntry == entryID;         
-    });
 
     console.log(images)
     
@@ -96,7 +98,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
         entryImage = document.createElement("a");
         entryImage.classList.add("add-lab-button");
         entryImage.textContent = region + "-img-" + (i+1) + "\n"
-        entryImage.href = images[i]["image"]
+        entryImage.href = images[i]
         entryImages.appendChild(entryImage)
     }
 
