@@ -31,3 +31,7 @@ def displayHistory(request):
 
 def patientDiary(request):
     return render(request, 'patientOnCall/patient-diary.html')
+
+def readDiaryEntry(request):
+    print(request)
+    return render(request, 'patientOnCall/patient-diary-entry.html')

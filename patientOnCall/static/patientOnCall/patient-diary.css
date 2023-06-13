@@ -45,3 +45,7 @@
 .hovered-row {
   background-color: var(--table-background-colour) !important;
 }
+
+.diary-info {
+  cursor: pointer;
+}
