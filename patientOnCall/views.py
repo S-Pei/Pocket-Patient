@@ -28,3 +28,6 @@ def addMedication(request):
 
 def displayHistory(request):
     return render(request, 'patientOnCall/lab-history.html')
+
+def patientDiary(request):
+    return render(request, 'patientOnCall/patient-diary.html')
