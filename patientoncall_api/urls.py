@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     PatientApiView,
-    PatientMedicalHistoryApiView
+    PatientMedicalHistoryApiView,
 )
 from . import views
 from rest_framework_simplejwt.views import (
@@ -23,4 +23,5 @@ urlpatterns = [
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
     path('doctor/patient-data/add-visit/', views.addVisit),
     path('doctor/patient-data/imaging-history/', views.addImagingHistory),
+    path('doctor/patient-data/add-imaging/', views.addImaging),
 ]

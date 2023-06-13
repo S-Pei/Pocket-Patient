@@ -94,12 +94,25 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     entryLab.classList.add("add-lab-button");
     entryLab.textContent = "Add Lab"
 
-    const entryImaging = document.createElement("a");
+    const entryImaging = document.createElement("div");
     entryImaging.classList.add("info-table-item");
     entryImaging.classList.add(row);
     entryImaging.classList.add("add-lab-button");
-    entryImaging.textContent = "Add Imaging"
     entryImaging.href = base_url + '/add-imaging'
+
+    const entryImagingReport = document.createElement("a");
+    // entryImagingReport.classList.add("info-table-item");
+    // entryImagingReport.classList.add(row);
+    entryImagingReport.textContent = "Imaging Report \n"
+    entryImaging.appendChild(entryImagingReport)
+
+    const entryAddImaging = document.createElement("a");
+    // entryImaging.classList.add("info-table-item");
+    // entryImaging.classList.add(row);
+    entryAddImaging.classList.add("add-lab-button");
+    entryAddImaging.textContent = "Add Imaging"
+    entryAddImaging.href = base_url + '/add-imaging'
+    entryImaging.appendChild(entryAddImaging)
 
     tableBody.appendChild(entryDate);
     // tableBody.appendChild(entryAdmissionDate);
@@ -109,6 +122,7 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     tableBody.appendChild(entryLetter);
     tableBody.appendChild(entryLab);
     tableBody.appendChild(entryImaging);
+
 }
 
 function row_hover(rowNum, visitType){

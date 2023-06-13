@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser 
+from django.views.generic.edit import FormView
 
 from datetime import datetime, date
 
@@ -18,7 +19,8 @@ from .models import (
     MedicalHistory,
     LabHistory,
     Medication,
-    ImagingHistory
+    ImagingHistory,
+    ImagingUpload
 )
 
 from .serializers import (
@@ -29,7 +31,7 @@ from .serializers import (
     ImagingHistorySerializer
 )
 
-from .forms import AddVisitForm, AddImagingForm
+from .forms import AddVisitForm, AddImagingForm, ImagesUploadForm
 
 @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
@@ -256,15 +258,18 @@ def addVisit(request):
         return render(request, "patientOnCall/add-visit.html", {'form': form})
 
 
+
 @csrf_exempt
 def addImaging(request):
     if request.method == "POST":
-        form = AddImagingForm(request.POST, request.FILES or None)
+        # form = AddImagingForm(request.POST, request.FILES or None)
+        form = ImagesUploadForm(request.POST, request.FILES or None)
+        images = request.FILES.getlist('image')
         if form.is_valid():
             patientId = request.POST.get("patientId");
             patientName = request.POST.get("patientName");
             user = matchPatientUser(patientId, patientName)
-            ImagingHistory.objects.create(
+            imagingEntry = ImagingHistory.objects.create(
                 patient=user,
                 date=request.POST.get("date"),
                 scanType=request.POST.get("scanType"),
@@ -274,10 +279,17 @@ def addImaging(request):
                 report=request.FILES["report"] if 'report' in request.FILES else False,
                 # visitEntry=request.POST.get("visitEntry")
             )
+
+            for i in images:
+                ImagingUpload.objects.create(
+                    image=i,
+                    imagingEntry=imagingEntry
+                )
             # print("is valid")
-            return render(request, "patientOnCall/scan-type.html", {'form': form})
+            return render(request, "patientOnCall/scan-type.html")
     else:
-        form = AddImagingForm()
+        # form = AddImagingForm()
+        form = ImagesUploadForm()
         # print("add visit")
         return render(request, "patientOnCall/add-imaging.html", {'form': form})
 
