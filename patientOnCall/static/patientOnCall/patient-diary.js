@@ -27,6 +27,7 @@ function insertDiaryEntries(diary) {
       entry["readByDoctor"],
       i >= diary.length - 1
     )
+    row_hover(i);
     i++;
   }
 }
@@ -41,7 +42,7 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   if (readByDoctor) { isReadByDoctorElem.classList.add("invisible"); }
 
   let dateElem = document.createElement("div");
-  dateElem.classList.add("info-table-item", "diary-date");
+  dateElem.classList.add("info-table-item", "diary-date", `row-${rowNum}`);
   if (isLastRow) { dateElem.classList.add("last-row"); }
   if (!readByDoctor) { dateElem.classList.add("read-by-doctor-info"); }
   dateElem.setAttribute("id", `diary-date-${rowNum}`);
@@ -49,7 +50,7 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   dateElem.innerHTML = date;
 
   let contentElem = document.createElement("div");
-  contentElem.classList.add("info-table-item", "diary-content");
+  contentElem.classList.add("info-table-item", "diary-content", `row-${rowNum}`);
   if (isLastRow) { contentElem.classList.add("last-row"); }
   if (!readByDoctor) { contentElem.classList.add("read-by-doctor-info"); }
   contentElem.setAttribute("id", `diary-content-${rowNum}`);
@@ -59,4 +60,21 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   table.appendChild(isReadByDoctorElem);
   table.appendChild(dateElem);
   table.appendChild(contentElem);
+}
+
+function row_hover(rowNum){
+  var rowClass = 'row-' + rowNum 
+  var row = document.getElementsByClassName(rowClass);
+  for(var i = 0; i <  row.length; i ++) {
+      row[i].onmouseover = function() {
+        for (var j = 0; j < row.length; j++) {
+          row[j].classList.add("hovered-row");
+        }
+      };
+      row[i].onmouseout = function() {
+        for (var j = 0; j < row.length; j++) {
+          row[j].classList.remove("hovered-row");
+        }
+      };   
+  }
 }

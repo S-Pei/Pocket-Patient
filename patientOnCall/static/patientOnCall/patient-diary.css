@@ -38,5 +38,9 @@
 
 .read-by-doctor-info {
   background-color: rgb(246, 246, 246) !important;
-  font-weight: bold;
+  font-weight: 600;
+}
+
+.hovered-row {
+  background-color: var(--table-background-colour) !important;
 }
