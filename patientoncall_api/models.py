@@ -47,3 +47,10 @@ class Medication(models.Model):
     route = models.CharField(max_length=1024)
     status = models.CharField(max_length=32, default="current")
     comments = models.CharField(max_length=1024, blank=True, null=True)
+
+
+class Diary(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(default=datetime.today)
+    content = models.TextField();

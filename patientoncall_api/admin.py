@@ -4,7 +4,8 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Medication
+    Medication,
+    Diary
 )
 
 class PatientUserAdmin(admin.ModelAdmin):
@@ -23,7 +24,11 @@ class MedicationAdmin(admin.ModelAdmin):
     list_display = ('patient', 'drug', 'dosage', 'startDate', 'endDate', 
                     'duration', 'route', 'status', 'comments')
 
+class DiaryAdmin(admin.ModelAdmin):
+    list_display = ('patient', 'date', 'content')
+
 admin.site.register(MedicalHistory, MedicalHistoryAdmin)
 admin.site.register(LabHistory, LabHistoryAdmin)
 admin.site.register(PatientUser, PatientUserAdmin)
 admin.site.register(Medication, MedicationAdmin)
+admin.site.register(Diary, DiaryAdmin)

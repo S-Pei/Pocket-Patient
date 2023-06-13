@@ -17,14 +17,16 @@ from .models import (
     PatientUser,
     MedicalHistory,
     LabHistory,
-    Medication
+    Medication,
+    Diary
 )
 
 from .serializers import (
     PatientUserSerializer,
     MedicalHistorySerializer,
     LabHistorySerializer,
-    MedicationSerializer
+    MedicationSerializer,
+    DiarySerializer
 )
 
 from .forms import AddVisitForm
@@ -104,6 +106,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     labHistories = LabHistory.objects.filter(patient=user.id)
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
+    diary = Diary.objects.filter(patient=user.id)
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
@@ -111,6 +114,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
+    diarySerializer = DiarySerializer(diary, many=True)
     sessionID = request.session.session_key
     return {
         'ok': True,
@@ -124,7 +128,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data,
         'current-medication': currentMedicationSerializer.data,
-        'previous-medication': previousMedicationSerializer.data
+        'previous-medication': previousMedicationSerializer.data,
+        'diary': diarySerializer.data
     }
 
 @csrf_exempt
