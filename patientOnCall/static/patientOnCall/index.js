@@ -135,6 +135,7 @@ function api_fetch_patient_full_data(toHideIds) {
         sessionStorage.setItem("labHistory", JSON.stringify(returned_value["lab-history"]))
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
         sessionStorage.setItem("imagingHistory", JSON.stringify(returned_value["imaging-history"]))
+        sessionStorage.setItem("imagingUploads", JSON.stringify(returned_value["imaging-uploads"]))
         sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
         sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
         sessionStorage.setItem("displayDisclaimer", toHideIds.length > 0)

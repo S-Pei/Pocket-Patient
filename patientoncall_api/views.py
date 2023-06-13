@@ -28,7 +28,8 @@ from .serializers import (
     MedicalHistorySerializer,
     LabHistorySerializer,
     MedicationSerializer,
-    ImagingHistorySerializer
+    ImagingHistorySerializer,
+    ImagingUploadSerializer
 )
 
 from .forms import AddVisitForm, AddImagingForm, ImagesUploadForm
@@ -107,6 +108,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     medicalHistories = MedicalHistory.objects.filter(patient=user.id).exclude(id__in=toHideIds)
     labHistories = LabHistory.objects.filter(patient=user.id)
     imagingHistories = ImagingHistory.objects.filter(patient=user.id)
+    imagingUploads = ImagingUpload.objects
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
@@ -115,6 +117,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
     imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
+                        context={"request": request}, many=True)
+    imagingUploadSerializer = ImagingUploadSerializer(imagingUploads, 
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
@@ -131,6 +135,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'medical-history': medicalHistorySerializer.data,
         'lab-history': labHistorySerializer.data,
         'imaging-history': imagingHistorySerializer.data,
+        'imaging-uploads': imagingUploadSerializer.data,
         'current-medication': currentMedicationSerializer.data,
         'previous-medication': previousMedicationSerializer.data
     }
@@ -279,11 +284,10 @@ def addImaging(request):
                 report=request.FILES["report"] if 'report' in request.FILES else False,
                 # visitEntry=request.POST.get("visitEntry")
             )
-
             for i in images:
                 ImagingUpload.objects.create(
-                    image=i,
-                    imagingEntry=imagingEntry
+                    imagingEntry=imagingEntry,
+                    image=i
                 )
             # print("is valid")
             return render(request, "patientOnCall/scan-type.html")
@@ -297,7 +301,7 @@ def addImaging(request):
 def addImagingHistory(request):
     if request.method == "POST":
         user = matchPatientUser(request.POST['patientID'], request.POST['patientName']) 
-        ImagingHistory.objects.create(patient=user, 
+        entry = ImagingHistory.objects.create(patient=user, 
                                       date=request.POST.get("date"),
                                       scanType=request.POST.get("scanType"),
                                       region = request.POST.get("region"),
@@ -305,9 +309,28 @@ def addImagingHistory(request):
                                       # visitType = request.POST.get("visitType"),
                                       report=request.FILES["report"] if 'report' in request.FILES else False)
                                       # visitEntry=request.POST.get("visitEntry"))
+        imageList = addImagingUploads(request, entry)
         imagingHistories = ImagingHistory.objects.filter(patient=user.id)
         imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
                                                         many=True)
         return JsonResponse({'ok': True,
-                             'imaging-history': imagingHistorySerializer.data},
+                             'imaging-history': imagingHistorySerializer.data,
+                             'imaging-uploads': imageList},
                                status=status.HTTP_201_CREATED)
+    
+@csrf_exempt
+def addImagingUploads(request, entry):
+    if request.method == "POST":
+        images = request.FILES.getlist('image')
+        imageList = []
+        for i in images:
+            ImagingUpload.objects.create(
+                                        image=i,
+                                        imagingEntry=entry
+                                        )
+                                        # visitEntry=request.POST.get("visitEntry"))
+            imagingUploads = ImagingUpload.objects.filter(imagingEntry=entry)
+            imagingUploadSerializer = ImagingUploadSerializer(imagingUploads, 
+                                                            many=True)
+            imageList.append(imagingUploadSerializer.data)
+        return imageList

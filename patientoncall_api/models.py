@@ -71,6 +71,6 @@ class ImagingHistory(models.Model):
 
 
 class ImagingUpload(models.Model): 
-   image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
    imagingEntry = models.ForeignKey(ImagingHistory, on_delete=models.CASCADE)
+   image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
    
