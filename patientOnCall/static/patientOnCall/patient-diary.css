@@ -36,9 +36,10 @@
   color: red;
 }
 
-.read-by-doctor-info {
+.not-read-by-doctor-info {
   background-color: rgb(246, 246, 246) !important;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .hovered-row {

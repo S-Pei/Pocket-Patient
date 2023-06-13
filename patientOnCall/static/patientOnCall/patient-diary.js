@@ -44,7 +44,7 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   let dateElem = document.createElement("div");
   dateElem.classList.add("info-table-item", "diary-date", `row-${rowNum}`);
   if (isLastRow) { dateElem.classList.add("last-row"); }
-  if (!readByDoctor) { dateElem.classList.add("read-by-doctor-info"); }
+  if (!readByDoctor) { dateElem.classList.add("not-read-by-doctor-info"); }
   dateElem.setAttribute("id", `diary-date-${rowNum}`);
   dateElem.setAttribute("diary-id", id);
   dateElem.innerHTML = date;
@@ -52,7 +52,7 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   let contentElem = document.createElement("div");
   contentElem.classList.add("info-table-item", "diary-content", `row-${rowNum}`);
   if (isLastRow) { contentElem.classList.add("last-row"); }
-  if (!readByDoctor) { contentElem.classList.add("read-by-doctor-info"); }
+  if (!readByDoctor) { contentElem.classList.add("not-read-by-doctor-info"); }
   contentElem.setAttribute("id", `diary-content-${rowNum}`);
   contentElem.setAttribute("diary-id", id);
   contentElem.innerHTML = content;
