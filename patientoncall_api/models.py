@@ -74,3 +74,9 @@ class ImagingUpload(models.Model):
    imagingEntry = models.ForeignKey(ImagingHistory, on_delete=models.CASCADE)
    image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
    
+
+class Diary(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(default=datetime.today)
+    content = models.TextField();

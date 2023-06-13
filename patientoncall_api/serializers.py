@@ -6,7 +6,8 @@ from .models import (
     LabHistory,
     Medication,
     ImagingHistory,
-    ImagingUpload
+    ImagingUpload,
+    Diary
 )
 
 class PatientUserSerializer(serializers.ModelSerializer):
@@ -44,3 +45,8 @@ class ImagingUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImagingUpload
         fields = ['imagingEntry','image']
+
+class DiarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Diary
+        fields = ('date', 'content')

@@ -2,7 +2,13 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from .models import Medication
+from .models import (
+    PatientUser,
+    Medication,
+    Diary
+)
+
+import jwt
 
 class EditConsumer(WebsocketConsumer):
 
@@ -56,6 +62,15 @@ class EditConsumer(WebsocketConsumer):
                 'currentMedication': response.get("currentMedication"),
                 # 'currentMedication': response.get("pastMedication")
             })
+        elif event == "NEW_DIARY_ENTRY":
+            self.add_diary_entry(response)
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_new_diary_information',
+                'event': "NEW_DIARY_ENTRY",
+                'patientId': response.get("patientId"),
+                'date': response.get("date"),
+                'content': response.get("content")
+            })
         else:
             print("UNKNOWN EVENT")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
@@ -71,8 +86,29 @@ class EditConsumer(WebsocketConsumer):
             "currentMedication": res["currentMedication"]
         }))
     
+    def send_new_diary_information(self, res):
+        self.send(text_data=json.dumps({
+            "event": res["event"],
+            "patientId": res["patientId"],
+            "date": res["date"],
+            "content": res["content"]
+        }))
+    
     def patient_data_access_authentication(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "ids": res["ids"] if "ids" in res else []
         }))
+
+
+    def add_diary_entry(self, res):
+        user = self.get_user_by_patientId(res.get("patientId"))
+        date = res.get("date").split(" ")[0]
+        diary = Diary.objects.create(patient=user, date=date, content=res.get("content"))
+        diary.save()
+
+
+    def get_user_by_patientId(self, patientId):
+        patientUser = PatientUser.objects.get(patientId=patientId)
+        user = patientUser.patient
+        return user
