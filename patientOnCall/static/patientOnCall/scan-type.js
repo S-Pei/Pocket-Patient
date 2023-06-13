@@ -33,12 +33,18 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
   var i = 0
   while (i < imagingHistory.length) {
     const entryID = imagingHistory[i]["id"]
-    // console.log(imagingUploads.filter(function(item){
-    //     return item.imagingEntry == entryID;         
-    // }));
+    // console.log(entryID === undefined)
+    if (entryID === undefined) {
+        const newImagingHistory = imagingHistory[i]
+        console.log(newImagingHistory)
+    }
+
     const images = imagingUploads.filter(function(item){
         return item.imagingEntry == entryID;         
     });
+
+    console.log(images)
+    
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
         imagingHistory[i]["region"],
@@ -78,7 +84,6 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
-        // console.log(entryRe port.href)
         entryReport.textContent = "Imaging Report";
     } 
 

@@ -28,22 +28,31 @@ var base_url = window.location.origin;
     inputs.each(function () {
       // console.log($(this))
       let attr = $(this).attr("name");
-      // console.log(attr)
+      console.log(attr)
       let value = $(this).val();
-      let valid_attrs = ["date", "scanType", "region", "indication", "report"]
+      let valid_attrs = ["date", "scanType", "region", "indication", "report", "image"]
       // console.log(valid_attrs.includes(attr))
       if (valid_attrs.includes(attr)) {
         if (attr === "report") {
           newImagingHistory[attr] = value.replace(/C:\\fakepath\\/, '/media/imagingreports/');
           // console.log(base_url)
           // console.log(newMedicalHistory[attr])
+        } else if (attr === "image"){
+          // const images = $(this)[0].files
+          // console.log($(this)[0].files);
+          const arr = Array.from($(this)[0].files)
+          var imageNames = []
+          arr.forEach(f => imageNames.push(f.name))
+          // console.log(imageNames)
+          newImagingHistory[attr] = imageNames;
         } else {
           newImagingHistory[attr] = value;
         }
       }
-        console.log(newImagingHistory)
       
     })
+    console.log(newImagingHistory)
+    console.log(newImagingHistory["image"])
     // valid_attrs.forEach
     let patientId = sessionStorage.getItem("patientID");
     let patientName = sessionStorage.getItem("patientName");

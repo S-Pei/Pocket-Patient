@@ -250,6 +250,8 @@ def addVisit(request):
             patientId = request.POST.get("patientId");
             patientName = request.POST.get("patientName");
             user = matchPatientUser(patientId, patientName)
+            print(request.POST)
+            print(user)
             MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=request.POST.get("admissionDate"),
@@ -258,7 +260,7 @@ def addVisit(request):
                 consultant = request.POST.get("consultant"),
                 visitType = request.POST.get("visitType"),
                 letter=request.FILES["letter"] if 'letter' in request.FILES else False,
-                addToMedicalHistory=True if (request.POST.get("addToMedicalHistory")=="on") else False
+                addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             )
             # print("is valid")
             return render(request, "patientOnCall/visit.html", {'created': True})
