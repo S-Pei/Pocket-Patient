@@ -53,4 +53,5 @@ class Diary(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.today)
-    content = models.TextField();
+    content = models.TextField()
+    readByDoctor = models.BooleanField(default=False)

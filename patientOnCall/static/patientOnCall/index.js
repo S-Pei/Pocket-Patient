@@ -136,6 +136,7 @@ function api_fetch_patient_full_data(toHideIds) {
         sessionStorage.setItem("medicalHistory", JSON.stringify(returned_value["medical-history"]))
         sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
         sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
+        sessionStorage.setItem("patientDiary", JSON.stringify(returned_value["diary"]))
         sessionStorage.setItem("displayDisclaimer", toHideIds.length > 0)
 
         window.location.href = "main/"

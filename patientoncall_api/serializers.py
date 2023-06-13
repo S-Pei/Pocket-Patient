@@ -36,4 +36,4 @@ class MedicationSerializer(serializers.ModelSerializer):
 class DiarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ('date', 'content')
+        fields = ('id', 'date', 'content', 'readByDoctor')

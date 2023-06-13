@@ -1,0 +1,42 @@
+#main-patient-diary-box {
+  padding: 2rem !important;
+}
+
+#main-patient-diary-box-table {
+  grid-template-columns: 1fr 8fr 25fr;
+}
+
+.info-table {
+  border: none !important;
+}
+
+.info-table-label {
+  border: 2px solid black !important;
+}
+
+.diary-date {
+  border-right: 1px solid black !important;
+  border-bottom: 1px solid black !important;
+  border-left: 2px solid black !important;
+}
+
+.diary-content {
+  border-left: 1px solid black !important;
+  border-bottom: 1px solid black !important;
+  border-right: 2px solid black !important;
+}
+
+.last-row {
+  border-bottom: 2px solid black !important;
+}
+
+.read-by-doctor-indicator-col {
+  text-align: center;
+  font-size: 23px;
+  color: red;
+}
+
+.read-by-doctor-info {
+  background-color: rgb(246, 246, 246) !important;
+  font-weight: bold;
+}
