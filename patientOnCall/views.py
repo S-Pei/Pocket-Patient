@@ -34,3 +34,6 @@ def displayImaging(request):
 
 def displayScanType(request, id):
     return render(request, 'patientOnCall/scan-type.html')
+
+def displayEditScan(request, scanType, id):
+    return render(request, 'patientOnCall/edit-scan.html')
