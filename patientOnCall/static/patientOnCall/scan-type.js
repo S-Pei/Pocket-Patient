@@ -90,7 +90,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
         var entryImage = "entryImage-" + i 
         entryImage = document.createElement("a");
         entryImage.classList.add("add-lab-button");
-        entryImage.textContent = "Image" + i
+        entryImage.textContent = region + "-img-" + (i+1) + "\n"
         entryImage.href = images[i]["image"]
         entryImages.appendChild(entryImage)
     }

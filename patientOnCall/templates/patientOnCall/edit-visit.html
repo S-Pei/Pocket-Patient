@@ -43,19 +43,21 @@
       <label for="entry-summary">Summary:</label>
       <p id="entry-summary"></p>   
     </div>
-    <div class="add-history pt-1">
-      <label for="entry-letter">Letter:</label>
+    <div class="add-history pt-1" id="entry-letter-wrapper">
+      <label>Letter:</label>
       <a id="entry-letter"></a>   
+      <input class="add-option" type="submit" id="upload-letter" value="Upload Letter">
     </div>
     <div class="add-history pt-1">
       <label for="entry-lab-report">Lab Reports:</label>
       <!-- <p class="form-control" name="entry-lab-report"></p>    -->
+      <input class="add-option" type="submit" id="add-lab" value="Add Lab">
     </div>
     <div class="add-history pt-1">
       <label>Imaging:</label>
-      <button class="edit-entry" id="add-imaging">Add Imaging</button>  
+      <!-- <button class="edit-entry" id="add-imaging">Add Imaging</button>   -->
+      <input class="add-option" type="submit" id="add-imaging" value="Add Imaging">
     </div>
-    
     
     <div class="add-history pt-1">
       <label for="entry-add-to-medical-history">Add discharge summary to medical history:</label>
@@ -63,7 +65,7 @@
     </div>
     <!-- <input class="add-button" type="submit" value="Save" id="add-visit"> -->
   </div>
-
+  
     
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="

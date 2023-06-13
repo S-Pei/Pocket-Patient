@@ -92,7 +92,7 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     entryLab.classList.add("info-table-item");
     entryLab.classList.add(row);
     entryLab.classList.add("add-lab-button");
-    entryLab.textContent = "Add Lab"
+    entryLab.textContent = "Lab Report"
 
     const entryImaging = document.createElement("div");
     entryImaging.classList.add("info-table-item");
@@ -106,13 +106,13 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     entryImagingReport.textContent = "Imaging Report \n"
     entryImaging.appendChild(entryImagingReport)
 
-    const entryAddImaging = document.createElement("a");
-    // entryImaging.classList.add("info-table-item");
-    // entryImaging.classList.add(row);
-    entryAddImaging.classList.add("add-lab-button");
-    entryAddImaging.textContent = "Add Imaging"
-    entryAddImaging.href = base_url + '/add-imaging'
-    entryImaging.appendChild(entryAddImaging)
+    // const entryAddImaging = document.createElement("a");
+    // // entryImaging.classList.add("info-table-item");
+    // // entryImaging.classList.add(row);
+    // entryAddImaging.classList.add("add-lab-button");
+    // entryAddImaging.textContent = "Add Imaging"
+    // entryAddImaging.href = base_url + '/add-imaging'
+    // entryImaging.appendChild(entryAddImaging)
 
     tableBody.appendChild(entryDate);
     // tableBody.appendChild(entryAdmissionDate);
