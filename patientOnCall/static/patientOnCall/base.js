@@ -24,6 +24,12 @@ document.getElementById("imaging-history").addEventListener("click", (e) => {
     window.location.href = base_url + "/imaging"
   })
 
+document.getElementById("patient-diary").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = base_url + "/patient-diary"
+})
+
+
 
 if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getItem("displayDisclaimer") == "true") {
   $("#disclaimer-note").removeClass("invisible");
