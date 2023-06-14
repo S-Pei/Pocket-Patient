@@ -48,41 +48,50 @@ function addMedication(isCurrent, id, drug, dosage, startDate, endDate, duration
 
     const medicationDrug = document.createElement("div");
     medicationDrug.classList.add("info-table-item", "drug-info-item");
+    medicationDrug.setAttribute("id", id + '-drug');
     medicationDrug.setAttribute("medication-id", id);
     medicationDrug.textContent = drug;
 
     const medicationDosage = document.createElement("div");
     medicationDosage.classList.add("info-table-item", "dosage-info-item");
+    medicationDosage.setAttribute("id", id + '-dosage');
     medicationDosage.setAttribute("medication-id", id);
     medicationDosage.textContent = dosage;
 
     const medicationStartDate = document.createElement("div");
     medicationStartDate.classList.add("info-table-item", "start-date-info-item");
+    medicationStartDate.setAttribute("id", id + '-start-date');
     medicationStartDate.setAttribute("medication-id", id);
     medicationStartDate.textContent = startDate;
 
     const medicationEndDate = document.createElement("div");
     medicationEndDate.classList.add("info-table-item", "end-date-info-item");
+    medicationEndDate.setAttribute("id", id + '-end-date');
     medicationEndDate.setAttribute("medication-id", id);
     medicationEndDate.textContent = endDate;
 
     const medicationDuration = document.createElement("div");
-    medicationDuration.classList.add("info-table-item","duration-info-item");
+    medicationDuration.classList.add("info-table-item", "duration-info-item");
+    medicationDuration.setAttribute("id", id + '-duration');
     medicationDuration.setAttribute("medication-id", id);
     medicationDuration.textContent = duration;
 
+
     const medicationRoute = document.createElement("div");
     medicationRoute.classList.add("info-table-item", "route-info-item");
+    medicationRoute.setAttribute("id", id + '-route');
     medicationRoute.setAttribute("medication-id", id);
     medicationRoute.textContent = route;
 
     const medicationComments = document.createElement("div");
     medicationComments.classList.add("info-table-item", "comments-info-item");
+    medicationComments.setAttribute("id", id + '-comments');
     medicationComments.setAttribute("medication-id", id);
     medicationComments.textContent = comments;
 
     const medicationByPatient = document.createElement("div");
     medicationByPatient.classList.add("info-table-item", "by-patient-info-item");
+    medicationByPatient.setAttribute("id", id + '-owner');
     medicationByPatient.setAttribute("medication-id", id);
     const medicationByPatientChild = document.createElement("div");
     if (byPatient == true) {
@@ -157,7 +166,15 @@ function connect_to_websocket() {
         }
 
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
-        // TODO
+        let removedID = data["removedID"];
+        document.getElementById(removedID + '-drug').remove();
+        document.getElementById(removedID + '-dosage').remove();
+        document.getElementById(removedID + '-start-date').remove();
+        document.getElementById(removedID + '-end-date').remove();
+        document.getElementById(removedID + '-duration').remove();
+        document.getElementById(removedID + '-route').remove();
+        document.getElementById(removedID + '-comments').remove();
+        document.getElementById(removedID + '-owner').remove();
       }
     }
   )
@@ -188,42 +205,51 @@ function insertNewMedBeforeMedWithId(nextMedId, isCurrent, id, drug, dosage, sta
     }
   
     const medicationDrug = document.createElement("div");
-    medicationDrug.classList.add("info-table-item");
+    medicationDrug.classList.add("info-table-item", "drug-info-item");
+    medicationDrug.setAttribute("id", id + '-drug');
     medicationDrug.setAttribute("medication-id", id);
     medicationDrug.textContent = drug;
 
     const medicationDosage = document.createElement("div");
-    medicationDosage.classList.add("info-table-item");
+    medicationDosage.classList.add("info-table-item", "dosage-info-item");
+    medicationDosage.setAttribute("id", id + '-dosage');
     medicationDosage.setAttribute("medication-id", id);
     medicationDosage.textContent = dosage;
 
     const medicationStartDate = document.createElement("div");
-    medicationStartDate.classList.add("info-table-item");
+    medicationStartDate.classList.add("info-table-item", "start-date-info-item");
+    medicationStartDate.setAttribute("id", id + '-start-date');
     medicationStartDate.setAttribute("medication-id", id);
     medicationStartDate.textContent = startDate;
 
     const medicationEndDate = document.createElement("div");
-    medicationEndDate.classList.add("info-table-item");
+    medicationEndDate.classList.add("info-table-item", "end-date-info-item");
+    medicationEndDate.setAttribute("id", id + '-end-date');
     medicationEndDate.setAttribute("medication-id", id);
     medicationEndDate.textContent = endDate;
 
     const medicationDuration = document.createElement("div");
-    medicationDuration.classList.add("info-table-item");
+    medicationDuration.classList.add("info-table-item", "duration-info-item");
+    medicationDuration.setAttribute("id", id + '-duration');
     medicationDuration.setAttribute("medication-id", id);
     medicationDuration.textContent = duration;
 
+
     const medicationRoute = document.createElement("div");
-    medicationRoute.classList.add("info-table-item");
+    medicationRoute.classList.add("info-table-item", "route-info-item");
+    medicationRoute.setAttribute("id", id + '-route');
     medicationRoute.setAttribute("medication-id", id);
     medicationRoute.textContent = route;
 
     const medicationComments = document.createElement("div");
-    medicationComments.classList.add("info-table-item");
+    medicationComments.classList.add("info-table-item", "comments-info-item");
+    medicationComments.setAttribute("id", id + '-comments');
     medicationComments.setAttribute("medication-id", id);
     medicationComments.textContent = comments;
 
     const medicationByPatient = document.createElement("div");
-    medicationByPatient.classList.add("info-table-item");
+    medicationByPatient.classList.add("info-table-item", "by-patient-info-item");
+    medicationByPatient.setAttribute("id", id + '-owner');
     medicationByPatient.setAttribute("medication-id", id);
     const medicationByPatientChild = document.createElement("div");
     if (byPatient == true) {

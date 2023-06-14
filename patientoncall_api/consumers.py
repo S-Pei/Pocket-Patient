@@ -87,7 +87,8 @@ class EditConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'send_current_medication_data',
                 'event': "REMOVE_MEDICATION_ENTRY",
-                'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId")))
+                'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId"))),
+                'removedID': response.get("id")
             })
         elif event == "NEW_DIARY_ENTRY":
             new_diary_data = self.add_diary_entry(response)
@@ -118,7 +119,8 @@ class EditConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "currentMedication": res["currentMedication"],
-            "newMedicationData": res["newMedicationData"] if "newMedicationData" in res else None
+            "newMedicationData": res["newMedicationData"] if "newMedicationData" in res else None,
+            "removedID": res["removedID"] if "removedID" in res else None
         }))
     
     def send_new_diary_information(self, res):
