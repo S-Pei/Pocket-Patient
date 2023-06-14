@@ -28,3 +28,12 @@ def addMedication(request):
 
 def displayHistory(request):
     return render(request, 'patientOnCall/lab-history.html')
+
+def displayImaging(request):
+    return render(request, 'patientOnCall/imaging.html')
+
+def displayScanType(request, id):
+    return render(request, 'patientOnCall/scan-type.html')
+
+def displayEditScan(request, scanType, id):
+    return render(request, 'patientOnCall/edit-scan.html')

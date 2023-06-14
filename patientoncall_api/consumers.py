@@ -2,6 +2,8 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from .models import (
     PatientUser,
     Medication,
@@ -10,6 +12,9 @@ from .models import (
 )
 from .serializers import (
     MedicalHistorySerializer,
+)
+from .serializers import (
+    MedicationSerializer,
 )
 
 import jwt
@@ -66,6 +71,17 @@ class EditConsumer(WebsocketConsumer):
                 'currentMedication': response.get("currentMedication"),
                 # 'currentMedication': response.get("pastMedication")
             })
+        elif event == "NEW_MEDICATION_ENTRY":
+            print("NEW_MEDICATION_ENTRY")
+            self.add_medication_entry(response)
+            user = self.get_user_by_patientId(response.get("patientId"))
+            currentMedication = Medication.objects.filter(patient=user.id, status="current")
+            currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_new_medication',
+                'event': "NEW_MEDICATION_ENTRY",
+                'currentMedication': json.dumps(currentMedicationSerializer.data)
+            })
         elif event == "NEW_DIARY_ENTRY":
             self.add_diary_entry(response)
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
@@ -107,22 +123,77 @@ class EditConsumer(WebsocketConsumer):
             "content": res["content"]
         }))
     
+    def send_new_medication(self, res):
+        self.send(text_data=json.dumps({
+            'event': res["event"],
+            "currentMedication": res["currentMedication"]
+        }))
+
     def patient_data_access_authentication(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "ids": res["ids"] if "ids" in res else []
         }))
 
+    def add_medication_entry(self, res):
+        user = self.get_user_by_patientId(res.get("patientId"))
+        startDateTime = res.get("startDate")
+        startDate = startDateTime.split(" ")[0]
+        duration = res.get("duration")
+        Medication.objects.create(patient=user, 
+                            drug=res.get("drug"), 
+                            dosage=res.get("dosage"), 
+                            startDate=startDate, 
+                            endDate=add_time(startDate, duration), 
+                            duration=duration, 
+                            route=res.get("route"),
+                            comments=res.get("comments"),
+                            byPatient=True)
 
     def add_diary_entry(self, res):
         print(res.get("patientId"))
         user = self.get_user_by_patientId(res.get("patientId"))
         print(user)
         date = res.get("date").split(" ")[0]
-        diary = Diary.objects.create(patient=user, date=date, content=res.get("content"))
-        diary.save()
+        Diary.objects.create(patient=user, date=date, content=res.get("content"))
 
     def get_user_by_patientId(self, patientId):
         patientUser = PatientUser.objects.get(patientId=patientId)
         user = patientUser.patient
         return user
+    
+    
+def add_time(date_str, duration):
+    durationInfo = duration.split(' ')
+    num = int(durationInfo[0])
+    unit = durationInfo[1]
+    date_parts = date_str.split('-')
+    day = int(date_parts[2])
+    month = int(date_parts[1])
+    year = int(date_parts[0])
+
+    date = datetime(year, month, day)
+    newDate = datetime(year, month, day)
+
+    if unit == 'Day':
+        newDate = date + relativedelta(days=num)
+    elif unit == 'Week':
+        newDate = date + relativedelta(weeks=num)
+    elif unit == 'Month':
+        newDate = date + relativedelta(months=num)
+    elif unit == 'Year':
+        newDate = date + relativedelta(years=num)
+    else:
+        print("error 404")
+
+    day = str(newDate.day).zfill(2)
+    month = str(newDate.month).zfill(2)
+    year = newDate.year
+
+    print(f'{year}-{month}-{day}')
+
+    print(f'{num}-{unit}')
+
+    print(newDate)
+
+    return f'{year}-{month}-{day}'

@@ -1,8 +1,8 @@
 var base_url = window.location.origin;
 
-var a = document.createElement('a');
-a.href = base_url + "/main" ;
-document.getElementById("profile").appendChild(a);
+document.getElementById("profile").onclick = function() {
+  window.location.href = base_url + "/main"  
+}
 
 document.getElementById("patient-summary").addEventListener("click", (e) => {
   e.preventDefault();
@@ -17,6 +17,11 @@ document.getElementById("medication").addEventListener("click", (e) => {
 document.getElementById("visit-history").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/visit"
+  })
+
+document.getElementById("imaging-history").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.href = base_url + "/imaging"
   })
 
 

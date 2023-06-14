@@ -20,6 +20,7 @@ var base_url = window.location.origin;
     $('#id_dischargeDate').datepicker({dateFormat: "yy-mm-dd", onSelect: function(dateText, inst){
       $('#id_admissionDate').datepicker('option', 'maxDate', new Date(dateText))}});
   });
+
   let inputs = $("p input, p textarea, p select")
   
   $("#patient-medical-history-add-entry").submit(function(eventObj) {
