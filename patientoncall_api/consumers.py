@@ -76,13 +76,15 @@ class EditConsumer(WebsocketConsumer):
                 'content': response.get("content")
             })
         elif event == "NEW_HOSP_VISIT_ENTRY":
-            medicalHistories = MedicalHistory.objects.filter(patient=response.get('patientId'))
+            print('receive new hosp notification')
+            user = self.get_user_by_patientId(response.get('patientId'))
+            medicalHistories = MedicalHistory.objects.filter(patient=user)
             medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
-                'type': 'send_new_diary_information',
+                'type': 'send_update_hosp_visit_information',
                 'event': "NEW_HOSP_VISIT_ENTRY",
-                'hospital_visit_history': medicalHistorySerializer
+                'hospital_visit_history': medicalHistorySerializer.data
             })
         else:
             print("UNKNOWN EVENT")
@@ -105,6 +107,12 @@ class EditConsumer(WebsocketConsumer):
             "patientId": res["patientId"],
             "date": res["date"],
             "content": res["content"]
+        }))
+    
+    def send_update_hosp_visit_information(self, res):
+        self.send(text_data=json.dumps({
+            "event": res["event"],
+            "hospital_visit_history": res["hospital_visit_history"]
         }))
     
     def patient_data_access_authentication(self, res):
