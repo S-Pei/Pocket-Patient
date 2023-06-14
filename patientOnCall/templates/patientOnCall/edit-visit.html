@@ -49,8 +49,8 @@
       <div id="entry-letter"></div>    
       <form id="upload-letter-form" method="POST" action="" enctype ="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="letter">
-        <input type="submit">Upload Letter</input>
+        <input type="file" name="letter" id="letter-upload">
+        <input type="submit" value="Upload Letter"></input>
       </form>
       <!-- <input class="add-option" type="submit" id="upload-letter" value="Upload Letter"> -->
     </div>

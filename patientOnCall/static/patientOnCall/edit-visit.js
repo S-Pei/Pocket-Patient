@@ -35,21 +35,16 @@ function getVisitEntry(entryNum) {
     const entryLetter = document.getElementById("entry-letter")
 
     if  (letter === '' || letter === '/media/False') {
-        // const entryLetterUpload = document.createElement("input")
-        // const entryLetterUploadBtn = document.createElement("input")
-        // entryLetterUpload.setAttribute('type','file')
-        // entryLetterUploadBtn.classList.add("add-option")
-        // entryLetterUploadBtn.setAttribute('type','submit')
-        // entryLetterUploadBtn.setAttribute('id','add-letter')
-        // entryLetterUploadBtn.setAttribute('value','Upload Letter')
-        // entryLetter.append(entryLetterUpload)
-        // entryLetter.append(entryLetterUploadBtn)
-
-        // document.getElementById("add-letter").onclick = function() {
-        //     window.location.href = base_url + "/edit-visit/" + (entryNum+1)
-        // };
+        $("#upload-letter-form").submit(function(eventObj) {
+            var letterUpload = $('#letter-upload').val().replace(/C:\\fakepath\\/, '/media/letterattachments/');
+            console.log(letterUpload)
+            medicalHistory[entryNum]["letter"] = letterUpload
+            console.log(medicalHistory[entryNum]["letter"])
+            sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
+            return true; 
+        });       
     } else {
-        letterForm.style.visibility = "hidden"
+        letterForm.remove()
         const entryLetterLink = document.createElement("a");
         if (visitType == "GP Consultation") {
             entryLetterLink.textContent = "GP Letter";
