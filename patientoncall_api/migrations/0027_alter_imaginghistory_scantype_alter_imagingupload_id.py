@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             name='scanType',
             field=models.CharField(choices=[('MRI', 'MRI'), ('PET', 'PET'), ('X-Ray', 'X-Ray'), ('ECG', 'ECG'), ('CT', 'CT'), ('Ultrasound', 'Ultrasound'), ('Medical Photography', 'Medical Photography')], default='MRI', max_length=100),
         ),
-        migrations.AlterField(
-            model_name='imagingupload',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
-        ),
+        # migrations.AlterField(
+        #     model_name='imagingupload',
+        #     name='id',
+        #     field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        # ),
     ]
