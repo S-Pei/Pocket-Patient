@@ -64,6 +64,12 @@ class EditConsumer(WebsocketConsumer):
                 'event': "GRANT_PATIENT_DATA_ACCESS",
                 'ids': ids
             })
+        elif event == "REVOKE_PATIENT_DATA_ACCESS":
+            print("REVOKE_PATIENT_DATA_ACCESS")
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'revoke_patient_data_access',
+                'event': "REVOKE_PATIENT_DATA_ACCESS",
+            })
         elif event == "CHANGE-IN-MEDICATION":
             print("CHANGE-IN-MEDICATION")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
@@ -158,6 +164,11 @@ class EditConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "ids": res["ids"] if "ids" in res else []
+        }))
+
+    def revoke_patient_data_access(self, res):
+        self.send(text_data=json.dumps({
+            "event": res["event"],
         }))
 
     def add_medication_entry(self, res):

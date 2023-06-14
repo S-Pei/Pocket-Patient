@@ -36,3 +36,33 @@ if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getIte
 } else {
   $("#disclaimer-note").addClass("invisible");
 }
+var websocket = null;
+
+function connect_to_websocket() {
+  console.log("Called function")
+  websocket = create_websocket(
+    () => {
+      console.log('Connected to websocket.');
+    },
+    (response) => {
+      let data = JSON.parse(response.data);
+      let event = data["event"]
+      console.log("Has response from websocket.")
+      if (event == "REVOKE_PATIENT_DATA_ACCESS") {
+        console.log("NOO I GOT KICKED");
+        sessionStorage.clear();
+        window.location.href = base_url;
+      }
+      if (websocket != null) {
+        websocket.close();
+        websocket = null;
+      }
+    }
+  )
+}
+
+(function() {
+  console.log("Ran apon load in base.js")
+  
+  connect_to_websocket();
+})();
