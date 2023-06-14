@@ -272,7 +272,7 @@ def addVisit(request):
             user = matchPatientUser(patientId, patientName)
             print(request.POST)
             print(user)
-            MedicalHistory.objects.create(
+            visit = MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=request.POST.get("admissionDate"),
                 dischargeDate=request.POST.get("dischargeDate"),
@@ -282,8 +282,18 @@ def addVisit(request):
                 letter=request.FILES["letter"] if 'letter' in request.FILES else False,
                 addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             )
+
+            context = {'created': True, 
+                        'id': visit.id,
+                        'admissionDate': visit.admissionDate,
+                        'dischargeDate': visit.dischargeDate,
+                        'summary': visit.summary,
+                        'visitType': visit.visitType, 
+                        'letter': visit.letter, 
+                        'addToMedicalHistory': visit.addToMedicalHistory }
+            print (context)
             # print("is valid")
-            return render(request, "patientOnCall/visit.html", {'created': True})
+            return render(request, "patientOnCall/visit.html", context)
     else:
         form = AddVisitForm()
         # print("add visit")
