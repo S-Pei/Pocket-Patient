@@ -71,7 +71,8 @@ class ImagingHistory(models.Model):
    # visitEntry = models.ForeignKey(MedicalHistory, on_delete=models.CASCADE)
 
 
-class ImagingUpload(models.Model): 
+class ImagingUpload(models.Model):
+   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
    imagingEntry = models.ForeignKey(ImagingHistory, on_delete=models.CASCADE)
    image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
    
