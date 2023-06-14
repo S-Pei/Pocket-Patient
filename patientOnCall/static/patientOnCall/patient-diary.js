@@ -1,22 +1,18 @@
 var base_url = window.location.origin;
-
+let websocket = null;
 
 (function() {
+  connect_to_websocket();
   
   const firstName = sessionStorage.getItem("patientFirstName")
   const lastName = sessionStorage.getItem("patientLastName")
   const id = sessionStorage.getItem("patientID")
   const diary = JSON.parse(sessionStorage.getItem("patientDiary"))
-  console.log(diary)
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
   insertDiaryEntries(diary);
-  // for(var i = 1; i <= medicalHistory.length; i ++) {
-  //     row_hover(i, medicalHistory[i-1]["visitType"]);
-  //     row_click(i);
-  // }
 })();
 
 function insertDiaryEntries(diary) {
@@ -28,12 +24,10 @@ function insertDiaryEntries(diary) {
       entry["date"],
       entry["content"],
       entry["readByDoctor"],
-      i >= diary.length - 1
+      i == 0
     )
-    row_hover(i);
     i++;
   }
-  row_click_redirect();
 }
 
 function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
@@ -64,9 +58,14 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   contentTextElem.innerHTML = content;
   contentElem.appendChild(contentTextElem);
 
-  table.appendChild(isReadByDoctorElem);
-  table.appendChild(dateElem);
-  table.appendChild(contentElem);
+  let columnTitleElem = document.getElementById("info-table-content-title");
+
+  table.insertBefore(contentElem, columnTitleElem.nextSibling);
+  table.insertBefore(dateElem, columnTitleElem.nextSibling);
+  table.insertBefore(isReadByDoctorElem, columnTitleElem.nextSibling);
+
+  row_hover(rowNum);
+  row_click_redirect(rowNum);
 }
 
 function row_hover(rowNum) {
@@ -86,18 +85,16 @@ function row_hover(rowNum) {
   }
 }
 
-function row_click_redirect() {
-  for (r = 0; r < JSON.parse(sessionStorage.getItem("patientDiary")).length; r++) {
-    var rowClass = 'row-' + r 
-    var row = document.getElementsByClassName(rowClass);
-    if (row.length <= 0) { return; }
-    for(var i = 0; i < row.length; i ++) {
-        row[i].onclick = function(event) {
-          let diaryId = event.target.getAttribute("diary-id");
-          setDiaryEntryToRead(diaryId);
-          window.location.href = base_url + "/patient-diary/entry?diaryId=" + diaryId;
-        };
-    }
+function row_click_redirect(rowNum) {
+  var rowClass = 'row-' + rowNum 
+  var row = document.getElementsByClassName(rowClass);
+  if (row.length <= 0) { return; }
+  for(var i = 0; i < row.length; i ++) {
+      row[i].onclick = function(event) {
+        let diaryId = event.target.getAttribute("diary-id");
+        setDiaryEntryToRead(diaryId);
+        window.location.href = base_url + "/patient-diary/entry?diaryId=" + diaryId;
+      };
   }
 }
 
@@ -113,4 +110,38 @@ function setDiaryEntryToRead(diaryId) {
     }
     i++;
   }
+}
+
+function connect_to_websocket() {
+  websocket = create_websocket(
+    () => {
+      console.log('Connected to websocket.');
+    },
+    (response) => {
+      let data = JSON.parse(response.data);
+      let event = data["event"]
+
+      if (event == "NEW_DIARY_ENTRY") {
+        addDiaryEntryToSession(data["newDiaryData"]);
+        addDiaryEntry(
+          getNumOfExistingRows(),
+          data["newDiaryData"]["id"],
+          data["newDiaryData"]["date"],
+          data["newDiaryData"]["content"],
+          false,
+          false
+        )
+      }
+    }
+  )
+}
+
+function getNumOfExistingRows() {
+  return ($(".info-table-item").length / 2) - 1;
+}
+
+function addDiaryEntryToSession(diaryEntry) {
+  let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
+  diary.push(diaryEntry);
+  sessionStorage.setItem("patientDiary", JSON.stringify(diary));
 }

@@ -11,6 +11,7 @@ from .models import (
 )
 from .serializers import (
     MedicationSerializer,
+    DiarySerializer
 )
 
 import jwt
@@ -79,13 +80,11 @@ class EditConsumer(WebsocketConsumer):
                 'currentMedication': json.dumps(currentMedicationSerializer.data)
             })
         elif event == "NEW_DIARY_ENTRY":
-            self.add_diary_entry(response)
+            new_diary_data = self.add_diary_entry(response)
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'send_new_diary_information',
                 'event': "NEW_DIARY_ENTRY",
-                'patientId': response.get("patientId"),
-                'date': response.get("date"),
-                'content': response.get("content")
+                'newDiaryData': new_diary_data
             })
         else:
             print("UNKNOWN EVENT")
@@ -105,9 +104,7 @@ class EditConsumer(WebsocketConsumer):
     def send_new_diary_information(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
-            "patientId": res["patientId"],
-            "date": res["date"],
-            "content": res["content"]
+            "newDiaryData": res["newDiaryData"],
         }))
     
     def send_new_medication(self, res):
@@ -140,7 +137,8 @@ class EditConsumer(WebsocketConsumer):
     def add_diary_entry(self, res):
         user = self.get_user_by_patientId(res.get("patientId"))
         date = res.get("date").split(" ")[0]
-        Diary.objects.create(patient=user, date=date, content=res.get("content"))
+        new_diary_entry = Diary.objects.create(patient=user, date=date, content=res.get("content"))
+        return DiarySerializer(new_diary_entry, many=False).data
 
 
     def get_user_by_patientId(self, patientId):
