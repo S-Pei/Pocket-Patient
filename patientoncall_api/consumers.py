@@ -92,15 +92,29 @@ class EditConsumer(WebsocketConsumer):
             })
         elif event == "NEW_HOSP_VISIT_ENTRY":
             print('receive new hosp notification')
-            user = self.get_user_by_patientId(response.get('patientId'))
+            id = response.get('patientId')
+            user = self.get_user_by_patientId(id)
             medicalHistories = MedicalHistory.objects.filter(patient=user)
             medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
-                                                        many=True)
-            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
-                'type': 'send_update_hosp_visit_information',
-                'event': "NEW_HOSP_VISIT_ENTRY",
-                'hospital_visit_history': medicalHistorySerializer.data
-            })
+                                                            many=True)
+            if not response.get('doctor_update'):
+                newMh = MedicalHistory.objects.get(id=response.get('mhId'))
+                
+                newMhSerialised = MedicalHistorySerializer(newMh, 
+                                                            many=False)
+                async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                    'type': 'send_update_hosp_visit_information',
+                    'event': "NEW_HOSP_VISIT_ENTRY",
+                    'hospital_visit_history': medicalHistorySerializer.data,
+                    'new_visit_entry': newMhSerialised.data
+                })    
+            else:
+                async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                    'type': 'send_doc_update_hosp_visit_information',
+                    'event': "NEW_HOSP_VISIT_ENTRY",
+                    'hospital_visit_history': medicalHistorySerializer.data,
+                })  
+
         else:
             print("UNKNOWN EVENT")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
@@ -131,7 +145,14 @@ class EditConsumer(WebsocketConsumer):
     def send_update_hosp_visit_information(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
-            "hospital_visit_history": res["hospital_visit_history"]
+            "hospital_visit_history": res["hospital_visit_history"],
+            'new_visit_entry': res["new_visit_entry"]
+        }))
+
+    def send_doc_update_hosp_visit_information(self, res):
+        self.send(text_data=json.dumps({
+            "event": res["event"],
+            "hospital_visit_history": res["hospital_visit_history"],
         }))
     
     def patient_data_access_authentication(self, res):
