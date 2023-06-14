@@ -64,29 +64,25 @@ class PatientMedicalHistoryApiView(APIView):
         List all data for given requested patient user
         '''
         
-        request_data = JSONParser().parse(request)
-        user = get_user_by_patientId(request_data['patient-id'])
+        # request_data = JSONParser().parse(request.data)
+        # request_data = json.loads(request.body)
         # print(request_data)
-        date_str = request_data['date']
-        summary = request_data['summary']
-        if not date_str or not summary:
-            return Response({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
+        user = get_user_by_patientId(request.POST.get('patient-id'))
         
-        discharge_date = request_data["dischargeDate"]
-        letter = request_data["letter"]
+        discharge_date = request.POST.get("dischargeDate").split(' ')[0]
+        letter = request.POST.get("letter")
         letterFileName = f'{discharge_date} letter'
-        letterFile = ContentFile(base64.b64decode(letter), letterFileName)
-        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        admissionDate = request.POST.get("admissionDate").split(' ')[0]
 
         MedicalHistory.objects.create(
                 patient=user,
-                admissionDate=request_data["admissionDate"],
+                admissionDate=admissionDate,
                 dischargeDate=discharge_date,
-                summary = request_data["summary"],
-                consultant = request_data["consultant"],
-                visitType = request_data["visitType"],
+                summary = request.POST.get("summary"),
+                consultant = request.POST.get("consultant"),
+                visitType = request.POST.get("visitType"),
                 letter= request.FILES["letter"] if 'letter' in request.FILES else False,
-                addToMedicalHistory=True if (request_data["addToMedicalHistory"]=="on") else False
+                addToMedicalHistory=True if (request.POST.get("addToMedicalHistory")=="on") else False
             )
         return Response({'ok': True}, status=status.HTTP_201_CREATED)
     
@@ -359,3 +355,9 @@ def addImagingUploads(request, entry):
                                                             many=True)
             imageList.append(imagingUploadSerializer.data)
         return imageList
+
+def get_user_by_patientId(patientId):
+            patientUser = PatientUser.objects.get(patientId=patientId)
+            user = patientUser.patient
+            return user
+
