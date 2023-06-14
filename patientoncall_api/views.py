@@ -344,3 +344,12 @@ def addImagingUploads(request, entry):
                                                             many=True)
             imageList.append(imagingUploadSerializer.data)
         return imageList
+    
+@csrf_exempt
+def uploadLetter(request, id, visitID):
+    visitEntry = MedicalHistory.objects.get(id=visitID)
+    letterUpload = request.FILES["letter"] if 'letter' in request.FILES else False
+    visitEntry.letter = letterUpload
+    visitEntry.save()
+    return render(request, 'patientOnCall/visit.html', {'visit':visitEntry})
+    

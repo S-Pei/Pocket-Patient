@@ -28,15 +28,28 @@ function getVisitEntry(entryNum) {
     document.getElementById("entry-visit-type").innerHTML = visitType
     document.getElementById("entry-summary").innerHTML = summary
     
+    const uploadURL = 'upload-letter/' + medicalHistory[entryNum]["id"]
+    console.log(uploadURL)
+    const letterForm = document.getElementById("upload-letter-form")
+    letterForm.setAttribute('action',uploadURL)
     const entryLetter = document.getElementById("entry-letter")
 
     if  (letter === '' || letter === '/media/False') {
-        const entryLetterUpload = document.createElement("input")
-        entryLetterUpload.classList.add("add-option")
-        entryLetterUpload.setAttribute('type','submit')
-        entryLetterUpload.setAttribute('value','Upload Letter')
-        entryLetter.append(entryLetterUpload)
+        // const entryLetterUpload = document.createElement("input")
+        // const entryLetterUploadBtn = document.createElement("input")
+        // entryLetterUpload.setAttribute('type','file')
+        // entryLetterUploadBtn.classList.add("add-option")
+        // entryLetterUploadBtn.setAttribute('type','submit')
+        // entryLetterUploadBtn.setAttribute('id','add-letter')
+        // entryLetterUploadBtn.setAttribute('value','Upload Letter')
+        // entryLetter.append(entryLetterUpload)
+        // entryLetter.append(entryLetterUploadBtn)
+
+        // document.getElementById("add-letter").onclick = function() {
+        //     window.location.href = base_url + "/edit-visit/" + (entryNum+1)
+        // };
     } else {
+        letterForm.style.visibility = "hidden"
         const entryLetterLink = document.createElement("a");
         if (visitType == "GP Consultation") {
             entryLetterLink.textContent = "GP Letter";
@@ -51,6 +64,8 @@ function getVisitEntry(entryNum) {
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
 }
 
+
 document.getElementById("add-imaging").onclick = function() {
     window.location.href = base_url + "/add-imaging"
 };
+
