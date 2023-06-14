@@ -5,6 +5,8 @@ from .models import (
     MedicalHistory,
     LabHistory,
     Medication,
+    ImagingHistory,
+    ImagingUpload,
     Diary
 )
 
@@ -24,6 +26,12 @@ class MedicationAdmin(admin.ModelAdmin):
     list_display = ('patient', 'drug', 'dosage', 'startDate', 'endDate', 
                     'duration', 'route', 'status', 'comments')
 
+class ImagingHistoryAdmin(admin.ModelAdmin):
+    list_display = ('patient','date','scanType','region','indication','report')
+
+class ImagingUploadAdmin(admin.ModelAdmin):
+    list_display = ('image', 'imagingEntry')
+    
 class DiaryAdmin(admin.ModelAdmin):
     list_display = ('patient', 'date', 'content')
 
@@ -31,4 +39,6 @@ admin.site.register(MedicalHistory, MedicalHistoryAdmin)
 admin.site.register(LabHistory, LabHistoryAdmin)
 admin.site.register(PatientUser, PatientUserAdmin)
 admin.site.register(Medication, MedicationAdmin)
+admin.site.register(ImagingHistory, ImagingHistoryAdmin)
+admin.site.register(ImagingUpload, ImagingUploadAdmin)
 admin.site.register(Diary, DiaryAdmin)

@@ -35,3 +35,11 @@ def patientDiary(request):
 def readDiaryEntry(request):
     print(request)
     return render(request, 'patientOnCall/patient-diary-entry.html')
+def displayImaging(request):
+    return render(request, 'patientOnCall/imaging.html')
+
+def displayScanType(request, id):
+    return render(request, 'patientOnCall/scan-type.html')
+
+def displayEditScan(request, scanType, id):
+    return render(request, 'patientOnCall/edit-scan.html')

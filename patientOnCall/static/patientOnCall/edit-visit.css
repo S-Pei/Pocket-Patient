@@ -2,3 +2,20 @@
     font-weight: bold;
     font-size: large;
 }
+
+/* .add-options-bar {
+    margin-left: 10%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    margin-top: 15px;
+    margin-left: 30%;
+} */
+
+.add-option {
+    padding: 1% 1%;
+    margin-left: 5px;
+    background-color: #239DB8;
+    border-radius: 4px;
+  }
