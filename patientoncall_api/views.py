@@ -76,7 +76,7 @@ class PatientMedicalHistoryApiView(APIView):
         letterFileName = f'{discharge_date} letter'
         admissionDate = request.POST.get("admissionDate").split(' ')[0]
 
-        MedicalHistory.objects.create(
+        obj = MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=admissionDate,
                 dischargeDate=discharge_date,
@@ -86,7 +86,7 @@ class PatientMedicalHistoryApiView(APIView):
                 letter= request.FILES["letter"] if 'letter' in request.FILES else False,
                 addToMedicalHistory=True if (request.POST.get("addToMedicalHistory")=="on") else False
             )
-        return Response({'ok': True}, status=status.HTTP_201_CREATED)
+        return Response({'ok': True, 'id': obj.id}, status=status.HTTP_201_CREATED)
     
 
 @csrf_exempt
@@ -273,7 +273,7 @@ def addVisit(request):
                 admissionDate=request.POST.get("admissionDate"),
                 dischargeDate=request.POST.get("dischargeDate"),
                 summary = request.POST.get("summary"),
-                consultant = request.POST.get("consultant"),
+                consultant = "John Lee",
                 visitType = request.POST.get("visitType"),
                 letter=request.FILES["letter"] if 'letter' in request.FILES else False,
                 addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"

@@ -1,4 +1,5 @@
 var base_url = window.location.origin;
+
 (function() {
   
   const firstName = sessionStorage.getItem("patientFirstName")
@@ -64,6 +65,7 @@ var base_url = window.location.origin;
     return true;
 });
 })();
+
 
 // function storeFileInSession () {
 //   var file = document.getElementById('#id_letter').files[0];
