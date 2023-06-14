@@ -285,7 +285,7 @@ def addVisit(request):
             request.session["dischargeDate"] = visit.dischargeDate
             request.session["summary"] = visit.summary
             request.session["visitType"] = visit.visitType
-            request.session["letter"] = visit.letter.url
+            request.session["letter"] = visit.letter.url if 'letter' in request.FILES else False
             request.session["addToMedicalHistory"] = visit.addToMedicalHistory
 
 
