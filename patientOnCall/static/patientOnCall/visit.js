@@ -1,6 +1,9 @@
 var base_url = window.location.origin;
 
 (function() {
+
+    connect_to_websocket();
+  
     // console.log(visitID)
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
@@ -170,4 +173,38 @@ document.getElementById("add-visit").addEventListener("click", (e) => {
 document.getElementsByClassName("add-lab-button").onclick = function() {
     window.location.href = base_url + "/add-imaging"
 };
+
+function connect_to_websocket() {
+    websocket = create_websocket(
+      () => {
+        console.log('Connected to websocket.');
+        console.log(isCreated);
+        if (isCreated) {
+            const id = sessionStorage.getItem("patientID")
+            const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+            websocket.send(JSON.stringify({
+                "event": "NEW_HOSP_VISIT_ENTRY",
+                "patientId": id,
+                "hospital_visit_history": medicalHistory,
+                "doctor_update": true
+              }))
+        }
+      },
+      // Patient adds a new hospital visit entry
+      (response) => {
+        let data = JSON.parse(response.data);
+        let event = data["event"]
+        let newMh = data["new_visit_entry"]
+    
+  
+        if (event == "NEW_HOSP_VISIT_ENTRY") {
+          const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+          console.log(medicalHistory)
+          sessionStorage.setItem("medicalHistory",JSON.stringify(data["hospital_visit_history"]))
+          addMedHistoryEntry(medicalHistory.length, newMh["admissionDate"], newMh["dischargeDate"],
+            newMh["summary"], newMh["visitType"], newMh["letter"])
+        }
+      }
+    )
+  }
 
