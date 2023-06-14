@@ -72,7 +72,6 @@ class ImagingHistory(models.Model):
 
 
 class ImagingUpload(models.Model):
-   temp_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   #  id = models.BigAutoField(auto_created=True, serialize=False, verbose_name='ID')
    imagingEntry = models.ForeignKey(ImagingHistory, on_delete=models.CASCADE)
    image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
