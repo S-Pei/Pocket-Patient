@@ -621,9 +621,9 @@ function showCommentSection(row) {
 
 function connect_to_websocket() {
     if (websocket == null) {
-        console.log(sessionStorage.getItem("currentMedication"))
       websocket = create_websocket(
         function (event) {
+            console.log("Connected to websocket");
           websocket.send(JSON.stringify({
               "event": "CHANGE-IN-MEDICATION",
               "currentMedication": sessionStorage.getItem("currentMedication")
@@ -632,7 +632,6 @@ function connect_to_websocket() {
         },
         function (response) {
             let data = JSON.parse(response.data)
-            console.log(data)
             if (data["event"] == "CHANGE-IN-MEDICATION") {
                 console.log("Change in medication has been sent successfully");
                 websocket.close();

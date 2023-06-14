@@ -74,11 +74,12 @@ class EditConsumer(WebsocketConsumer):
             })
         elif event == "NEW_MEDICATION_ENTRY":
             print("NEW_MEDICATION_ENTRY")
-            self.add_medication_entry(response)
+            new_medication_data = self.add_medication_entry(response)
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'send_current_medication_data',
                 'event': "NEW_MEDICATION_ENTRY",
-                'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId")))
+                'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId"))),
+                'newMedicationData': new_medication_data
             })
         elif event == "REMOVE_MEDICATION_ENTRY":
             print("REMOVE_MEDICATION_ENTRY")
@@ -116,7 +117,8 @@ class EditConsumer(WebsocketConsumer):
     def send_current_medication_data(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
-            "currentMedication": res["currentMedication"]
+            "currentMedication": res["currentMedication"],
+            "newMedicationData": res["newMedicationData"] if "newMedicationData" in res else None
         }))
     
     def send_new_diary_information(self, res):
@@ -136,7 +138,7 @@ class EditConsumer(WebsocketConsumer):
         startDateTime = res.get("startDate")
         startDate = startDateTime.split(" ")[0]
         duration = res.get("duration")
-        Medication.objects.create(patient=user, 
+        new_medication =  Medication.objects.create(patient=user, 
                             drug=res.get("drug"), 
                             dosage=res.get("dosage"), 
                             startDate=startDate, 
@@ -145,6 +147,7 @@ class EditConsumer(WebsocketConsumer):
                             route=res.get("route"),
                             comments=res.get("comments"),
                             byPatient=True)
+        return MedicationSerializer(new_medication, many=False).data
         
     def remove_medication_entry(self, res):
         print(res['id'])
