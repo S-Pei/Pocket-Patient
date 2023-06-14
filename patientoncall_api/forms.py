@@ -13,7 +13,7 @@ class AddImagingForm(ModelForm):
       # exclude = ('id', 'patient')
 
 class ImagesUploadForm(AddImagingForm):
-  image = FileField(widget=ClearableFileInput(attrs={'allow_multiple_selected': True}))
+  image = FileField(required=False, widget=ClearableFileInput(attrs={'allow_multiple_selected': True}))
   
   class Meta(AddImagingForm.Meta):
     fields = AddImagingForm.Meta.fields + ['image',]
