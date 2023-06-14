@@ -1,6 +1,6 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
 
 from rest_framework.views import APIView
@@ -11,6 +11,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser 
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.views.generic.edit import FormView
+
+from drp39.settings import BASE_URL
 
 from datetime import datetime, date
 
@@ -284,6 +286,15 @@ def addVisit(request):
         return render(request, "patientOnCall/add-visit.html", {'form': form})
 
 
+@csrf_exempt
+def readDiaryEntry(request):
+    if request.method == "POST":
+        diary_entry = Diary.objects.get(id=request.POST['diaryId'])
+        if diary_entry.readByDoctor == False:
+            diary_entry.readByDoctor = True
+            diary_entry.save()
+        diarySerializer = DiarySerializer(diary_entry, many=False)
+        return JsonResponse({'ok': True, 'diary-data': diarySerializer.data}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def addImaging(request):

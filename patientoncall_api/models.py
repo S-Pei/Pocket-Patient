@@ -82,3 +82,4 @@ class Diary(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.today)
     content = models.TextField()
+    readByDoctor = models.BooleanField(default=False)

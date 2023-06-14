@@ -23,6 +23,7 @@ urlpatterns = [
     # path('pageDoctor/', views.displayDoctor, name='index'),
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
     path('doctor/patient-data/add-visit/', views.addVisit),
+    path('doctor/patient-data/diary/entry/', views.readDiaryEntry),
     path('doctor/patient-data/imaging-history/', views.addImagingHistory),
     path('doctor/patient-data/imaging-uploads/', views.addImagingHistory),
     path('doctor/patient-data/add-imaging/', views.addImaging),
