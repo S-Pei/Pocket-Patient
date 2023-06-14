@@ -18,7 +18,6 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
   }
 })
 
-var websocket = null;
 
 function wait_for_patient_approval() {
   $("#patient-search-form").addClass("invisible");
