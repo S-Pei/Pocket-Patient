@@ -19,3 +19,7 @@
     width: 25vh; 
     border-width: 0px;
 }
+
+#id_summary {
+    width: 100%;
+}

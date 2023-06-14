@@ -76,7 +76,7 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     entryLetter.classList.add("info-table-item");
     entryLetter.classList.add(row);
     // console.log(letter)
-    if  (letter === "False") {
+    if  (letter === "/media/False") {
         console.log("NOOOOO")
     } else {
         entryLetter.href = base_url + letter;

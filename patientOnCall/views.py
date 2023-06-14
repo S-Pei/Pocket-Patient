@@ -12,7 +12,25 @@ def displayMedication(request):
     return render(request, 'patientOnCall/medication.html')
 
 def displayVisit(request):
-    return render(request, 'patientOnCall/visit.html')
+    context = {}
+    if ("created" in request.session and request.session["created"] == True):
+        context = {'created': True, 
+                    'id': request.session["id"],
+                    'admissionDate': request.session["admissionDate"],
+                    'dischargeDate': request.session["dischargeDate"],
+                    'summary': request.session["summary"],
+                    'visitType': request.session["visitType"], 
+                    'letter': request.session["letter"], 
+                    'addToMedicalHistory': request.session["addToMedicalHistory"] }
+        request.session["created"] = False
+        request.session["id"] = ""
+        request.session["admissionDate"] = None
+        request.session["dischargeDate"] = None
+        request.session["summary"] = None
+        request.session["visitType"] = None
+        request.session["letter"] = None
+        request.session["addToMedicalHistory"] = None
+    return render(request, 'patientOnCall/visit.html', context=context)
 
 def displayAddVisit(request):
     return render(request, 'patientOnCall/add-visit.html')
