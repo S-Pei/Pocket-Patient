@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.core.files.base import ContentFile
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,11 +9,15 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser 
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.views.generic.edit import FormView
+
+from drp39.settings import BASE_URL
 
 from datetime import datetime, date
 
 import json
+import base64
 
 from .models import (
     PatientUser,
@@ -53,23 +58,38 @@ class PatientApiView(APIView):
 @permission_classes([IsAuthenticated])
 class PatientMedicalHistoryApiView(APIView):
     # add permission to check if user is authenticated
+    parser_classes = (MultiPartParser, FormParser, )
 
     @csrf_exempt    
     def post(self, request, *args, **kwargs):
         '''
         List all data for given requested patient user
         '''
-        user = matchPatientUser(12345, 'Bob Choy')
+        
         request_data = JSONParser().parse(request)
+        user = get_user_by_patientId(request_data['patient-id'])
         # print(request_data)
         date_str = request_data['date']
         summary = request_data['summary']
         if not date_str or not summary:
             return Response({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
         
+        discharge_date = request_data["dischargeDate"]
+        letter = request_data["letter"]
+        letterFileName = f'{discharge_date} letter'
+        letterFile = ContentFile(base64.b64decode(letter), letterFileName)
         date = datetime.strptime(date_str, '%Y-%m-%d').date()
 
-        MedicalHistory.objects.create(patient=user, date=date, summary=summary)
+        MedicalHistory.objects.create(
+                patient=user,
+                admissionDate=request_data["admissionDate"],
+                dischargeDate=discharge_date,
+                summary = request_data["summary"],
+                consultant = request_data["consultant"],
+                visitType = request_data["visitType"],
+                letter= request.FILES["letter"] if 'letter' in request.FILES else False,
+                addToMedicalHistory=True if (request_data["addToMedicalHistory"]=="on") else False
+            )
         return Response({'ok': True}, status=status.HTTP_201_CREATED)
     
 
@@ -270,6 +290,15 @@ def addVisit(request):
         return render(request, "patientOnCall/add-visit.html", {'form': form})
 
 
+@csrf_exempt
+def readDiaryEntry(request):
+    if request.method == "POST":
+        diary_entry = Diary.objects.get(id=request.POST['diaryId'])
+        if diary_entry.readByDoctor == False:
+            diary_entry.readByDoctor = True
+            diary_entry.save()
+        diarySerializer = DiarySerializer(diary_entry, many=False)
+        return JsonResponse({'ok': True, 'diary-data': diarySerializer.data}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def addImaging(request):
