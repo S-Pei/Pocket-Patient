@@ -51,7 +51,7 @@
       newMedicalHistory["dischargeDate"]= "{{ dischargeDate }}";
       newMedicalHistory["summary"]= "{{ summary }}";
       newMedicalHistory["visitType"]= "{{ visitType }}"
-      newMedicalHistory["letter"]= '/media/'+ "{{ letter }}"
+      newMedicalHistory["letter"]= "{{ letter }}"
       newMedicalHistory["addToMedicalHistory"]= "{{ addToMedicalHistory }}"
       medicalHistory.unshift(newMedicalHistory)
       sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
