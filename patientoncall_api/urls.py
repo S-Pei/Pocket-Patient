@@ -13,6 +13,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('patient-data/', PatientApiView.as_view()),
+    path('patient-data/patient-add-visit/',PatientMedicalHistoryApiView.as_view()),
     path('patient-data/medical-history/', PatientMedicalHistoryApiView.as_view()),
     path('doctor/patient-verify/', views.verifyPatientCredentials),
     path('doctor/patient-data/', views.getPatientData),
@@ -22,4 +23,5 @@ urlpatterns = [
     # path('pageDoctor/', views.displayDoctor, name='index'),
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
     path('doctor/patient-data/add-visit/', views.addVisit),
+
 ]
