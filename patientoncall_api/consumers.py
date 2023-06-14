@@ -7,7 +7,11 @@ from dateutil.relativedelta import relativedelta
 from .models import (
     PatientUser,
     Medication,
-    Diary
+    Diary,
+    MedicalHistory
+)
+from .serializers import (
+    MedicalHistorySerializer,
 )
 from .serializers import (
     MedicationSerializer,
@@ -86,6 +90,15 @@ class EditConsumer(WebsocketConsumer):
                 'event': "NEW_DIARY_ENTRY",
                 'newDiaryData': new_diary_data
             })
+        elif event == "NEW_HOSP_VISIT_ENTRY":
+            medicalHistories = MedicalHistory.objects.filter(patient=response.get('patientId'))
+            medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+                                                        many=True)
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_new_diary_information',
+                'event': "NEW_HOSP_VISIT_ENTRY",
+                'hospital_visit_history': medicalHistorySerializer
+            })
         else:
             print("UNKNOWN EVENT")
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
@@ -135,11 +148,12 @@ class EditConsumer(WebsocketConsumer):
                             byPatient=True)
 
     def add_diary_entry(self, res):
+        print(res.get("patientId"))
         user = self.get_user_by_patientId(res.get("patientId"))
+        print(user)
         date = res.get("date").split(" ")[0]
         new_diary_entry = Diary.objects.create(patient=user, date=date, content=res.get("content"))
         return DiarySerializer(new_diary_entry, many=False).data
-
 
     def get_user_by_patientId(self, patientId):
         patientUser = PatientUser.objects.get(patientId=patientId)
