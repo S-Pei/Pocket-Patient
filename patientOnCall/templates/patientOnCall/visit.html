@@ -34,6 +34,20 @@
   </div>
   <script>
     var isCreated = "{{ created }}"
+    let medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+    if ("{{id}}"==="") {
+    } else {
+      let newMedicalHistory = {}
+      newMedicalHistory["id"]= "{{id}}";
+      newMedicalHistory["admissionDate"]= "{{admissionDate}}";
+      newMedicalHistory["dischargeDate"]= "{{dischargeDate}}";
+      newMedicalHistory["summary"]= "{{summary}}";
+      newMedicalHistory["visitType"]= "{{visitType}}"
+      newMedicalHistory["letter"]= "{{letter}}"
+      newMedicalHistory["addToMedicalHistory"]= "{{addToMedicalHistory}}"
+      medicalHistory.unshift(newMedicalHistory)
+      sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
+    }
   </script>
   <script src="{% static 'patientOnCall/visit.js' %}"></script>
 </body>

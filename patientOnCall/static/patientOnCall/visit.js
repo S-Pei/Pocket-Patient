@@ -4,6 +4,7 @@ var base_url = window.location.origin;
 
     connect_to_websocket();
   
+    // console.log(visitID)
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
     const id = sessionStorage.getItem("patientID")
@@ -78,7 +79,7 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     entryLetter.classList.add("info-table-item");
     entryLetter.classList.add(row);
     // console.log(letter)
-    if  (letter === '' || letter === '/media/False') {
+    if  (letter === "False") {
         console.log("NOOOOO")
     } else {
         entryLetter.href = base_url + letter;

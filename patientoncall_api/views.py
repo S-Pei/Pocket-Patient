@@ -268,7 +268,7 @@ def addVisit(request):
             user = matchPatientUser(patientId, patientName)
             print(request.POST)
             print(user)
-            MedicalHistory.objects.create(
+            visit = MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=request.POST.get("admissionDate"),
                 dischargeDate=request.POST.get("dischargeDate"),
@@ -278,8 +278,18 @@ def addVisit(request):
                 letter=request.FILES["letter"] if 'letter' in request.FILES else False,
                 addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             )
+
+            context = {'created': True, 
+                        'id': visit.id,
+                        'admissionDate': visit.admissionDate,
+                        'dischargeDate': visit.dischargeDate,
+                        'summary': visit.summary,
+                        'visitType': visit.visitType, 
+                        'letter': visit.letter, 
+                        'addToMedicalHistory': visit.addToMedicalHistory }
+            print (context)
             # print("is valid")
-            return render(request, "patientOnCall/visit.html", {'created': True})
+            return render(request, "patientOnCall/visit.html", context)
     else:
         form = AddVisitForm()
         # print("add visit")
@@ -302,6 +312,7 @@ def addImaging(request):
         # form = AddImagingForm(request.POST, request.FILES or None)
         form = ImagesUploadForm(request.POST, request.FILES or None)
         images = request.FILES.getlist('image')
+        scanName = request.POST.get("scanType")
         if form.is_valid():
             patientId = request.POST.get("patientId");
             patientName = request.POST.get("patientName");
@@ -309,7 +320,7 @@ def addImaging(request):
             imagingEntry = ImagingHistory.objects.create(
                 patient=user,
                 date=request.POST.get("date"),
-                scanType=request.POST.get("scanType"),
+                scanType=scanName,
                 region = request.POST.get("region"),
                 indication = request.POST.get("indication"),
                 # visitType = request.POST.get("visitType"),
@@ -322,7 +333,9 @@ def addImaging(request):
                     image=i
                 )
             # print("is valid")
-            return render(request, "patientOnCall/scan-type.html")
+            tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
+            return HttpResponseRedirect(tableURL)
+            # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
     else:
         # form = AddImagingForm()
         form = ImagesUploadForm()
@@ -372,3 +385,12 @@ def get_user_by_patientId(patientId):
             user = patientUser.patient
             return user
 
+    
+@csrf_exempt
+def uploadLetter(request, id, visitID):
+    visitEntry = MedicalHistory.objects.get(id=visitID)
+    letterUpload = request.FILES["letter"] if 'letter' in request.FILES else False
+    visitEntry.letter = letterUpload
+    visitEntry.save()
+    return render(request, 'patientOnCall/visit.html', {'visit':visitEntry})
+    
