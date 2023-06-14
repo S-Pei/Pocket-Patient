@@ -31,15 +31,21 @@ function getVisitEntry(entryNum) {
     const entryLetter = document.getElementById("entry-letter")
 
     if  (letter === '' || letter === '/media/False') {
-       entryLetter.textContent = ""
+        const entryLetterUpload = document.createElement("input")
+        entryLetterUpload.classList.add("add-option")
+        entryLetterUpload.setAttribute('type','submit')
+        entryLetterUpload.setAttribute('value','Upload Letter')
+        entryLetter.append(entryLetterUpload)
     } else {
-        entryLetter.href = base_url + letter;
+        const entryLetterLink = document.createElement("a");
         if (visitType == "GP Consultation") {
-            entryLetter.textContent = "GP Letter";
+            entryLetterLink.textContent = "GP Letter";
         }
         else {
-            entryLetter.textContent = "Discharge Letter";
+            entryLetterLink.textContent = "Discharge Letter";
         }
+        entryLetterLink.href = base_url + letter
+        entryLetter.append(entryLetterLink)
     } 
     console.log(addToMedicalHistory)
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
