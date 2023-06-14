@@ -1,4 +1,5 @@
 var base_url = window.location.origin;
+let websocket;
 
 (function() {
   
@@ -19,6 +20,8 @@ var base_url = window.location.origin;
 function insertMedication(medication, isCurrent) {
   var i = 0
   while (i < medication.length) {
+
+    console.log(medication[i])
     
       addMedication(isCurrent, medication[i]["drug"], 
                         medication[i]["dosage"], 
@@ -26,12 +29,13 @@ function insertMedication(medication, isCurrent) {
                         medication[i]["endDate"], 
                         medication[i]["duration"], 
                         medication[i]["route"],
-                        medication[i]["comments"])
+                        medication[i]["comments"],
+                        medication[i]["byPatient"])
       i++;
   }
 }
 
-function addMedication(isCurrent, drug, dosage, startDate, endDate, duration, route, comments) {
+function addMedication(isCurrent, drug, dosage, startDate, endDate, duration, route, comments, byPatient) {
     // Create a new entry for the table
     let tableBody;
     if (isCurrent) {
@@ -69,6 +73,18 @@ function addMedication(isCurrent, drug, dosage, startDate, endDate, duration, ro
     medicationComments.classList.add("info-table-item");
     medicationComments.textContent = comments;
 
+    const medicationByPatient = document.createElement("div");
+    medicationByPatient.classList.add("info-table-item");
+    const medicationByPatientChild = document.createElement("div");
+    if (byPatient == true) {
+      medicationByPatientChild.textContent = "Patient";
+      medicationByPatientChild.classList.add("by-patient")
+    } else {
+      medicationByPatientChild.textContent = "Doctor";
+      medicationByPatientChild.classList.add("by-doctor")
+    }
+    medicationByPatient.appendChild(medicationByPatientChild);
+
     tableBody.appendChild(medicationDrug);
     tableBody.appendChild(medicationDosage);
     tableBody.appendChild(medicationStartDate);
@@ -76,12 +92,26 @@ function addMedication(isCurrent, drug, dosage, startDate, endDate, duration, ro
     tableBody.appendChild(medicationDuration);
     tableBody.appendChild(medicationRoute);
     tableBody.appendChild(medicationComments);
+    tableBody.appendChild(medicationByPatient);
 }
 
 document.getElementById("edit-medication").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/edit-medication"
   })
+
+
+function connect_to_websocket() {
+  websocket = create_websocket(
+    () => {
+      console.log("Connected to websocket");
+    },
+    (response) => {
+      let data = JSON.parse(response.data)
+      let event = data["event"]
+    }
+  )
+}
 
 // document.getElementById("medication-submit").addEventListener("click", (e) => {
 //     e.preventDefault();
