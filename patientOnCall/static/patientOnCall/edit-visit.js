@@ -28,23 +28,39 @@ function getVisitEntry(entryNum) {
     document.getElementById("entry-visit-type").innerHTML = visitType
     document.getElementById("entry-summary").innerHTML = summary
     
+    const uploadURL = 'upload-letter/' + medicalHistory[entryNum]["id"]
+    console.log(uploadURL)
+    const letterForm = document.getElementById("upload-letter-form")
+    letterForm.setAttribute('action',uploadURL)
     const entryLetter = document.getElementById("entry-letter")
 
-    if  (letter === '' || letter === '/media/False') {
-       entryLetter.textContent = ""
+    if  (letter === 'False') {
+        $("#upload-letter-form").submit(function(eventObj) {
+            var letterUpload = $('#letter-upload').val().replace(/C:\\fakepath\\/, '/media/letterattachments/');
+            console.log(letterUpload)
+            medicalHistory[entryNum]["letter"] = letterUpload
+            console.log(medicalHistory[entryNum]["letter"])
+            sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
+            return true; 
+        });       
     } else {
-        entryLetter.href = base_url + letter;
+        letterForm.remove()
+        const entryLetterLink = document.createElement("a");
         if (visitType == "GP Consultation") {
-            entryLetter.textContent = "GP Letter";
+            entryLetterLink.textContent = "GP Letter";
         }
         else {
-            entryLetter.textContent = "Discharge Letter";
+            entryLetterLink.textContent = "Discharge Letter";
         }
+        entryLetterLink.href = base_url + letter
+        entryLetter.append(entryLetterLink)
     } 
     console.log(addToMedicalHistory)
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
 }
 
+
 document.getElementById("add-imaging").onclick = function() {
     window.location.href = base_url + "/add-imaging"
 };
+

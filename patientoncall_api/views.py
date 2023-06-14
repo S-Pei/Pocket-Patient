@@ -66,31 +66,27 @@ class PatientMedicalHistoryApiView(APIView):
         List all data for given requested patient user
         '''
         
-        request_data = JSONParser().parse(request)
-        user = get_user_by_patientId(request_data['patient-id'])
+        # request_data = JSONParser().parse(request.data)
+        # request_data = json.loads(request.body)
         # print(request_data)
-        date_str = request_data['date']
-        summary = request_data['summary']
-        if not date_str or not summary:
-            return Response({'ok': False}, status=status.HTTP_400_BAD_REQUEST)
+        user = get_user_by_patientId(request.POST.get('patient-id'))
         
-        discharge_date = request_data["dischargeDate"]
-        letter = request_data["letter"]
+        discharge_date = request.POST.get("dischargeDate").split(' ')[0]
+        letter = request.POST.get("letter")
         letterFileName = f'{discharge_date} letter'
-        letterFile = ContentFile(base64.b64decode(letter), letterFileName)
-        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        admissionDate = request.POST.get("admissionDate").split(' ')[0]
 
-        MedicalHistory.objects.create(
+        obj = MedicalHistory.objects.create(
                 patient=user,
-                admissionDate=request_data["admissionDate"],
+                admissionDate=admissionDate,
                 dischargeDate=discharge_date,
-                summary = request_data["summary"],
-                consultant = request_data["consultant"],
-                visitType = request_data["visitType"],
+                summary = request.POST.get("summary"),
+                consultant = request.POST.get("consultant"),
+                visitType = request.POST.get("visitType"),
                 letter= request.FILES["letter"] if 'letter' in request.FILES else False,
-                addToMedicalHistory=True if (request_data["addToMedicalHistory"]=="on") else False
+                addToMedicalHistory=True if (request.POST.get("addToMedicalHistory")=="on") else False
             )
-        return Response({'ok': True}, status=status.HTTP_201_CREATED)
+        return Response({'ok': True, 'id': obj.id}, status=status.HTTP_201_CREATED)
     
 
 @csrf_exempt
@@ -272,18 +268,28 @@ def addVisit(request):
             user = matchPatientUser(patientId, patientName)
             print(request.POST)
             print(user)
-            MedicalHistory.objects.create(
+            visit = MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=request.POST.get("admissionDate"),
                 dischargeDate=request.POST.get("dischargeDate"),
                 summary = request.POST.get("summary"),
-                consultant = request.POST.get("consultant"),
+                consultant = "John Lee",
                 visitType = request.POST.get("visitType"),
                 letter=request.FILES["letter"] if 'letter' in request.FILES else False,
                 addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             )
+
+            context = {'created': True, 
+                        'id': visit.id,
+                        'admissionDate': visit.admissionDate,
+                        'dischargeDate': visit.dischargeDate,
+                        'summary': visit.summary,
+                        'visitType': visit.visitType, 
+                        'letter': visit.letter, 
+                        'addToMedicalHistory': visit.addToMedicalHistory }
+            print (context)
             # print("is valid")
-            return render(request, "patientOnCall/visit.html", {'created': True})
+            return render(request, "patientOnCall/visit.html", context)
     else:
         form = AddVisitForm()
         # print("add visit")
@@ -306,6 +312,7 @@ def addImaging(request):
         # form = AddImagingForm(request.POST, request.FILES or None)
         form = ImagesUploadForm(request.POST, request.FILES or None)
         images = request.FILES.getlist('image')
+        scanName = request.POST.get("scanType")
         if form.is_valid():
             patientId = request.POST.get("patientId");
             patientName = request.POST.get("patientName");
@@ -313,7 +320,7 @@ def addImaging(request):
             imagingEntry = ImagingHistory.objects.create(
                 patient=user,
                 date=request.POST.get("date"),
-                scanType=request.POST.get("scanType"),
+                scanType=scanName,
                 region = request.POST.get("region"),
                 indication = request.POST.get("indication"),
                 # visitType = request.POST.get("visitType"),
@@ -326,7 +333,9 @@ def addImaging(request):
                     image=i
                 )
             # print("is valid")
-            return render(request, "patientOnCall/scan-type.html")
+            tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
+            return HttpResponseRedirect(tableURL)
+            # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
     else:
         # form = AddImagingForm()
         form = ImagesUploadForm()
@@ -370,3 +379,18 @@ def addImagingUploads(request, entry):
                                                             many=True)
             imageList.append(imagingUploadSerializer.data)
         return imageList
+
+def get_user_by_patientId(patientId):
+            patientUser = PatientUser.objects.get(patientId=patientId)
+            user = patientUser.patient
+            return user
+
+    
+@csrf_exempt
+def uploadLetter(request, id, visitID):
+    visitEntry = MedicalHistory.objects.get(id=visitID)
+    letterUpload = request.FILES["letter"] if 'letter' in request.FILES else False
+    visitEntry.letter = letterUpload
+    visitEntry.save()
+    return render(request, 'patientOnCall/visit.html', {'visit':visitEntry})
+    
