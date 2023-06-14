@@ -29,10 +29,24 @@ function getDiaryData() {
     success: function(returned_value) {
       if (returned_value.ok == true) {
         console.log(returned_value["diary-data"]);
+        loadDiaryData(returned_value["diary-data"]);
       }
     },
     error: function (xhr) {
       console.log(xhr);
     }
   })
+}
+
+function loadDiaryData(diary) {
+  setDiaryDate(diary["date"]);
+  setDiaryContent(diary["content"]);
+}
+
+function setDiaryDate(date) {
+  $("#diary-entry-date").text(date);
+}
+
+function setDiaryContent(content) {
+  $("#diary-entry-content").text(content);
 }

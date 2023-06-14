@@ -59,7 +59,10 @@ function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
   if (!readByDoctor) { contentElem.classList.add("not-read-by-doctor-info"); }
   contentElem.setAttribute("id", `diary-content-${rowNum}`);
   contentElem.setAttribute("diary-id", id);
-  contentElem.innerHTML = content;
+  let contentTextElem = document.createElement("div");
+  contentTextElem.classList.add("diary-content-text");
+  contentTextElem.innerHTML = content;
+  contentElem.appendChild(contentTextElem);
 
   table.appendChild(isReadByDoctorElem);
   table.appendChild(dateElem);
