@@ -18,7 +18,11 @@ function getScanEntry(entryNum) {
     const indication = imagingHistory[entryNum]["indication"]
     const report = imagingHistory[entryNum]["report"]
 
-    $(".section-header").html(scanType + " Scan: " + date)
+    if (scanType === "Medical Photography") {
+        $(".section-header").html(scanType + ": " + date)
+    } else {
+        $(".section-header").html(scanType + " Scan: " + date)
+    }
     // document.getElementById("visit-title").innerHTML = "Visit Entry:" + admissionDate  
     document.getElementById("entry-date").innerHTML = date
     document.getElementById("entry-scan-type").innerHTML = scanType
@@ -28,7 +32,7 @@ function getScanEntry(entryNum) {
     
     const entryReport = document.getElementById("entry-report")
 
-    if  (report === '' || report === '/media/False') {
+    if  (report === '' || report === (base_url + '/media/False')) {
        entryReport.textContent = ""
     } else {
         entryReport.textContent = scanType + " Report"

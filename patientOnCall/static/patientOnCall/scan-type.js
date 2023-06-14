@@ -1,7 +1,6 @@
 var base_url = window.location.origin;
 
 (function() {
-  
     const firstName = sessionStorage.getItem("patientFirstName")
     const lastName = sessionStorage.getItem("patientLastName")
     const id = sessionStorage.getItem("patientID")
@@ -12,10 +11,10 @@ var base_url = window.location.origin;
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
     // console.log(window.location.href.split('/')[4])
-    const scanName = window.location.href.split('/')[4] 
+    var scanName = window.location.href.split('/')[4] 
     if (scanName === "Medical-Photography"){
-        const medicalPhotography = scanName.replace(/-/g, " ");
-        $(".section-header").html(medicalPhotography)
+        scanName = "Medical Photography"
+        $(".section-header").html(scanName)
     } else {
         $(".section-header").html(scanName + ' Scans')
     }
@@ -32,21 +31,23 @@ var base_url = window.location.origin;
 function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
   var i = 0
   while (i < imagingHistory.length) {
-    const entryID = imagingHistory[i]["id"]
-    // console.log(entryID === undefined)
-    var images = []
-    if (entryID === undefined) {
-        images = imagingHistory[i]['image']
-    } else {
-        imagesEntries = imagingUploads.filter(function(item){
-            return item.imagingEntry == entryID;         
-        });
-        imagesEntries.forEach(f => images.push(f['image']))
-    }
-
-
+      const entryID = imagingHistory[i]["id"]
+      // console.log(entryID === undefined)
+      var images = []
+      if (entryID === undefined) {
+          images = imagingHistory[i]['image']
+        } else {
+            imagesEntries = imagingUploads.filter(function(item){
+                return item.imagingEntry == entryID;         
+            });
+            imagesEntries.forEach(f => images.push(f['image']))
+        }
+        
+        
+    console.log(scanName)
     console.log(images)
-    
+    console.log(imagingHistory[i]["scanType"])
+
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
         imagingHistory[i]["region"],

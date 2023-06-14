@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 
@@ -277,6 +277,7 @@ def addImaging(request):
         # form = AddImagingForm(request.POST, request.FILES or None)
         form = ImagesUploadForm(request.POST, request.FILES or None)
         images = request.FILES.getlist('image')
+        scanName = request.POST.get("scanType")
         if form.is_valid():
             patientId = request.POST.get("patientId");
             patientName = request.POST.get("patientName");
@@ -284,7 +285,7 @@ def addImaging(request):
             imagingEntry = ImagingHistory.objects.create(
                 patient=user,
                 date=request.POST.get("date"),
-                scanType=request.POST.get("scanType"),
+                scanType=scanName,
                 region = request.POST.get("region"),
                 indication = request.POST.get("indication"),
                 # visitType = request.POST.get("visitType"),
@@ -297,7 +298,9 @@ def addImaging(request):
                     image=i
                 )
             # print("is valid")
-            return render(request, "patientOnCall/scan-type.html")
+            tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
+            return HttpResponseRedirect(tableURL)
+            # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
     else:
         # form = AddImagingForm()
         form = ImagesUploadForm()
