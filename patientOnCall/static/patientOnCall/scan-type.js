@@ -28,6 +28,7 @@ var base_url = window.location.origin;
 
 })();
 
+
 function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
   var i = 0
   while (i < imagingHistory.length) {
@@ -38,14 +39,16 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
     //       images = imagingHistory[i]['image']
     //     } else {
        imagesEntries = imagingUploads.filter(function(item){
-         return item.imagingEntry == entryID;         
+         return (item.imagingEntry === entryID && 
+            imagingHistory[i]["scanType"] === scanName );         
        });
-        imagesEntries.forEach(f => images.push(f['image']))
+        imagesEntries.forEach(
+            f => images.push(f['image']))
         // }
-        
-        
+    
+     
     // console.log(scanName)
-    // console.log(images)
+    console.log(images)
     // console.log(imagingHistory[i]["scanType"])
 
     if (imagingHistory[i]["scanType"] === scanName) {
@@ -83,7 +86,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
     const entryReport = document.createElement("a");
     entryReport.classList.add("info-table-item");
     entryReport.classList.add(row);
-    console.log(report)
+    // console.log(report)
     if  (report === 'False' || report === (base_url + '/media/False')) {
         console.log("NOOOOO")
     } else {
@@ -94,6 +97,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
     const entryImages = document.createElement("div");
     entryImages.classList.add("info-table-item");
     entryImages.classList.add(row);
+    // console.log("img length" + images.length )
     for(var i = 0; i < images.length; i ++) {
         console.log(images[i])
         var entryImage = "entryImage-" + i 

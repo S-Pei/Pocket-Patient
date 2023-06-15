@@ -69,12 +69,16 @@
       newImagingHistory["region"]= "{{ region }}"
       newImagingHistory["indication"]= "{{ indication }}"
       newImagingHistory["report"]= "{{ report }}"
-      
-      for( var i = 0; i < imgArr.length; i ++ ) {
-        let newImagingUpload = {}
-        newImagingUpload["imagingEntry"] = "{{ id }}";
-        newImagingUpload["image"] = imgArr[i]
-        imagingUploads.push(newImagingUpload)
+
+      if (imgArr ==  "") {
+        console.log("ay")
+      } else {
+        for( var i = 0; i < imgArr.length; i ++ ) {
+          let newImagingUpload = {}
+          newImagingUpload["imagingEntry"] = "{{ id }}";
+          newImagingUpload["image"] = imgArr[i]
+          imagingUploads.push(newImagingUpload)
+        }
       }
       imagingHistory.push(newImagingHistory)
       imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
