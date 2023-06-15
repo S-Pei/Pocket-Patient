@@ -80,9 +80,15 @@ class ImagingUpload(models.Model):
    image = models.FileField(upload_to='imagingattachments/', blank=True, null=True, default=True)
    
 
+class DiaryClass(models.Model):
+   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+   patient = models.ForeignKey(User, on_delete=models.CASCADE)
+   contentType = models.CharField(max_length=64)
+
+
 class Diary(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    diaryClass = models.ForeignKey(DiaryClass, on_delete=models.CASCADE, null=True)
     date = models.DateField(default=datetime.today)
     content = models.TextField()
     readByDoctor = models.BooleanField(default=False)
