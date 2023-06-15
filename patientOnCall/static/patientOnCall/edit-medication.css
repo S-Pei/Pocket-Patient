@@ -272,3 +272,12 @@ margin-right: 1%;
   border-radius: 7px;
   font-weight: 500;
 }
+
+.save-button-box {
+  width: 18%;
+  font-size: 1.2em;
+}
+
+#save-medication {
+  width: 90%;
+}

@@ -5,7 +5,7 @@
   const patientID = sessionStorage.getItem("patientID")
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-  document.getElementById("patient-id").innerHTML = 'NHS Number: ' + patientID
+  document.getElementById("patient-id").innerHTML = 'NHS Number:' + patientID
 
   getDiaryData();
 })();
