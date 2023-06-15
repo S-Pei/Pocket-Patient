@@ -24,11 +24,10 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
                   'summary', 'visitType', 'letter', 'addToMedicalHistory']
 
 class LabHistorySerializer(serializers.ModelSerializer):
-    report = serializers.ImageField(max_length=None, use_url=True, 
-                                        allow_null=False, required=True)
+    report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
     class Meta:
         model = LabHistory
-        fields = ['date', 'report']
+        fields = ['id', 'date', 'labType', 'report']
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:

@@ -10,8 +10,23 @@ var base_url = window.location.origin;
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
     // console.log(window.location.href.split('/')[4])
+    document.getElementById("back-button").href = document.referrer
+    
     var labName = window.location.href.split('/')[4] 
-    $(".section-header").html(labName + ' Tests')
+    if (labName === "fbc") {
+        labName = "Full Blood Count Report"
+    } else if (labName === "cancer") {
+        labName = "Cancer Blood Test" 
+    } else if (labName === "electrolyte") {
+        labName = "Electrolyte Test" 
+    } else if (labName === "genetic") {
+        labName = "Genetic Test" 
+    } else if (labName === "liver") {
+        labName = "Liver Function Test" 
+    } else if (labName === "thyroid") {
+        labName = "Thyroid Function Test" 
+    }
+    $(".section-header").html(labName)
 
 
     // console.log(labHistory);

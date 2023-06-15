@@ -34,7 +34,7 @@ var base_url = window.location.origin;
     }
   })
 
-  let inputs = $("p input, p textarea, p select")
+  // let inputs = $("p input, p textarea, p select")
   
   $("#patient-medical-history-add-entry").submit(function(eventObj) {
     // let newMedicalHistory = {}

@@ -85,23 +85,17 @@ def displayEditScan(request, scanType, id):
 
 def displayLabType(request, id):
     context = {}
-    # print(request.session)
-    # if ("created" in request.session and request.session["created"] == True):
-    #     context = {'created': True, 
-    #                 'id': request.session["id"],
-    #                 'date': request.session["date"],
-    #                 'scanType': request.session["scanType"],
-    #                 'region': request.session["region"],
-    #                 'indication': request.session["indication"], 
-    #                 'report': request.session["report"],
-    #                 'image': request.session["image"]} 
-    #     print(context)
-    #     request.session["created"] = False
-    #     request.session["id"] = ""
-    #     request.session["date"] = None
-    #     request.session["scanType"] = None
-    #     request.session["region"] = None
-    #     request.session["indication"] = None
-    #     request.session["report"] = None
-    #     request.session["image"] = None
+    print(request.session)
+    if ("created" in request.session and request.session["created"] == True):
+        context = {'created': True, 
+                    'id': request.session["id"],
+                    'date': request.session["date"],
+                    'labType': request.session["labType"],
+                    'report': request.session["report"]} 
+        print(context)
+        request.session["created"] = False
+        request.session["id"] = ""
+        request.session["date"] = None
+        request.session["labType"] = None
+        request.session["report"] = None
     return render(request, 'patientOnCall/lab-type.html', context=context)

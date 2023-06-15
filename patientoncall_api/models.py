@@ -30,11 +30,21 @@ class MedicalHistory(models.Model):
   class Meta:
      ordering = ('-admissionDate',)
 
+LAB_TYPE = (
+   ('Full Blood Count Report','Full Blood Count Report'),
+   ('Cancer Blood Test','Cancer Blood Test'),
+   ('Electrolyte Test','Electrolyte Test'),
+   ('Genetic Test','Genetic Test'),
+   ('Liver Function Test','Liver Function Test'),
+   ('Thyroid Function Test','Thyroid Function Test'),
+)
+
 class LabHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
-    report = models.ImageField(blank=True, null=True)
+    date = models.DateField(default=datetime.today, blank=True, null=True)
+    labType = models.CharField(max_length=100, choices=LAB_TYPE, default='Full Blood Count Report')
+    report = models.FileField(upload_to='labattachments/', blank=True, null=True, default=True)
 
 
 class Medication(models.Model):

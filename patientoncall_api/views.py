@@ -41,7 +41,7 @@ from .serializers import (
     DiarySerializer
 )
 
-from .forms import AddVisitForm, AddImagingForm, ImagesUploadForm
+from .forms import AddVisitForm, AddImagingForm, ImagesUploadForm, AddLabForm
 
 @permission_classes([IsAuthenticated])
 class PatientApiView(APIView):
@@ -445,3 +445,62 @@ def uploadImages(request, scanType, id, imagingID):
     addImagingUploads(request, imagingEntry)
     # return render(request, 'patientOnCall/imaging.html', {'imaging':imagingEntry})
     return redirect(f"{BASE_URL}scan-type/"f"{scanType}")
+
+@csrf_exempt
+def addLab(request):
+    if request.method == "POST":
+        form = AddLabForm(request.POST, request.FILES or None)
+        labName = request.POST.get("labType")
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            labEntry = LabHistory.objects.create(
+                patient=user,
+                date=request.POST.get("date"),
+                labType=labName,
+                report=request.FILES["report"] if 'report' in request.FILES else False,
+            ) 
+           
+            request.session["created"] = True
+            request.session["id"] = str(labEntry.id)
+            request.session["date"] = labEntry.date
+            request.session["labType"] = labEntry.labType
+            
+            request.session["report"] = labEntry.report.url if 'report' in request.FILES else False
+        
+        if (labName == "Full Blood Count Report"):
+            labName = "fbc"
+        elif (labName == "Cancer Blood Test"): 
+            labName = "cancer"
+        elif (labName == "Electrolyte Test"): 
+            labName = "electrolyte"
+        elif (labName == "Genetic Test" ): 
+            labName = "genetic"
+        elif (labName == "Liver Function Test"): 
+            labName = "liver" 
+        elif (labName == "Thyroid Function Test"): 
+            labName = "thyroid"
+    
+        return redirect(f"{BASE_URL}lab-type/"f"{labName}")
+            
+    else:
+
+        form = AddLabForm()
+        # print("add visit")
+        return render(request, "patientOnCall/add-lab.html", {'form': form})
+    
+@csrf_exempt
+def addLabHistory(request):
+    if request.method == "POST":
+        user = matchPatientUser(request.POST['patientID'], request.POST['patientName']) 
+        LabHistory.objects.create(patient=user, 
+                                date=request.POST.get("date"),
+                                scanType=request.POST.get("scanType"),
+                                report=request.FILES["report"] if 'report' in request.FILES else False)
+        labHistories = LabHistory.objects.filter(patient=user.id)
+        labHistorySerializer = LabHistorySerializer(labHistories, 
+                                                        many=True)
+        return JsonResponse({'ok': True,
+                             'lab-history': labHistorySerializer.data},
+                               status=status.HTTP_201_CREATED)

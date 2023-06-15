@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from patientoncall_api.views import addVisit, addImaging, uploadLetter, uploadReport, uploadImages
+from patientoncall_api.views import addVisit, addImaging, uploadLetter, uploadReport, uploadImages, addLab
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -16,11 +16,12 @@ urlpatterns = [
     path('patient-diary/', views.patientDiary, name='patient-diary'),
     path('patient-diary/entry/', views.readDiaryEntry, name='patient-diary-read'),
     path('imaging/', views.displayImaging, name='imaging'),
-    path('add-imaging/', addImaging, name='dd-imaging'),
+    path('add-imaging/', addImaging, name='add-imaging'),
     path('scan-type/<str:id>/', views.displayScanType, name='scan-type'),
     path('edit-scan/<str:scanType>/<str:id>/', views.displayEditScan, name='patient-edit-scan'),
     path('edit-visit/<str:id>/upload-letter/<str:visitID>', uploadLetter, name='upload-letter'),
     path('edit-scan/<str:scanType>/<str:id>/upload-report/<str:imagingID>', uploadReport, name='upload-report'),
     path('edit-scan/<str:scanType>/<str:id>/upload-images/<str:imagingID>', uploadImages, name='upload-images'),
     path('lab-type/<str:id>/', views.displayLabType, name='lab-type'),
+    path('add-lab/', addLab, name='add-lab'),
 ]

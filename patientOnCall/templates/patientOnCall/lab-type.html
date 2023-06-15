@@ -31,64 +31,29 @@
       
     </div>
   </div>
-  <!-- <script>
+  <script>
     var isCreated = "{{ created }}"
     console.log(isCreated)
-    let imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
-    let imagingUploads = JSON.parse(sessionStorage.getItem("imagingUploads"))
-    imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
-    // var idList = []
-    // for(var i = 0; i < medicalHistory.length; i++) {
-    //   console.log(medicalHistory[i]["id"])
-    //   idList.push(medicalHistory[i]["id"])
-    //   console.log("{{id}}" === medicalHistory[i]["id"])
-    // }
-    // console.log("{{id}}" === medicalHistory[i]["id"])
+    let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
+    labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
+
     if ("{{ id }}"==="") {
       console.log("no")
     } else {
-      let newImagingHistory = {}
-      // console.log("{{ id }}")
-      // console.log("{{ image }}")
+      let newLabHistory = {}
+      newLabHistory["id"]= "{{ id }}";
+      newLabHistory["date"]= "{{ date }}";
+      newLabHistory["labType"]= "{{ labType }}";
+      newLabHistory["report"]= "{{ report }}"
 
-      var imgURLs = "{{ image }}"
-      const imgArr = imgURLs.split(',')
-      // console.log(imgArr)
-      for(var i = 0; i < imgArr.length; i++)
-        {
-          imgArr[i] = imgArr[i].replace("&#x27;", "");
-          imgArr[i] = imgArr[i].replace("&#x27;", "");
-          imgArr[i] = imgArr[i].replace("[", "");
-          imgArr[i] = imgArr[i].replace("]", "");
-          imgArr[i] = imgArr[i].replace(" ", "");
-        }
-    
-      // console.log(imgArr)
-      newImagingHistory["id"]= "{{ id }}";
-      newImagingHistory["date"]= "{{ date }}";
-      newImagingHistory["scanType"]= "{{ scanType }}";
-      newImagingHistory["region"]= "{{ region }}"
-      newImagingHistory["indication"]= "{{ indication }}"
-      newImagingHistory["report"]= "{{ report }}"
+      labHistory.push(newLabHistory)
+      labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-      if (imgArr ==  "") {
-        console.log("ay")
-      } else {
-        for( var i = 0; i < imgArr.length; i ++ ) {
-          let newImagingUpload = {}
-          newImagingUpload["imagingEntry"] = "{{ id }}";
-          newImagingUpload["image"] = imgArr[i]
-          imagingUploads.push(newImagingUpload)
-        }
-      }
-      imagingHistory.push(newImagingHistory)
-      imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      // console.log(imagingHistory)
-      sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
-      sessionStorage.setItem("imagingUploads",JSON.stringify(imagingUploads))
+      sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
+
     }
-  </script> -->
+  </script>
   <script src="{% static 'patientOnCall/lab-type.js' %}"></script>
 </body>
 {% endblock %}

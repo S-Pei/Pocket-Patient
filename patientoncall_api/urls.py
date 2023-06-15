@@ -27,4 +27,6 @@ urlpatterns = [
     path('doctor/patient-data/imaging-history/', views.addImagingHistory),
     path('doctor/patient-data/imaging-uploads/', views.addImagingHistory),
     path('doctor/patient-data/add-imaging/', views.addImaging),
+    path('doctor/patient-data/lab-history/', views.addLabHistory),
+    path('doctor/patient-data/add-lab/', views.addLab),
 ]
