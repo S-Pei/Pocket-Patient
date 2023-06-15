@@ -35,7 +35,7 @@ document.getElementById("medication-submit").addEventListener("click", (e) => {
     //       sessionStorage.setItem("currentMedication", JSON.stringify(currentMedication));
     const currentDict = JSON.parse(sessionStorage.getItem("medicationDict"));
           // console.log(sessionStorage.getItem("medicationDict"))
-    addHash(currentDict, Object.keys(currentDict).length, "0", drug, dosage, startDate, endDate, duration, route, "added", comment);
+    addHash(currentDict, Object.keys(currentDict).length, "0", drug, dosage, startDate, endDate, duration, route, "added", comment, false);
     sessionStorage.setItem("medicationDict", JSON.stringify(currentDict));
           // console.log(currentDict);
     window.location.href = "/edit-medication"
@@ -54,13 +54,13 @@ function addTime(dateStr, num, unit) {
 
     const date = new Date(year, month, day);
 
-    if (unit === 'day') {
+    if (unit === 'Day') {
         date.setDate(date.getDate() + num);
-    } else if (unit === 'week') {
+    } else if (unit === 'Week') {
         date.setDate(date.getDate() + (num * 7));
-    } else if (unit === 'month') {
+    } else if (unit === 'Month') {
         date.setMonth(date.getMonth() + num);
-    } else if (unit === 'year') {
+    } else if (unit === 'Year') {
         date.setFullYear(date.getFullYear() + num);
     }
 
@@ -71,7 +71,7 @@ function addTime(dateStr, num, unit) {
     return `${year}-${month}-${day}`;
 }
 
-function addHash(dict, row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
+function addHash(dict, row, id, drug, dosage, startDate, endDate, duration, route, status, comments, byPatient) {
   dict["" + row] = {};
   dict["" + row]["id"] = id;
   dict["" + row]["drug"] = drug;
@@ -82,4 +82,5 @@ function addHash(dict, row, id, drug, dosage, startDate, endDate, duration, rout
   dict["" + row]["route"] = route;
   dict["" + row]["status"] = status;
   dict["" + row]["comments"] = comments;
+  dict["" + row]["byPatient"] = byPatient;
 }

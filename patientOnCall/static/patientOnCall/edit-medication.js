@@ -2,8 +2,6 @@ var base_url = window.location.origin;
 
 var dict = {};
 
-var websocket;
-
 (function() {
     const value = sessionStorage.getItem('medicationDict');
     console.log(dict)
@@ -19,7 +17,8 @@ var websocket;
                                 dict["" + i]["endDate"], 
                                 dict["" + i]["duration"], 
                                 dict["" + i]["route"],
-                                dict["" + i]["comments"])
+                                dict["" + i]["comments"],
+                                dict["" + i]["byPatient"])
             }
             i++;
         }
@@ -58,7 +57,8 @@ function insertMedication(medication) {
                         medication[i]["duration"], 
                         medication[i]["route"],
                         medication[i]["status"],
-                        medication[i]["comments"])
+                        medication[i]["comments"],
+                        medication[i]["byPatient"])
       i++;
   }
 }
@@ -73,39 +73,41 @@ function insertMedication(medication) {
  * @param {string} duration medication duration
  * @param {string} route medication route
  */
-function addMedication(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
+function addMedication(row, id, drug, dosage, startDate, endDate, duration, route, status, comments, byPatient) {
     // Create a new entry for the table
     var tableBody = document.getElementById("main-current-medication-box-table");
 
     // Insert all information in medication
-    createAndInsertMedicationInfo(tableBody, row, "action", null);
-    createAndInsertMedicationInfo(tableBody, row, "drug", drug);
-    createAndInsertMedicationInfo(tableBody, row, "dosage", dosage);
-    createAndInsertMedicationInfo(tableBody, row, "start-date", startDate);
-    createAndInsertMedicationInfo(tableBody, row, "end-date", endDate);
-    createAndInsertMedicationInfo(tableBody, row, "duration", duration);
-    createAndInsertMedicationInfo(tableBody, row, "route", route);
-    createAndInsertMedicationInfo(tableBody, row, "comments", comments);
-    createAndInsertMedicationInfo(tableBody, row, "confirmation", null);
+    createAndInsertMedicationInfo(tableBody, row, "action", null, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "drug", drug, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "dosage", dosage, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "start-date", startDate, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "end-date", endDate, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "duration", duration, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "route", route, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "comments", comments, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "by-patient", byPatient, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "confirmation", null, byPatient);
 
     // save value to dict
-    saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, status, comments);
+    saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, status, comments, byPatient);
 }
 
-function insertFromDict(row, drug, dosage, startDate, endDate, duration, route, comments) {
+function insertFromDict(row, drug, dosage, startDate, endDate, duration, route, comments, byPatient) {
     var tableBody = document.getElementById("main-current-medication-box-table");
 
     console.log("attempt insert")
     // Insert all information in medication
-    createAndInsertMedicationInfo(tableBody, row, "action", null);
-    createAndInsertMedicationInfo(tableBody, row, "drug", drug);
-    createAndInsertMedicationInfo(tableBody, row, "dosage", dosage);
-    createAndInsertMedicationInfo(tableBody, row, "start-date", startDate);
-    createAndInsertMedicationInfo(tableBody, row, "end-date", endDate);
-    createAndInsertMedicationInfo(tableBody, row, "duration", duration);
-    createAndInsertMedicationInfo(tableBody, row, "route", route);
-    createAndInsertMedicationInfo(tableBody, row, "comments", comments);
-    createAndInsertMedicationInfo(tableBody, row, "confirmation", null);
+    createAndInsertMedicationInfo(tableBody, row, "action", null, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "drug", drug, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "dosage", dosage, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "start-date", startDate, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "end-date", endDate, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "duration", duration, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "route", route, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "comments", comments, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "by-patient", byPatient, byPatient);
+    createAndInsertMedicationInfo(tableBody, row, "confirmation", null, byPatient);
 }
 
 function assignEvent() {
@@ -166,7 +168,7 @@ function reloadUnEditedContent(row) {
     reloadMedicationInfo(row, "confirm");
 }
 
-function saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, status, comments) {
+function saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, status, comments, byPatient) {
     if (!dict.hasOwnProperty("" + row)) {
         dict["" + row] = {};
     }
@@ -179,6 +181,7 @@ function saveToDict(row, id, drug, dosage, startDate, endDate, duration, route, 
     dict["" + row]["route"] = route;
     dict["" + row]["status"] = status;
     dict["" + row]["comments"] = comments;
+    dict["" + row]["byPatient"] = byPatient;
     sessionStorage.setItem("medicationDict", JSON.stringify(dict));
 }
 
@@ -237,16 +240,24 @@ function getToday() {
     return year + "-" + month + "-" + day;
 }
 
-function createAndInsertMedicationInfo(tableBody, row, type, data) {
+function createAndInsertMedicationInfo(tableBody, row, type, data, byPatient) {
     let medicationInfo = document.createElement("div");
     medicationInfo.classList.add("info-table-item");
     medicationInfo.classList.add(`medication-${row}`);
     if (type == "action") {
-        let selectElem = createActionMedicationElement(row);
-        medicationInfo.appendChild(selectElem);
+        if (byPatient == false) {
+            let selectElem = createActionMedicationElement(row);
+            medicationInfo.appendChild(selectElem);
+        } else {
+            medicationInfo.id = `medication-${type}-${row}`;
+            medicationInfo.textContent = "No action";
+        }
     } else if (type == "confirmation") {
         let confirmBtnElem = createConfirmButtonElement(row);
         medicationInfo.appendChild(confirmBtnElem);
+    } else if (type == "by-patient") {
+        let byPatientElem = createByPatientElement(row, data);
+        medicationInfo.appendChild(byPatientElem);
     } else {
         medicationInfo.id = `medication-${type}-${row}`;
         medicationInfo.textContent = data;    
@@ -297,6 +308,19 @@ function createConfirmButtonElement(row) {
     return confirmButton;
 }
 
+function createByPatientElement(row, data) {
+    let byPatientElem = document.createElement("div");
+    byPatientElem.id = `medication-by-patient-${row}`;
+    if (data == true) {
+        byPatientElem.classList.add("by-patient");
+        byPatientElem.textContent = "Patient";
+    } else {
+        byPatientElem.classList.add("by-doctor");
+        byPatientElem.textContent = "Doctor";
+    }
+    return byPatientElem;
+}
+
 function changeMedicationInfoToEditable(row, type) {
     const elem = document.getElementById(`medication-${type}-${row}`);
     let newChild = null;
@@ -345,7 +369,7 @@ function createDurationEditablesElement(elem, row) {
     let timeSelect = document.createElement("select");
     timeSelect.class = `input-duration-time`;
     timeSelect.id = `input-duration-time-${row}`;
-    let times = ["day", "week", "month", "year"]
+    let times = ["Day", "Week", "Month", "Year"]
     let optionIndex = times.indexOf(durationTime);
     for (i in times) {
         let newOption = document.createElement("option");
@@ -507,7 +531,6 @@ function updateMedication() {
         }
     }
 
-
     $.ajax({
       type: "POST",
       url: base_url + "/api/doctor/patient-data/medication/update/",
@@ -516,7 +539,11 @@ function updateMedication() {
         if (returned_value.ok == true) { 
             sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
             sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
-            connect_to_websocket();
+            websocket.send(JSON.stringify({
+                "event": "CHANGE-IN-MEDICATION",
+                "currentMedication": sessionStorage.getItem("currentMedication")
+              //   "pastMedication": sessionStorage.getItem("pastMedication")
+            }));
         }
       },
       error: function () { }
@@ -618,28 +645,3 @@ function showCommentSection(row) {
 
     document.getElementById("pop-up-mask").appendChild(confirmComment);
 }
-
-function connect_to_websocket() {
-    if (websocket == null) {
-        console.log(sessionStorage.getItem("currentMedication"))
-      websocket = create_websocket(
-        function (event) {
-          websocket.send(JSON.stringify({
-              "event": "CHANGE-IN-MEDICATION",
-              "currentMedication": sessionStorage.getItem("currentMedication")
-            //   "pastMedication": sessionStorage.getItem("pastMedication")
-            }))
-        },
-        function (response) {
-            let data = JSON.parse(response.data)
-            console.log(data)
-            if (data["event"] == "CHANGE-IN-MEDICATION") {
-                console.log("Change in medication has been sent successfully");
-                websocket.close();
-                websocket = null;
-                window.location.href = "/medication"
-            }
-        });
-    }
-  }
-  
