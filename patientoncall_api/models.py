@@ -49,6 +49,9 @@ class Medication(models.Model):
     comments = models.CharField(max_length=1024, blank=True, null=True)
     byPatient = models.BooleanField(default=False)
 
+    class Meta:
+     ordering = ('-startDate',)
+
 SCAN_TYPE = (
    ('MRI', 'MRI'),
    ('PET', 'PET'),

@@ -43,6 +43,20 @@ function connect_to_websocket() {
   websocket = create_websocket(
     () => {
       console.log('Connected to websocket.');
+      if (window.location.href == base_url + "/visit/") {
+        console.log('Connected to websocket.');
+        console.log(isCreated);
+        if (isCreated) {
+            const id = sessionStorage.getItem("patientID")
+            const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+            websocket.send(JSON.stringify({
+                "event": "NEW_HOSP_VISIT_ENTRY",
+                "patientId": id,
+                "hospital_visit_history": medicalHistory,
+                "doctor_update": true
+              }))
+        }
+      }
     },
     (response) => {
       let data = JSON.parse(response.data);
@@ -52,11 +66,75 @@ function connect_to_websocket() {
         console.log("NOO I GOT KICKED");
         sessionStorage.clear();
         window.location.href = base_url;
+      } else if (event == "NEW_MEDICATION_ENTRY") {
+        let newMedicationData = data["newMedicationData"]
+        let updatedCurrMedication = JSON.parse(data["currentMedication"])
+        sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
+
+        if (window.location.href == base_url + "/medication/") {
+          console.log("In medication page")
+          let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
+        if (nextMedId == null) {
+          addMedication(
+            true,
+            newMedicationData["id"],
+            newMedicationData["drug"],
+            newMedicationData["dosage"],
+            newMedicationData["startDate"],
+            newMedicationData["endDate"],
+            newMedicationData["duration"],
+            newMedicationData["route"],
+            newMedicationData["comments"],
+            newMedicationData["byPatient"]
+          )
+        } else {
+          insertNewMedBeforeMedWithId(
+            nextMedId, 
+            true,
+            newMedicationData["id"],
+            newMedicationData["drug"],
+            newMedicationData["dosage"],
+            newMedicationData["startDate"],
+            newMedicationData["endDate"],
+            newMedicationData["duration"],
+            newMedicationData["route"],
+            newMedicationData["comments"],
+            newMedicationData["byPatient"]
+          );
+        }
+        }
+
+      } else if (event == "REMOVE_MEDICATION_ENTRY") {
+        if (window.location.href == base_url + "/medication/") {
+          let removedID = data["removedID"];
+          document.getElementById(removedID + '-drug').remove();
+          document.getElementById(removedID + '-dosage').remove();
+          document.getElementById(removedID + '-start-date').remove();
+          document.getElementById(removedID + '-end-date').remove();
+          document.getElementById(removedID + '-duration').remove();
+          document.getElementById(removedID + '-route').remove();
+          document.getElementById(removedID + '-comments').remove();
+          document.getElementById(removedID + '-owner').remove();
+        }
+      } else if (event == "CHANGE-IN-MEDICATION") {
+        if (window.location.href == base_url + "/edit-medication/") {
+          console.log("Change in medication has been sent successfully");
+          window.location.href = "/medication"
+        }
+      } else if (event == "NEW_HOSP_VISIT_ENTRY") {
+          let newMh = data["new_visit_entry"]
+          const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+          console.log(medicalHistory)
+          sessionStorage.setItem("medicalHistory",JSON.stringify(data["hospital_visit_history"]))
+          if (window.location.href == base_url + "/visit/") {  
+            addMedHistoryEntry(medicalHistory.length, newMh["admissionDate"], newMh["dischargeDate"],
+              newMh["summary"], newMh["visitType"], newMh["letter"])
+          }
       }
-      if (websocket != null) {
-        websocket.close();
-        websocket = null;
-      }
+      // if (websocket != null) {
+      //   websocket.close();
+      //   websocket = null;
+      // }
     }
   )
 }

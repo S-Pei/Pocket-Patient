@@ -6,16 +6,7 @@ document.getElementById("patient-search-submit").addEventListener("click", (e) =
   let patientId = document.getElementById("patient-id").value;
   let patientName = document.getElementById("patient-name").value;
 
-  if (window.location.protocol == "https:") {
-    api_verify_valid_patient_credentials(patientId, patientName);
-  } else {
-    // Skip verification in DEBUG mode
-    sessionStorage.setItem("patientID", patientId);
-    sessionStorage.setItem("patientName", patientName);
-    sessionStorage.setItem("patientUsername", 'bobchoy');
-    connect_to_websocket();
-    api_fetch_patient_full_data([]);
-  }
+  api_verify_valid_patient_credentials(patientId, patientName);
 })
 
 
@@ -58,24 +49,22 @@ function status_error(message) {
 }
 
 function connect_to_websocket() {
-  if (websocket == null) {
-    websocket = create_websocket(
-      function (event) {
-        websocket.send(JSON.stringify({
-            "event": "REQUEST_PATIENT_DATA_ACCESS"
-          }))
-      },
-      function (response) {
-        let data = JSON.parse(response.data)
-        let event = data["event"]
-    
-        if (event == "GRANT_PATIENT_DATA_ACCESS") {
-          let toHideIds = data["ids"];
-          console.log(toHideIds);
-          api_fetch_patient_full_data(toHideIds);
-        }
-      });
-  }
+  websocket = create_websocket(
+    function (event) {
+      websocket.send(JSON.stringify({
+          "event": "REQUEST_PATIENT_DATA_ACCESS"
+        }))
+    },
+    function (response) {
+      let data = JSON.parse(response.data)
+      let event = data["event"]
+  
+      if (event == "GRANT_PATIENT_DATA_ACCESS") {
+        let toHideIds = data["ids"];
+        console.log(toHideIds);
+        api_fetch_patient_full_data(toHideIds);
+      }
+    });
 }
 
 function disconnect_websocket() {

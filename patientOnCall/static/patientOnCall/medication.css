@@ -41,7 +41,7 @@
 }
 
 .main-medication-box-table {
-  grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 2fr;
+  grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 2fr 1fr;
 }
 
 #print-button {
@@ -50,4 +50,26 @@
 
 #prev-button {
   background-color: #A1DADE;
+}
+
+.info-table-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.by-patient {
+  padding: 0 5px;
+  background-color: var(--light-red-colour);
+  margin: 5px 0;
+  border-radius: 7px;
+  font-weight: 500;
+}
+
+.by-doctor {
+  padding: 0 5px;
+  background-color: var(--info-bg-color);
+  margin: 5px 0;
+  border-radius: 7px;
+  font-weight: 500;
 }
