@@ -2,8 +2,6 @@ var base_url = window.location.origin;
 
 var dict = {};
 
-var websocket;
-
 (function() {
     const value = sessionStorage.getItem('medicationDict');
     console.log(dict)

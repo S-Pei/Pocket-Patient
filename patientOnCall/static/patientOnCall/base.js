@@ -39,12 +39,10 @@ if (sessionStorage.getItem("displayDisclaimer") != null && sessionStorage.getIte
 var websocket = null;
 
 function connect_to_websocket() {
-  console.log("Called function")
   websocket = create_websocket(
     () => {
       console.log('Connected to websocket.');
       if (window.location.href == base_url + "/visit/") {
-        console.log('Connected to websocket.');
         console.log(isCreated);
         if (isCreated) {
             const id = sessionStorage.getItem("patientID")
@@ -130,11 +128,19 @@ function connect_to_websocket() {
             addMedHistoryEntry(medicalHistory.length, newMh["admissionDate"], newMh["dischargeDate"],
               newMh["summary"], newMh["visitType"], newMh["letter"])
           }
+      } else if (event == "NEW_DIARY_ENTRY") {
+        addDiaryEntryToSession(data["newDiaryData"]);
+        if (window.location.href == base_url + "/patient-diary/") {
+          addDiaryEntry(
+            getNumOfExistingRows(),
+            data["newDiaryData"]["id"],
+            data["newDiaryData"]["date"],
+            data["newDiaryData"]["content"],
+            false,
+            false
+          )
+        }
       }
-      // if (websocket != null) {
-      //   websocket.close();
-      //   websocket = null;
-      // }
     }
   )
 }
