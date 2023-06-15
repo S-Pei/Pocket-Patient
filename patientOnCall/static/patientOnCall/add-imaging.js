@@ -8,7 +8,10 @@ var base_url = window.location.origin;
   // console.log(imagingHistory)
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
-
+  
+  // scanType = window.location.href.split('/')[4]
+  console.log(document.referrer)
+  document.getElementById("back-to-scan-type").href = document.referrer
   // const admissionDate = document.getElementById('#id_admissionDate')
   // const dischargeDate = document.getElementById('#id_dischargeDate')
 

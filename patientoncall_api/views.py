@@ -427,3 +427,21 @@ def uploadLetter(request, id, visitID):
     visitEntry.save()
     return render(request, 'patientOnCall/visit.html', {'visit':visitEntry})
     
+@csrf_exempt
+def uploadReport(request, scanType, id, imagingID):
+    imagingEntry = ImagingHistory.objects.get(id=imagingID)
+    reportUpload = request.FILES["report"] if 'report' in request.FILES else False
+    imagingEntry.report = reportUpload
+    imagingEntry.save()
+    # return render(request, 'patientOnCall/imaging.html', {'imaging':imagingEntry})
+    return redirect(f"{BASE_URL}scan-type/"f"{scanType}")
+
+@csrf_exempt
+def uploadImages(request, scanType, id, imagingID):
+    print("HIIII")
+    # images = request.FILES.getlist('image')
+    # print(request.FILES)
+    imagingEntry = ImagingHistory.objects.get(id=imagingID)
+    addImagingUploads(request, imagingEntry)
+    # return render(request, 'patientOnCall/imaging.html', {'imaging':imagingEntry})
+    return redirect(f"{BASE_URL}scan-type/"f"{scanType}")

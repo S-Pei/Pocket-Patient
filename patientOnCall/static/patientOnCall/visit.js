@@ -39,7 +39,12 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     const entryDate = document.createElement("div");
     entryDate.classList.add("info-table-item");
     entryDate.classList.add(row);
-    entryDate.textContent = admissionDate + "\n" + "-\n" + dischargeDate;
+    if (admissionDate === dischargeDate) {
+        console.log("same date")
+        entryDate.textContent = admissionDate;
+    } else {
+        entryDate.textContent = admissionDate + "\n" + "-\n" + dischargeDate;
+    }
 
     // const entryAdmissionDate = document.createElement("div");
     // entryAdmissionDate.classList.add("info-table-item");
@@ -72,6 +77,11 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
         entryVisitType.style.backgroundColor = "#6BC4EB";
     }
     
+    const entryConsultant = document.createElement("div");
+    entryConsultant.classList.add("info-table-item");
+    entryConsultant.classList.add(row);
+    entryConsultant.textContent = "Dr John Lee"
+    
     const entryLetter = document.createElement("a");
     entryLetter.classList.add("info-table-item");
     entryLetter.classList.add(row);
@@ -88,23 +98,23 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
         }
     } 
 
-    const entryLab = document.createElement("a");
-    entryLab.classList.add("info-table-item");
-    entryLab.classList.add(row);
-    entryLab.classList.add("add-lab-button");
-    entryLab.textContent = "Lab Report"
+    // const entryLab = document.createElement("a");
+    // entryLab.classList.add("info-table-item");
+    // entryLab.classList.add(row);
+    // entryLab.classList.add("add-lab-button");
+    // entryLab.textContent = "Lab Report"
 
-    const entryImaging = document.createElement("div");
-    entryImaging.classList.add("info-table-item");
-    entryImaging.classList.add(row);
-    entryImaging.classList.add("add-lab-button");
-    entryImaging.href = base_url + '/add-imaging'
+    const entryLabAndImaging = document.createElement("div");
+    entryLabAndImaging.classList.add("info-table-item");
+    entryLabAndImaging.classList.add(row);
+    entryLabAndImaging.classList.add("add-lab-button");
+    // entryImaging.href = base_url + '/add-imaging'
 
-    const entryImagingReport = document.createElement("a");
-    // entryImagingReport.classList.add("info-table-item");
-    // entryImagingReport.classList.add(row);
-    entryImagingReport.textContent = "Imaging Report \n"
-    entryImaging.appendChild(entryImagingReport)
+    // const entryImagingReport = document.createElement("a");
+    // // entryImagingReport.classList.add("info-table-item");
+    // // entryImagingReport.classList.add(row);
+    // entryImagingReport.textContent = "Imaging Report \n"
+    // entryImaging.appendChild(entryImagingReport)
 
     // const entryAddImaging = document.createElement("a");
     // // entryImaging.classList.add("info-table-item");
@@ -119,9 +129,9 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     // tableBody.appendChild(entryDischargeDate);
     tableBody.appendChild(entrySummary);
     tableBody.appendChild(entryVisitType);
+    tableBody.appendChild(entryConsultant);
     tableBody.appendChild(entryLetter);
-    tableBody.appendChild(entryLab);
-    tableBody.appendChild(entryImaging);
+    tableBody.appendChild(entryLabAndImaging);
 
 }
 
