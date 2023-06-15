@@ -34,7 +34,8 @@ function getVisitEntry(entryNum) {
     letterForm.setAttribute('action',uploadURL)
     const entryLetter = document.getElementById("entry-letter")
 
-    if  (letter === 'False') {
+    console.log(letter)
+    if  (letter === "False" || letter === '/media/False') {
         $("#upload-letter-form").submit(function(eventObj) {
             var letterUpload = $('#letter-upload').val().replace(/C:\\fakepath\\/, '/media/letterattachments/');
             console.log(letterUpload)

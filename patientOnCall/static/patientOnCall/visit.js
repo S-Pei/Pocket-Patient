@@ -9,7 +9,8 @@ var base_url = window.location.origin;
     const lastName = sessionStorage.getItem("patientLastName")
     const id = sessionStorage.getItem("patientID")
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
-
+    medicalHistory.sort((a, b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
+    
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
@@ -78,8 +79,8 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     const entryLetter = document.createElement("a");
     entryLetter.classList.add("info-table-item");
     entryLetter.classList.add(row);
-    // console.log(letter)
-    if  (letter === "False") {
+    console.log(letter)
+    if  (letter === "False" || letter === "/media/False") {
         console.log("NOOOOO")
     } else {
         entryLetter.href = base_url + letter;

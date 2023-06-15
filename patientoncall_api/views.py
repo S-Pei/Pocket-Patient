@@ -279,17 +279,27 @@ def addVisit(request):
                 addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             )
 
-            context = {'created': True, 
-                        'id': visit.id,
-                        'admissionDate': visit.admissionDate,
-                        'dischargeDate': visit.dischargeDate,
-                        'summary': visit.summary,
-                        'visitType': visit.visitType, 
-                        'letter': visit.letter, 
-                        'addToMedicalHistory': visit.addToMedicalHistory }
-            print (context)
+            request.session["created"] = True
+            request.session["id"] = str(visit.id)
+            request.session["admissionDate"] = visit.admissionDate
+            request.session["dischargeDate"] = visit.dischargeDate
+            request.session["summary"] = visit.summary
+            request.session["visitType"] = visit.visitType
+            request.session["letter"] = visit.letter.url if 'letter' in request.FILES else False
+            request.session["addToMedicalHistory"] = visit.addToMedicalHistory
+
+
+            # context = {'created': True, 
+            #             'id': visit.id,
+            #             'admissionDate': visit.admissionDate,
+            #             'dischargeDate': visit.dischargeDate,
+            #             'summary': visit.summary,
+            #             'visitType': visit.visitType, 
+            #             'letter': visit.letter, 
+            #             'addToMedicalHistory': visit.addToMedicalHistory }
+            # print (context)
             # print("is valid")
-            return render(request, "patientOnCall/visit.html", context)
+            return redirect(f"{BASE_URL}visit/")
     else:
         form = AddVisitForm()
         # print("add visit")
