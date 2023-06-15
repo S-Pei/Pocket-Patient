@@ -46,6 +46,8 @@ function getRelatedDiaryEntries() {
   let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
   for (key of Object.keys(diary)) {
     if (key.replace(/ /g,'').toLowerCase() == category) {
+      // Set header category label
+      $("#category-label").text(`Category: ${key}`);
       return diary[key];
     }
   }
