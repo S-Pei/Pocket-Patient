@@ -2,7 +2,6 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
-from flask import render_template
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
