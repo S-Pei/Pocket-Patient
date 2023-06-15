@@ -35,7 +35,12 @@
         <label for="entry-report">Imaging Report:</label>
         <!-- <input class="add-option" type="submit" id="add-report" value="Upload Report"> -->
         <!-- <a id="entry-report"></a>    -->
-        <div id="entry-report"></div>  
+        <div id="entry-report"></div>
+        <form id="upload-report-form" method="POST" action="" enctype ="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="report" id="report-upload">
+            <input type="submit" value="Upload Report"></input>
+        </form>
     </div>
     <div class="add-history pt-1">
         <label for="entry-images">Images:</label>

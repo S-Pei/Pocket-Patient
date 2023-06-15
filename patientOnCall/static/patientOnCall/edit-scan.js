@@ -31,16 +31,24 @@ function getScanEntry(entryNum) {
     document.getElementById("entry-indication").innerHTML = indication
     // document.getElementById("entry-report").innerHTML = report 
     
+    const uploadURL = 'upload-report/' + imagingHistory[entryNum]["id"]
+    console.log(uploadURL)
+    const reportForm = document.getElementById("upload-report-form")
+    reportForm.setAttribute('action',uploadURL)
     const entryReport = document.getElementById("entry-report")
-
+    
+    console.log(report)
     if  (report === 'False' || report === (base_url + '/media/False')) {
-    //    entryReport.textContent = ""
-       const entryReportUpload = document.createElement("input")
-       entryReportUpload.classList.add("add-option")
-       entryReportUpload.setAttribute('type','submit')
-       entryReportUpload.setAttribute('value','Upload Report')
-       entryReport.append(entryReportUpload)
+        $("#upload-report-form").submit(function(eventObj) {
+            var reportUpload = $('#report-upload').val().replace(/C:\\fakepath\\/, '/media/imagingreports/');
+            console.log(reportUpload)
+            imagingHistory[entryNum]["report"] = reportUpload
+            console.log(imagingHistory[entryNum]["report"])
+            sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
+            return true; 
+        });       
     } else {
+        reportForm.remove()
         const entryReportLink = document.createElement("a");
         entryReportLink.textContent = scanType + " Report"
         entryReportLink.href = base_url + report
