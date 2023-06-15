@@ -10,22 +10,54 @@ var base_url = window.location.origin;
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
-  // insertDiaryEntries(diary);
+  insertRelatedDiaryEntries();
 })();
 
-function insertDiaryEntries(diary) {
-  let i = 0;
-  for (entry of diary) {
-    addDiaryEntry(
-      i,
-      entry["id"],
-      entry["date"],
-      entry["content"],
-      entry["readByDoctor"],
-      i == 0
-    )
-    i++;
+function insertRelatedDiaryEntries(diary) {
+  let entries = getRelatedDiaryEntries();
+  if (entries != undefined) {
+    let i = 0;
+    for (entry of entries) {
+      addDiaryEntry(
+        i,
+        entry["id"],
+        entry["date"],
+        entry["content"],
+        entry["readByDoctor"],
+        i == 0
+      )
+      i++;
+    }
+  } else {
+    console.error("No such category found!");
+    return;
   }
+}
+
+function getRelatedDiaryEntries() {
+  let category = getCategoryFromUrl();
+  console.log(`category: ${category}`);
+  if (category === undefined) { 
+    console.error("No category provided!");
+    return;
+  }
+
+  // Has category passed as parameter in url
+  let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
+  for (key of Object.keys(diary)) {
+    if (key.replace(/ /g,'').toLowerCase() == category) {
+      return diary[key];
+    }
+  }
+  return undefined;
+}
+
+function getCategoryFromUrl() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const category = urlParams.get('category');
+
+  return category != null && category != undefined ? category : undefined;    
 }
 
 function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {

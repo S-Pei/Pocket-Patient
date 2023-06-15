@@ -41,6 +41,6 @@ function addCategoriesClickRedirectListener() {
 
     let categorySelected = $(this).text();
     let categoryFormatted = categorySelected.replace(/ /g,'').toLowerCase();
-    window.location.href = base_url + `/patient-diary/${categoryFormatted}`;
+    window.location.href = base_url + `/patient-diary/?category=${categoryFormatted}`;
   });
 }
