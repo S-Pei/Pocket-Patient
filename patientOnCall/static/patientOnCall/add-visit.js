@@ -22,6 +22,18 @@ var base_url = window.location.origin;
       $('#id_admissionDate').datepicker('option', 'maxDate', new Date(dateText))}});
   });
 
+  const visitDropDown = document.getElementById("id_visitType")
+  visitDropDown.addEventListener("change", e => {
+    var visitChosen = e.target.value;
+    if (visitChosen == "GP Consultation" || visitChosen == "Hospital Clinic"){
+      document.getElementById("admission-date-label").innerHTML = 'Date'; 
+      document.getElementById("discharge-date-wrapper").style.display = 'none'; 
+    } else {
+      document.getElementById("admission-date-label").innerHTML = 'Admission Date'; 
+      document.getElementById("discharge-date-wrapper").style.display = 'block'; 
+    }
+  })
+
   let inputs = $("p input, p textarea, p select")
   
   $("#patient-medical-history-add-entry").submit(function(eventObj) {
