@@ -29,6 +29,36 @@
       
     </div>
   </div>
+  <script>
+    var isCreated = "{{ created }}"
+    console.log(isCreated)
+    let imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
+    imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
+    // var idList = []
+    // for(var i = 0; i < medicalHistory.length; i++) {
+    //   console.log(medicalHistory[i]["id"])
+    //   idList.push(medicalHistory[i]["id"])
+    //   console.log("{{id}}" === medicalHistory[i]["id"])
+    // }
+    // console.log("{{id}}" === medicalHistory[i]["id"])
+    if ("{{ id }}"==="") {
+      console.log("no")
+    } else {
+      let newImagingHistory = {}
+      console.log("{{ id }}")
+      newImagingHistory["id"]= "{{ id }}";
+      newImagingHistory["date"]= "{{ date }}";
+      newImagingHistory["scanType"]= "{{ scanType }}";
+      newImagingHistory["region"]= "{{ region }}"
+      newImagingHistory["indication"]= "{{ indication }}"
+      newImagingHistory["report"]= "{{ report }}"
+      imagingHistory.push(newImagingHistory)
+      imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      console.log(imagingHistory)
+      sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
+    }
+  </script>
   <script src="{% static 'patientOnCall/scan-type.js' %}"></script>
 </body>
 {% endblock %}

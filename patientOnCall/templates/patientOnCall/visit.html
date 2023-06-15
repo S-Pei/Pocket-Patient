@@ -37,13 +37,6 @@
     let medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
     medicalHistory.sort((a, b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
     sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
-    // var idList = []
-    // for(var i = 0; i < medicalHistory.length; i++) {
-    //   console.log(medicalHistory[i]["id"])
-    //   idList.push(medicalHistory[i]["id"])
-    //   console.log("{{id}}" === medicalHistory[i]["id"])
-    // }
-    // console.log("{{id}}" === medicalHistory[i]["id"])
     if ("{{ id }}"==="") {
       console.log("no")
     } else {

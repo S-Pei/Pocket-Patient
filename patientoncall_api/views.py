@@ -2,6 +2,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
+from flask import render_template
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -336,15 +337,26 @@ def addImaging(request):
                 # visitType = request.POST.get("visitType"),
                 report=request.FILES["report"] if 'report' in request.FILES else False,
                 # visitEntry=request.POST.get("visitEntry")
-            )
+            ) 
             for i in images:
                 ImagingUpload.objects.create(
                     imagingEntry=imagingEntry,
                     image=i
                 )
             # print("is valid")
-            tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
-            return HttpResponseRedirect(tableURL)
+            request.session["created"] = True
+            request.session["id"] = str(imagingEntry.id)
+            request.session["date"] = imagingEntry.date
+            request.session["scanType"] = imagingEntry.scanType
+            request.session["region"] = imagingEntry.region
+            request.session["indication"] = imagingEntry.indication
+            request.session["report"] = imagingEntry.report.url if 'report' in request.FILES else False
+            
+            # print(request.session)
+            # tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
+            # return HttpResponseRedirect(tableURL)
+        return redirect(f"{BASE_URL}scan-type/"f"{scanName}")
+            # return render_template(f"{BASE_URL}scan-type/{scanName}")
             # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
     else:
         # form = AddImagingForm()

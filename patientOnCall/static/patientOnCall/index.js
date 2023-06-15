@@ -58,7 +58,6 @@ function status_error(message) {
 }
 
 function connect_to_websocket() {
-  if (websocket == null) {
     websocket = create_websocket(
       function (event) {
         websocket.send(JSON.stringify({
@@ -75,7 +74,6 @@ function connect_to_websocket() {
           api_fetch_patient_full_data(toHideIds);
         }
       });
-  }
 }
 
 function disconnect_websocket() {
