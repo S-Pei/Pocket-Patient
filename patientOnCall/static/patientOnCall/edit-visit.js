@@ -23,9 +23,20 @@ function getVisitEntry(entryNum) {
 
     $(".section-header").html("Visit Entry: " + admissionDate)
     // document.getElementById("visit-title").innerHTML = "Visit Entry:" + admissionDate  
-    document.getElementById("entry-admission-date").innerHTML = admissionDate
-    document.getElementById("entry-discharge-date").innerHTML = dischargeDate
     document.getElementById("entry-visit-type").innerHTML = visitType
+    // document.getElementById("entry-admission-date").innerHTML = admissionDate
+    // document.getElementById("entry-discharge-date").innerHTML = dischargeDate
+    
+    if (visitType == "GP Consultation" || visitType == "Hospital Clinic"){
+      document.getElementById("admission-date-label").innerHTML = 'Date:'; 
+      document.getElementById("entry-admission-date").innerHTML = admissionDate
+      document.getElementById("discharge-date-wrapper").style.display = 'none'; 
+    } else { 
+        document.getElementById("entry-admission-date").innerHTML = admissionDate
+        document.getElementById("discharge-date-wrapper").style.display = 'block'; 
+        document.getElementById("entry-discharge-date").innerHTML = dischargeDate
+    }
+  
     document.getElementById("entry-summary").innerHTML = summary
     
     const uploadURL = 'upload-letter/' + medicalHistory[entryNum]["id"]
