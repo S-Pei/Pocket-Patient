@@ -10,7 +10,7 @@ var base_url = window.location.origin;
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
     // console.log(window.location.href.split('/')[4])
-    document.getElementById("back-button").href = document.referrer
+    // document.getElementById("back-button").href = document.referrer
     
     var labName = window.location.href.split('/')[4] 
     if (labName === "fbc") {
