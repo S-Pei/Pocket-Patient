@@ -1,3 +1,5 @@
+var base_url = window.location.origin;
+
 (function() {
   
   const firstName = sessionStorage.getItem("patientFirstName")
@@ -8,6 +10,7 @@
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + patientID
 
   insertDiaryCategories();
+  addCategoriesClickRedirectListener();
 })();
 
 function insertDiaryCategories() {
@@ -30,4 +33,14 @@ function createCategoryElement(category) {
 
 function insertCategoryElement(categoryElement) {
   $("#categories-grid-box").append(categoryElement);
+}
+
+function addCategoriesClickRedirectListener() {
+  $(".category-item").click(function (e) { 
+    e.preventDefault();
+
+    let categorySelected = $(this).text();
+    let categoryFormatted = categorySelected.replace(/ /g,'').toLowerCase();
+    window.location.href = base_url + `/patient-diary/${categoryFormatted}`;
+  });
 }
