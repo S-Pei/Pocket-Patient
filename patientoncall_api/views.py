@@ -26,6 +26,7 @@ from .models import (
     Medication,
     ImagingHistory,
     ImagingUpload,
+    DiaryClass,
     Diary
 )
 
@@ -36,6 +37,7 @@ from .serializers import (
     MedicationSerializer,
     ImagingHistorySerializer,
     ImagingUploadSerializer,
+    DiaryClassSerializer,
     DiarySerializer
 )
 
@@ -129,7 +131,6 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     imagingUploads = ImagingUpload.objects
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
-    diary = Diary.objects.filter(patient=user.id)
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
@@ -141,7 +142,6 @@ def getAllPatientDataById(request, user, toHideIds=[]):
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
-    diarySerializer = DiarySerializer(diary, many=True)
     sessionID = request.session.session_key
     return {
         'ok': True,
@@ -158,8 +158,17 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'imaging-uploads': imagingUploadSerializer.data,
         'current-medication': currentMedicationSerializer.data,
         'previous-medication': previousMedicationSerializer.data,
-        'diary': diarySerializer.data
+        'diary-info': getDiaryData(request, user)
     }
+
+def getDiaryData(request, user) :
+    diaryClass = DiaryClass.objects.filter(patient=user.id)
+    dict = {}
+    for className in diaryClass:
+        entries = Diary.objects.filter(diaryClass=className)
+        dict[className.contentType] = DiarySerializer(entries, many=True).data
+    print(json.dumps(dict))
+    return json.dumps(dict)
 
 @csrf_exempt
 def addMedicalHistory(request):
@@ -336,15 +345,29 @@ def addImaging(request):
                 # visitType = request.POST.get("visitType"),
                 report=request.FILES["report"] if 'report' in request.FILES else False,
                 # visitEntry=request.POST.get("visitEntry")
-            )
+            ) 
+            currImages = []
             for i in images:
-                ImagingUpload.objects.create(
+                imageUploads = ImagingUpload.objects.create(
                     imagingEntry=imagingEntry,
                     image=i
                 )
+                currImages.append(imageUploads.image.url)
+            print(currImages)
             # print("is valid")
-            tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
-            return HttpResponseRedirect(tableURL)
+            request.session["created"] = True
+            request.session["id"] = str(imagingEntry.id)
+            request.session["date"] = imagingEntry.date
+            request.session["scanType"] = imagingEntry.scanType
+            request.session["region"] = imagingEntry.region
+            request.session["indication"] = imagingEntry.indication
+            request.session["report"] = imagingEntry.report.url if 'report' in request.FILES else False
+            request.session["image"] = currImages  
+            # print(request.session)
+            # tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
+            # return HttpResponseRedirect(tableURL)
+        return redirect(f"{BASE_URL}scan-type/"f"{scanName}")
+            # return render_template(f"{BASE_URL}scan-type/{scanName}")
             # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
     else:
         # form = AddImagingForm()

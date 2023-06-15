@@ -33,7 +33,7 @@ function getScanEntry(entryNum) {
     
     const entryReport = document.getElementById("entry-report")
 
-    if  (report === '' || report === (base_url + '/media/False')) {
+    if  (report === 'False' || report === (base_url + '/media/False')) {
     //    entryReport.textContent = ""
        const entryReportUpload = document.createElement("input")
        entryReportUpload.classList.add("add-option")

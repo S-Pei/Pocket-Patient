@@ -28,25 +28,28 @@ var base_url = window.location.origin;
 
 })();
 
+
 function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
   var i = 0
   while (i < imagingHistory.length) {
       const entryID = imagingHistory[i]["id"]
       // console.log(entryID === undefined)
       var images = []
-      if (entryID === undefined) {
-          images = imagingHistory[i]['image']
-        } else {
-            imagesEntries = imagingUploads.filter(function(item){
-                return item.imagingEntry == entryID;         
-            });
-            imagesEntries.forEach(f => images.push(f['image']))
-        }
-        
-        
-    console.log(scanName)
+    //   if (entryID === undefined) {
+    //       images = imagingHistory[i]['image']
+    //     } else {
+       imagesEntries = imagingUploads.filter(function(item){
+         return (item.imagingEntry === entryID && 
+            imagingHistory[i]["scanType"] === scanName );         
+       });
+        imagesEntries.forEach(
+            f => images.push(f['image']))
+        // }
+    
+     
+    // console.log(scanName)
     console.log(images)
-    console.log(imagingHistory[i]["scanType"])
+    // console.log(imagingHistory[i]["scanType"])
 
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
@@ -60,6 +63,7 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
 }
 function addImagingHistoryEntry(rowNum, date, region, indication, report, images) {
     // Create a new entry for the table
+    console.log(images)
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
     // console.log(row)
@@ -82,8 +86,8 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
     const entryReport = document.createElement("a");
     entryReport.classList.add("info-table-item");
     entryReport.classList.add(row);
-    // console.log(letter)
-    if  (report === '' || report === (base_url + '/media/False')) {
+    // console.log(report)
+    if  (report === 'False' || report === (base_url + '/media/False')) {
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
@@ -93,6 +97,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
     const entryImages = document.createElement("div");
     entryImages.classList.add("info-table-item");
     entryImages.classList.add(row);
+    // console.log("img length" + images.length )
     for(var i = 0; i < images.length; i ++) {
         console.log(images[i])
         var entryImage = "entryImage-" + i 

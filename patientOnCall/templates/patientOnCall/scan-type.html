@@ -29,6 +29,64 @@
       
     </div>
   </div>
+  <script>
+    var isCreated = "{{ created }}"
+    console.log(isCreated)
+    let imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
+    let imagingUploads = JSON.parse(sessionStorage.getItem("imagingUploads"))
+    imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
+    // var idList = []
+    // for(var i = 0; i < medicalHistory.length; i++) {
+    //   console.log(medicalHistory[i]["id"])
+    //   idList.push(medicalHistory[i]["id"])
+    //   console.log("{{id}}" === medicalHistory[i]["id"])
+    // }
+    // console.log("{{id}}" === medicalHistory[i]["id"])
+    if ("{{ id }}"==="") {
+      console.log("no")
+    } else {
+      let newImagingHistory = {}
+      // console.log("{{ id }}")
+      // console.log("{{ image }}")
+
+      var imgURLs = "{{ image }}"
+      const imgArr = imgURLs.split(',')
+      // console.log(imgArr)
+      for(var i = 0; i < imgArr.length; i++)
+        {
+          imgArr[i] = imgArr[i].replace("&#x27;", "");
+          imgArr[i] = imgArr[i].replace("&#x27;", "");
+          imgArr[i] = imgArr[i].replace("[", "");
+          imgArr[i] = imgArr[i].replace("]", "");
+          imgArr[i] = imgArr[i].replace(" ", "");
+        }
+    
+      // console.log(imgArr)
+      newImagingHistory["id"]= "{{ id }}";
+      newImagingHistory["date"]= "{{ date }}";
+      newImagingHistory["scanType"]= "{{ scanType }}";
+      newImagingHistory["region"]= "{{ region }}"
+      newImagingHistory["indication"]= "{{ indication }}"
+      newImagingHistory["report"]= "{{ report }}"
+
+      if (imgArr ==  "") {
+        console.log("ay")
+      } else {
+        for( var i = 0; i < imgArr.length; i ++ ) {
+          let newImagingUpload = {}
+          newImagingUpload["imagingEntry"] = "{{ id }}";
+          newImagingUpload["image"] = imgArr[i]
+          imagingUploads.push(newImagingUpload)
+        }
+      }
+      imagingHistory.push(newImagingHistory)
+      imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      // console.log(imagingHistory)
+      sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
+      sessionStorage.setItem("imagingUploads",JSON.stringify(imagingUploads))
+    }
+  </script>
   <script src="{% static 'patientOnCall/scan-type.js' %}"></script>
 </body>
 {% endblock %}

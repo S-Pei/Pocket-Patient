@@ -7,6 +7,7 @@ from .models import (
     Medication,
     ImagingHistory,
     ImagingUpload,
+    DiaryClass,
     Diary
 )
 
@@ -27,12 +28,12 @@ class LabHistorySerializer(serializers.ModelSerializer):
                                         allow_null=False, required=True)
     class Meta:
         model = LabHistory
-        fields = ('date', 'report')
+        fields = ['date', 'report']
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
-        fields = ('id', 'drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'status', 'comments', 'byPatient')
+        fields = ['id', 'drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'status', 'comments', 'byPatient']
 
 class ImagingHistorySerializer(serializers.ModelSerializer):
     report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
@@ -46,7 +47,12 @@ class ImagingUploadSerializer(serializers.ModelSerializer):
         model = ImagingUpload
         fields = ['imagingEntry','image']
 
+class DiaryClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DiaryClass
+        fields = ['contentType']
+
 class DiarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ('id', 'date', 'content', 'readByDoctor')
+        fields = ['id', 'date', 'content', 'readByDoctor']
