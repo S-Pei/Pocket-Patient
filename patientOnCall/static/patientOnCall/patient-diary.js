@@ -5,11 +5,12 @@ var base_url = window.location.origin;
   const lastName = sessionStorage.getItem("patientLastName")
   const id = sessionStorage.getItem("patientID")
   const diary = JSON.parse(sessionStorage.getItem("patientDiary"))
+  console.log(diary);
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
-  insertDiaryEntries(diary);
+  // insertDiaryEntries(diary);
 })();
 
 function insertDiaryEntries(diary) {

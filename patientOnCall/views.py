@@ -50,9 +50,12 @@ def displayHistory(request):
 def patientDiary(request):
     return render(request, 'patientOnCall/patient-diary.html')
 
+def patientDiaryCategories(request):
+    return render(request, 'patientOnCall/patient-diary-categories.html')
+
 def readDiaryEntry(request):
-    print(request)
     return render(request, 'patientOnCall/patient-diary-entry.html')
+
 def displayImaging(request):
     return render(request, 'patientOnCall/imaging.html')
 

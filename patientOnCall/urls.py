@@ -14,6 +14,7 @@ urlpatterns = [
     path('add-medication/', views.addMedication, name='add-medication'),
     path('lab-history/', views.displayHistory, name='lab-history'),
     path('patient-diary/', views.patientDiary, name='patient-diary'),
+    path('patient-diary-categories/', views.patientDiaryCategories, name='patient-diary-caegories'),
     path('patient-diary/entry/', views.readDiaryEntry, name='patient-diary-read'),
     path('imaging/', views.displayImaging, name='imaging'),
     path('add-imaging/', addImaging, name='dd-imaging'),

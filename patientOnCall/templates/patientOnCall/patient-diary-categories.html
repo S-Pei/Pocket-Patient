@@ -1,0 +1,15 @@
+{% extends "patientOnCall/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'patientOnCall/patient-diary-categories.css' %}"></link>
+</head>
+<body>
+  <div class="container-fluid p-3 mb-3 patient-identity">
+    <h1 id="patient-name"></h1>
+    <h3 id="patient-id"></h3>
+    </div>
+  <script src="{% static 'patientOnCall/patient-diary-categories.js' %}"></script>
+</body>
+{% endblock %}

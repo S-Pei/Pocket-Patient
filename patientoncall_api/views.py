@@ -158,17 +158,16 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'imaging-uploads': imagingUploadSerializer.data,
         'current-medication': currentMedicationSerializer.data,
         'previous-medication': previousMedicationSerializer.data,
-        'diary-info': getDiaryData(request, user)
+        'diary-info': getDiaryData(user)
     }
 
-def getDiaryData(request, user) :
+def getDiaryData(user):
     diaryClass = DiaryClass.objects.filter(patient=user.id)
     dict = {}
     for className in diaryClass:
         entries = Diary.objects.filter(diaryClass=className)
         dict[className.contentType] = DiarySerializer(entries, many=True).data
-    print(json.dumps(dict))
-    return json.dumps(dict)
+    return dict
 
 @csrf_exempt
 def addMedicalHistory(request):

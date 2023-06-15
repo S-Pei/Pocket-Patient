@@ -26,7 +26,7 @@ document.getElementById("imaging-history").addEventListener("click", (e) => {
 
 document.getElementById("patient-diary").addEventListener("click", (e) => {
   e.preventDefault();
-  window.location.href = base_url + "/patient-diary"
+  window.location.href = base_url + "/patient-diary-categories"
 })
 
 
