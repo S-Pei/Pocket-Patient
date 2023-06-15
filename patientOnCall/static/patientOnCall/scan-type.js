@@ -83,8 +83,8 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
     const entryReport = document.createElement("a");
     entryReport.classList.add("info-table-item");
     entryReport.classList.add(row);
-    // console.log(letter)
-    if  (report === '' || report === (base_url + '/media/False')) {
+    console.log(report)
+    if  (report === 'False' || report === (base_url + '/media/False')) {
         console.log("NOOOOO")
     } else {
         entryReport.href = report;

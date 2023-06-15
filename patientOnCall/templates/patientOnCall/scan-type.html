@@ -52,7 +52,7 @@
 
       var imgURLs = "{{ image }}"
       const imgArr = imgURLs.split(',')
-      console.log(imgArr)
+      // console.log(imgArr)
       for(var i = 0; i < imgArr.length; i++)
         {
           imgArr[i] = imgArr[i].replace("&#x27;", "");
@@ -62,7 +62,7 @@
           imgArr[i] = imgArr[i].replace(" ", "");
         }
     
-      console.log(imgArr)
+      // console.log(imgArr)
       newImagingHistory["id"]= "{{ id }}";
       newImagingHistory["date"]= "{{ date }}";
       newImagingHistory["scanType"]= "{{ scanType }}";
@@ -78,7 +78,7 @@
       }
       imagingHistory.push(newImagingHistory)
       imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      console.log(imagingHistory)
+      // console.log(imagingHistory)
       sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
       sessionStorage.setItem("imagingUploads",JSON.stringify(imagingUploads))
     }
