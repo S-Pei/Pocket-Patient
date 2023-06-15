@@ -12,7 +12,7 @@ urlpatterns = [
     # path('api/getpatient', views.getPatient, name='apiGetPatient')
     path('edit-medication/', views.newMedication, name='edit-medication'),
     path('add-medication/', views.addMedication, name='add-medication'),
-    path('lab-history/', views.displayHistory, name='lab-history'),
+    path('lab-history/', views.displayLabHistory, name='lab-history'),
     path('patient-diary/', views.patientDiary, name='patient-diary'),
     path('patient-diary/entry/', views.readDiaryEntry, name='patient-diary-read'),
     path('imaging/', views.displayImaging, name='imaging'),
@@ -22,4 +22,5 @@ urlpatterns = [
     path('edit-visit/<str:id>/upload-letter/<str:visitID>', uploadLetter, name='upload-letter'),
     path('edit-scan/<str:scanType>/<str:id>/upload-report/<str:imagingID>', uploadReport, name='upload-report'),
     path('edit-scan/<str:scanType>/<str:id>/upload-images/<str:imagingID>', uploadImages, name='upload-images'),
+    path('lab-type/<str:id>/', views.displayLabType, name='lab-type'),
 ]

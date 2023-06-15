@@ -1,133 +1,41 @@
-.medication-box {
-    padding-top: 2em;
-  }
-  
-  #main-current-medication-box {
-    max-height: 40vh;
-    margin-bottom: 1em;
-  }
-  
-  
-  #main-current-medication-box-headers {
-    display: flex;
-    align-items: center;
-  }
-  
-  .medication-box h2 {
-    flex: 4;
-    margin-bottom: 0 !important;
-    text-align: left;
-  }
-  
-  #main-current-medication-box button {
-    flex: 1;
-    margin-left: 1%;
-    margin-right: 1%;
-  }
-  
-  #main-current-medication-box button {
-    font-size: 1.3em;
-    flex: 1;
-    margin: 0 1%;
-    color: white;
-    border-width: 0;
-    border-radius: 10px;
-    box-shadow: 2px 2px 2px 2px rgba(0,0,0,.5);
-  }
-  
-  #main-current-medication-box-headers button {
-    height: 40px;
-    width: 100%;
-  }
-  
-  .main-medication-box-table {
-    grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 2fr;
-  }
-  
-  #print-button {
-    background-color: #E27CA1;
-  }
-  
-  #prev-button {
-    background-color: #A1DADE;
-  }
+#lab-history-and-presentation-box {
+  /* height: 40vh; */
+  width: 100%;
+  padding-bottom: 0.5em; 
+}
 
-  .patient-photo {
-    width: 30%; 
-    float:left;
-    padding-left:10px;
-  }
-  
-  .personal{
-    height: 25%;
-    max-height: 300px;
-    max-width: 980px;
-  }
-  
-  #allergies-box {
-    width: 90%;
-    height: 40px;
-    background-color: #BFE2F1;
-    border-radius: 10px;
-    padding-left: 10px;
-    padding-top: 5px;
-  }
-  
-  #lab-history-and-presentation-box {
-    height: 40vh;
-    width: 100%;
-    display: flex;
-  }
-  
-  #main-lab-history-box {
-    width: 65%;
-  }
-  
-  #main-lab-history-box ul {
-    list-style-type: none;
-    max-width: 700px;
-  }
-  
-  #patient-medical-history-add-entry {
-    max-width: 700px;
-  }
-  
-  .lab-history-entry {
-    background-color: var(--info-bg-color);
-  }
+#main-lab-history-box {
+  width: 100%;
+}
+
+#main-lab-history-box ul {
+  list-style-type: none;
+  max-width: 90%;
+  height: 20vh;
+}
+
+.lab-history-entries {
+  margin-left: 5%;
+  height: 20vh;
+}
+
+
+.lab-history-entry {
+  background-color: var(--info-darker-bg-color);
+  box-shadow: 2px 2px 4px var(--dark-shade-color);
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: x-large;
+  padding: 5rem; 
+  padding-bottom: 1rem;
+  padding-top: 1rem; 
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.lab-history-entry:hover{
+  background-color: var(--info-bg-color);
+}
 
   
-  #presentation-box {
-    width: 35%;
-    border: 3px solid var(--info-darker-bg-color);
-    margin-right: 0.1%;
-    border-radius: 15px;
-    background-color: var(--info-lighter-bg-color);
-    font-size: 1.1em;
-  }
-  
-  #main-current-medication-box {
-    padding-top: 2em;
-    max-height: 35vh;
-    background-color: #FFFFFF;
-  }
-  
-  #main-current-medication-box-headers {
-    display: flex;
-  }
-  
-  #main-current-medication-box h2 {
-    flex: 4;
-    margin-bottom: 0 !important;
-  }
-  
-  #main-current-medication-box button {
-    font-size: 1.2em;
-    flex: 1;
-    margin: 0 1%;
-    color: white;
-    border-width: 0;
-    border-radius: 10px;
-    box-shadow: 2px 2px 2px 2px rgba(0,0,0,.5);
-  }
-  
+ 

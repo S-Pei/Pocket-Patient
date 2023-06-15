@@ -19,6 +19,11 @@ document.getElementById("visit-history").addEventListener("click", (e) => {
     window.location.href = base_url + "/visit"
   })
 
+document.getElementById("lab-history").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = base_url + "/lab-history"
+})
+
 document.getElementById("imaging-history").addEventListener("click", (e) => {
     e.preventDefault();
     window.location.href = base_url + "/imaging"
