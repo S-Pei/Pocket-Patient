@@ -1,9 +1,6 @@
 var base_url = window.location.origin;
-let websocket = null;
 
-(function() {
-  connect_to_websocket();
-  
+(function() {  
   const firstName = sessionStorage.getItem("patientFirstName")
   const lastName = sessionStorage.getItem("patientLastName")
   const id = sessionStorage.getItem("patientID")
@@ -112,29 +109,29 @@ function setDiaryEntryToRead(diaryId) {
   }
 }
 
-function connect_to_websocket() {
-  websocket = create_websocket(
-    () => {
-      console.log('Connected to websocket.');
-    },
-    (response) => {
-      let data = JSON.parse(response.data);
-      let event = data["event"]
+// function connect_to_websocket() {
+//   websocket = create_websocket(
+//     () => {
+//       console.log('Connected to websocket.');
+//     },
+//     (response) => {
+//       let data = JSON.parse(response.data);
+//       let event = data["event"]
 
-      if (event == "NEW_DIARY_ENTRY") {
-        addDiaryEntryToSession(data["newDiaryData"]);
-        addDiaryEntry(
-          getNumOfExistingRows(),
-          data["newDiaryData"]["id"],
-          data["newDiaryData"]["date"],
-          data["newDiaryData"]["content"],
-          false,
-          false
-        )
-      }
-    }
-  )
-}
+//       if (event == "NEW_DIARY_ENTRY") {
+//         addDiaryEntryToSession(data["newDiaryData"]);
+//         addDiaryEntry(
+//           getNumOfExistingRows(),
+//           data["newDiaryData"]["id"],
+//           data["newDiaryData"]["date"],
+//           data["newDiaryData"]["content"],
+//           false,
+//           false
+//         )
+//       }
+//     }
+//   )
+// }
 
 function getNumOfExistingRows() {
   return ($(".info-table-item").length / 2) - 1;
