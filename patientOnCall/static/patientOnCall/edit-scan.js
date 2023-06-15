@@ -6,6 +6,7 @@
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
+    document.getElementById("back-to-scan-type").href = document.referrer
     rowNum = window.location.href.split('/')[5]
     getScanEntry(rowNum-1)
 })();

@@ -24,7 +24,7 @@
     width: 100%;
 }
 
-.back-button-box {
+/* .back-button-box {
     width: 15%;
     text-align: left;
     display: flex;
@@ -38,4 +38,4 @@
     border: none;
     padding: 5px 2em;
     box-shadow: 1px 1px 4px var(--dark-shade-color);
-}
+} */
