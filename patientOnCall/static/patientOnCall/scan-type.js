@@ -34,19 +34,19 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
       const entryID = imagingHistory[i]["id"]
       // console.log(entryID === undefined)
       var images = []
-      if (entryID === undefined) {
-          images = imagingHistory[i]['image']
-        } else {
-            imagesEntries = imagingUploads.filter(function(item){
-                return item.imagingEntry == entryID;         
-            });
-            imagesEntries.forEach(f => images.push(f['image']))
-        }
+    //   if (entryID === undefined) {
+    //       images = imagingHistory[i]['image']
+    //     } else {
+       imagesEntries = imagingUploads.filter(function(item){
+         return item.imagingEntry == entryID;         
+       });
+        imagesEntries.forEach(f => images.push(f['image']))
+        // }
         
         
-    console.log(scanName)
-    console.log(images)
-    console.log(imagingHistory[i]["scanType"])
+    // console.log(scanName)
+    // console.log(images)
+    // console.log(imagingHistory[i]["scanType"])
 
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
@@ -60,6 +60,7 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
 }
 function addImagingHistoryEntry(rowNum, date, region, indication, report, images) {
     // Create a new entry for the table
+    console.log(images)
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
     // console.log(row)

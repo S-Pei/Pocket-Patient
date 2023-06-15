@@ -338,11 +338,14 @@ def addImaging(request):
                 report=request.FILES["report"] if 'report' in request.FILES else False,
                 # visitEntry=request.POST.get("visitEntry")
             ) 
+            currImages = []
             for i in images:
-                ImagingUpload.objects.create(
+                imageUploads = ImagingUpload.objects.create(
                     imagingEntry=imagingEntry,
                     image=i
                 )
+                currImages.append(imageUploads.image.url)
+            print(currImages)
             # print("is valid")
             request.session["created"] = True
             request.session["id"] = str(imagingEntry.id)
@@ -351,7 +354,7 @@ def addImaging(request):
             request.session["region"] = imagingEntry.region
             request.session["indication"] = imagingEntry.indication
             request.session["report"] = imagingEntry.report.url if 'report' in request.FILES else False
-            
+            request.session["image"] = currImages  
             # print(request.session)
             # tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
             # return HttpResponseRedirect(tableURL)

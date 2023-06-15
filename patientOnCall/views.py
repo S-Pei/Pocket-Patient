@@ -66,7 +66,8 @@ def displayScanType(request, id):
                     'scanType': request.session["scanType"],
                     'region': request.session["region"],
                     'indication': request.session["indication"], 
-                    'report': request.session["report"]}
+                    'report': request.session["report"],
+                    'image': request.session["image"]} 
         print(context)
         request.session["created"] = False
         request.session["id"] = ""
@@ -75,6 +76,7 @@ def displayScanType(request, id):
         request.session["region"] = None
         request.session["indication"] = None
         request.session["report"] = None
+        request.session["image"] = None
     return render(request, 'patientOnCall/scan-type.html', context=context)
 
 def displayEditScan(request, scanType, id):
