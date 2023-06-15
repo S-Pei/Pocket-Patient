@@ -8,6 +8,7 @@
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + patientID
 
   getDiaryData();
+  addBackButtonRedirectListener();
 })();
 
 
@@ -49,4 +50,21 @@ function setDiaryDate(date) {
 
 function setDiaryContent(content) {
   $("#diary-entry-content").text(content);
+}
+
+function addBackButtonRedirectListener() {
+  $("#back-to-category-btn").click(function (e) { 
+    e.preventDefault();
+    
+    let category = getCategoryFromUrl();
+    window.location.href = base_url + `/patient-diary/?category=${category}`;
+  });
+}
+
+function getCategoryFromUrl() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const category = urlParams.get('category');
+
+  return category != null && category != undefined ? category : undefined;    
 }
