@@ -426,3 +426,13 @@ def uploadReport(request, scanType, id, imagingID):
     imagingEntry.save()
     # return render(request, 'patientOnCall/imaging.html', {'imaging':imagingEntry})
     return redirect(f"{BASE_URL}scan-type/"f"{scanType}")
+
+@csrf_exempt
+def uploadImages(request, scanType, id, imagingID):
+    print("HIIII")
+    # images = request.FILES.getlist('image')
+    # print(request.FILES)
+    imagingEntry = ImagingHistory.objects.get(id=imagingID)
+    addImagingUploads(request, imagingEntry)
+    # return render(request, 'patientOnCall/imaging.html', {'imaging':imagingEntry})
+    return redirect(f"{BASE_URL}scan-type/"f"{scanType}")

@@ -44,7 +44,12 @@
     </div>
     <div class="add-history pt-1">
         <label for="entry-images">Images:</label>
-        <input class="add-option" type="submit" id="add-image" value="Upload Images">
+        <!-- <input class="add-option" type="submit" id="add-image" value="Upload Images"> -->
+        <form id="upload-images-form" method="POST" action="" enctype ="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" multiple="multiple" name="image" id="images-upload">
+            <input type="submit" value="Upload images"></input>
+        </form>
         <p id="entry-images"></p>   
     </div>
    </div>
