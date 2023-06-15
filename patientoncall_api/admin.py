@@ -7,6 +7,7 @@ from .models import (
     Medication,
     ImagingHistory,
     ImagingUpload,
+    DiaryClass,
     Diary
 )
 
@@ -31,9 +32,12 @@ class ImagingHistoryAdmin(admin.ModelAdmin):
 
 class ImagingUploadAdmin(admin.ModelAdmin):
     list_display = ('image', 'imagingEntry')
+
+class DiaryClassAdmin(admin.ModelAdmin):
+    list_display = ('patient', 'contentType')
     
 class DiaryAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'date', 'content')
+    list_display = ('diaryClass', 'date', 'content', 'readByDoctor')
 
 admin.site.register(MedicalHistory, MedicalHistoryAdmin)
 admin.site.register(LabHistory, LabHistoryAdmin)
@@ -41,4 +45,5 @@ admin.site.register(PatientUser, PatientUserAdmin)
 admin.site.register(Medication, MedicationAdmin)
 admin.site.register(ImagingHistory, ImagingHistoryAdmin)
 admin.site.register(ImagingUpload, ImagingUploadAdmin)
+admin.site.register(DiaryClass, DiaryClassAdmin)
 admin.site.register(Diary, DiaryAdmin)

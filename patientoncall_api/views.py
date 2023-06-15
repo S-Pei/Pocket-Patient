@@ -26,6 +26,7 @@ from .models import (
     Medication,
     ImagingHistory,
     ImagingUpload,
+    DiaryClass,
     Diary
 )
 
@@ -36,6 +37,7 @@ from .serializers import (
     MedicationSerializer,
     ImagingHistorySerializer,
     ImagingUploadSerializer,
+    DiaryClassSerializer,
     DiarySerializer
 )
 
@@ -129,7 +131,6 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     imagingUploads = ImagingUpload.objects
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
-    diary = Diary.objects.filter(patient=user.id)
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
     medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                         many=True)
@@ -141,7 +142,6 @@ def getAllPatientDataById(request, user, toHideIds=[]):
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
-    diarySerializer = DiarySerializer(diary, many=True)
     sessionID = request.session.session_key
     return {
         'ok': True,
@@ -158,8 +158,17 @@ def getAllPatientDataById(request, user, toHideIds=[]):
         'imaging-uploads': imagingUploadSerializer.data,
         'current-medication': currentMedicationSerializer.data,
         'previous-medication': previousMedicationSerializer.data,
-        'diary': diarySerializer.data
+        'diary-info': getDiaryData(request, user)
     }
+
+def getDiaryData(request, user) :
+    diaryClass = DiaryClass.objects.filter(patient=user.id)
+    dict = {}
+    for className in diaryClass:
+        entries = Diary.objects.filter(diaryClass=className)
+        dict[className.contentType] = DiarySerializer(entries, many=True).data
+    print(json.dumps(dict))
+    return json.dumps(dict)
 
 @csrf_exempt
 def addMedicalHistory(request):
