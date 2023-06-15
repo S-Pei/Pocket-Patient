@@ -533,7 +533,6 @@ function updateMedication() {
         }
     }
 
-
     $.ajax({
       type: "POST",
       url: base_url + "/api/doctor/patient-data/medication/update/",
@@ -542,7 +541,11 @@ function updateMedication() {
         if (returned_value.ok == true) { 
             sessionStorage.setItem("currentMedication", JSON.stringify(returned_value["current-medication"]))
             sessionStorage.setItem("previousMedication", JSON.stringify(returned_value["previous-medication"]))
-            connect_to_websocket();
+            websocket.send(JSON.stringify({
+                "event": "CHANGE-IN-MEDICATION",
+                "currentMedication": sessionStorage.getItem("currentMedication")
+              //   "pastMedication": sessionStorage.getItem("pastMedication")
+            }));
         }
       },
       error: function () { }
@@ -644,27 +647,3 @@ function showCommentSection(row) {
 
     document.getElementById("pop-up-mask").appendChild(confirmComment);
 }
-
-function connect_to_websocket() {
-    if (websocket == null) {
-      websocket = create_websocket(
-        function (event) {
-            console.log("Connected to websocket");
-          websocket.send(JSON.stringify({
-              "event": "CHANGE-IN-MEDICATION",
-              "currentMedication": sessionStorage.getItem("currentMedication")
-            //   "pastMedication": sessionStorage.getItem("pastMedication")
-            }))
-        },
-        function (response) {
-            let data = JSON.parse(response.data)
-            if (data["event"] == "CHANGE-IN-MEDICATION") {
-                console.log("Change in medication has been sent successfully");
-                websocket.close();
-                websocket = null;
-                window.location.href = "/medication"
-            }
-        });
-    }
-  }
-  

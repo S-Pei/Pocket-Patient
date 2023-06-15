@@ -102,6 +102,11 @@ function connect_to_websocket() {
           document.getElementById(removedID + '-comments').remove();
           document.getElementById(removedID + '-owner').remove();
         }
+      } else if (event == "CHANGE-IN-MEDICATION") {
+        if (window.location.href == base_url + "/edit-medication/") {
+          console.log("Change in medication has been sent successfully");
+          window.location.href = "/medication"
+        }
       }
       if (websocket != null) {
         websocket.close();
