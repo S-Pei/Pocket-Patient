@@ -9,9 +9,24 @@ var base_url = window.location.origin;
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + patientID
 
+  checkIfOnlyOneCategory();
   insertDiaryCategories();
   addCategoriesClickRedirectListener();
 })();
+
+function checkIfOnlyOneCategory() {
+  let diaryData = JSON.parse(sessionStorage.getItem("patientDiary"));
+  if (Object.keys(diaryData).length <= 1) {
+    $("#categories-grid-box").addClass("is-single");
+  }
+}
+
+function checkIfMoreThanOneCategory() {
+  let diaryData = JSON.parse(sessionStorage.getItem("patientDiary"));
+  if (Object.keys(diaryData).length > 1) {
+    $("#categories-grid-box").removeClass("is-single");
+  }
+}
 
 function insertDiaryCategories() {
   let diaryData = JSON.parse(sessionStorage.getItem("patientDiary"));

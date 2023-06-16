@@ -159,6 +159,7 @@ function connect_to_websocket() {
             window.location.href = base_url + `/patient-diary/?category=${categoryFormatted}`;
           })
           insertCategoryElement(categoryElement);
+          checkIfMoreThanOneCategory();
         }
       }
     }
