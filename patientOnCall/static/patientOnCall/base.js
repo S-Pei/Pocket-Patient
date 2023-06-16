@@ -77,34 +77,34 @@ function connect_to_websocket() {
         if (window.location.href == base_url + "/medication/") {
           console.log("In medication page")
           let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
-        if (nextMedId == null) {
-          addMedication(
-            true,
-            newMedicationData["id"],
-            newMedicationData["drug"],
-            newMedicationData["dosage"],
-            newMedicationData["startDate"],
-            newMedicationData["endDate"],
-            newMedicationData["duration"],
-            newMedicationData["route"],
-            newMedicationData["comments"],
-            newMedicationData["byPatient"]
-          )
-        } else {
-          insertNewMedBeforeMedWithId(
-            nextMedId, 
-            true,
-            newMedicationData["id"],
-            newMedicationData["drug"],
-            newMedicationData["dosage"],
-            newMedicationData["startDate"],
-            newMedicationData["endDate"],
-            newMedicationData["duration"],
-            newMedicationData["route"],
-            newMedicationData["comments"],
-            newMedicationData["byPatient"]
-          );
-        }
+          if (nextMedId == null) {
+            addMedication(
+              true,
+              newMedicationData["id"],
+              newMedicationData["drug"],
+              newMedicationData["dosage"],
+              newMedicationData["startDate"],
+              newMedicationData["endDate"],
+              newMedicationData["duration"],
+              newMedicationData["route"],
+              newMedicationData["comments"],
+              newMedicationData["byPatient"]
+            )
+          } else {
+            insertNewMedBeforeMedWithId(
+              nextMedId, 
+              true,
+              newMedicationData["id"],
+              newMedicationData["drug"],
+              newMedicationData["dosage"],
+              newMedicationData["startDate"],
+              newMedicationData["endDate"],
+              newMedicationData["duration"],
+              newMedicationData["route"],
+              newMedicationData["comments"],
+              newMedicationData["byPatient"]
+            );
+          }
         }
 
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
@@ -145,6 +145,16 @@ function connect_to_websocket() {
             false
           )
         }
+      } else if (event == "NEW_DIARY_CLASS") {
+        addDiaryCategoryToSession(data["category"]);
+        if (window.location.href == base_url + "/patient-diary-categories/") {
+          let categoryElement = createCategoryElement(data["category"]);
+          categoryElement.addEventListener("click", () => {
+            let categoryFormatted = data["category"].replace(/ /g,'').toLowerCase();
+            window.location.href = base_url + `/patient-diary/?category=${categoryFormatted}`;
+          })
+          insertCategoryElement(categoryElement);
+        }
       }
     }
   )
@@ -155,3 +165,10 @@ function connect_to_websocket() {
   
   connect_to_websocket();
 })();
+
+function addDiaryCategoryToSession(category) {
+  let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
+  diary[category] = [];
+  sessionStorage.setItem("patientDiary", JSON.stringify(diary));
+  console.log(sessionStorage.getItem("patientDiary"));
+}
