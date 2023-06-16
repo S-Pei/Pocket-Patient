@@ -84,3 +84,13 @@ function addHash(dict, row, id, drug, dosage, startDate, endDate, duration, rout
   dict["" + row]["comments"] = comments;
   dict["" + row]["byPatient"] = byPatient;
 }
+
+function setDefaultStartDate() {
+    const date = new Date().toJSON().slice(0, 10);
+    console.log(date);
+    $("#medication-start-date").val(date);
+}
+
+(function() {  
+    setDefaultStartDate();
+})();

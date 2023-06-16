@@ -66,6 +66,12 @@
   width: 100%;
 }
 
+#route-selection-box {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
 #duration-inputs {
   display: flex;
   flex-direction: column;
