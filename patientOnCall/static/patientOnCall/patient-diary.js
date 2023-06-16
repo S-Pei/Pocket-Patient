@@ -1,30 +1,68 @@
 var base_url = window.location.origin;
+var _category;
 
 (function() {  
   const firstName = sessionStorage.getItem("patientFirstName")
   const lastName = sessionStorage.getItem("patientLastName")
   const id = sessionStorage.getItem("patientID")
-  const diary = JSON.parse(sessionStorage.getItem("patientDiary"))
 
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
-  insertDiaryEntries(diary);
+  insertRelatedDiaryEntries();
 })();
 
-function insertDiaryEntries(diary) {
-  let i = 0;
-  for (entry of diary) {
-    addDiaryEntry(
-      i,
-      entry["id"],
-      entry["date"],
-      entry["content"],
-      entry["readByDoctor"],
-      i == 0
-    )
-    i++;
+function insertRelatedDiaryEntries() {
+  let entries = getRelatedDiaryEntries();
+  if (entries != undefined) {
+    let i = 0;
+    for (entry of entries) {
+      addDiaryEntry(
+        i,
+        entry["id"],
+        entry["date"],
+        entry["content"],
+        entry["readByDoctor"],
+        i == 0
+      )
+      i++;
+    }
+  } else {
+    console.error("No such category found!");
+    return;
   }
+}
+
+function getRelatedDiaryEntries() {
+  let category = getCategoryFromUrl();
+  console.log(`category: ${category}`);
+  if (category === undefined) { 
+    console.error("No category provided!");
+    return;
+  }
+
+  // Has category passed as parameter in url
+  let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
+  for (key of Object.keys(diary)) {
+    if (key.replace(/ /g,'').toLowerCase() == category) {
+      // Set header category label
+      $("#category-label").text(`Category: ${key}`);
+
+      // Set global category variable
+      _category = key;
+
+      return diary[key];
+    }
+  }
+  return undefined;
+}
+
+function getCategoryFromUrl() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const category = urlParams.get('category');
+
+  return category != null && category != undefined ? category : undefined;    
 }
 
 function addDiaryEntry(rowNum, id, date, content, readByDoctor, isLastRow) {
@@ -90,48 +128,31 @@ function row_click_redirect(rowNum) {
       row[i].onclick = function(event) {
         let diaryId = event.target.getAttribute("diary-id");
         setDiaryEntryToRead(diaryId);
-        window.location.href = base_url + "/patient-diary/entry?diaryId=" + diaryId;
+        window.location.href = base_url + "/patient-diary/entry?diaryId=" 
+          + diaryId + `&category=${_category.replace(/ /g,'').toLowerCase()}`;
       };
   }
 }
 
 function setDiaryEntryToRead(diaryId) {
   let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
-  var i = 0;
-  for (entry of diary) {
-    if (entry["id"] == diaryId) {
-      entry["readByDoctor"] = true;
-      diary[i] = entry;
-      sessionStorage.setItem("patientDiary", JSON.stringify(diary));
-      break;
+  for (key of Object.keys(diary)) {
+    if (key === _category) {
+      let entries = diary[key];
+      var i = 0;
+      for (entry of entries) {
+        if (entry["id"] == diaryId) {
+          entry["readByDoctor"] = true;
+          entries[i] = entry;
+          diary[key] = entries;
+          sessionStorage.setItem("patientDiary", JSON.stringify(diary));
+          return;
+        }
+        i++;
+      }
     }
-    i++;
   }
 }
-
-// function connect_to_websocket() {
-//   websocket = create_websocket(
-//     () => {
-//       console.log('Connected to websocket.');
-//     },
-//     (response) => {
-//       let data = JSON.parse(response.data);
-//       let event = data["event"]
-
-//       if (event == "NEW_DIARY_ENTRY") {
-//         addDiaryEntryToSession(data["newDiaryData"]);
-//         addDiaryEntry(
-//           getNumOfExistingRows(),
-//           data["newDiaryData"]["id"],
-//           data["newDiaryData"]["date"],
-//           data["newDiaryData"]["content"],
-//           false,
-//           false
-//         )
-//       }
-//     }
-//   )
-// }
 
 function getNumOfExistingRows() {
   return ($(".info-table-item").length / 2) - 1;

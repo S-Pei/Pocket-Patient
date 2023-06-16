@@ -102,6 +102,9 @@ class DiaryClass(models.Model):
    patient = models.ForeignKey(User, on_delete=models.CASCADE)
    contentType = models.CharField(max_length=64)
 
+   def __str__ (self):
+      return f"{self.patient.username}: {self.contentType}"
+
 
 class Diary(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
