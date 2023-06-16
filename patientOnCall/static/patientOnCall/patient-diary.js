@@ -157,9 +157,3 @@ function setDiaryEntryToRead(diaryId) {
 function getNumOfExistingRows() {
   return ($(".info-table-item").length / 2) - 1;
 }
-
-function addDiaryEntryToSession(diaryEntry) {
-  let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
-  diary.push(diaryEntry);
-  sessionStorage.setItem("patientDiary", JSON.stringify(diary));
-}

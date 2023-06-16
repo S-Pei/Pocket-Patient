@@ -5,11 +5,18 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.is-single {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
 .category-item-box {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 
 .category-item {
   /* max-height: 20%; */
