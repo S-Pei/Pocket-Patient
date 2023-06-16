@@ -34,29 +34,24 @@
     </div> {% endcomment %}
   </div>
   <div class="p-3" id="main-current-medication-box">
-    <div id="main-current-medication-box-headers">
-      <h2>Current Medications:</h2>
-      {% comment %} <button class="red-btn" id="print-button">print</button>
-      <button class="green-btn" id="prev-button">prev</button> {% endcomment %}
+    <div class="p-3 medication-box" id="main-current-medication-box">
+      <div id="main-current-medication-box-headers">
+        <h2 class="section-header">Current Medications:</h2>
+      </div>
+      <div class="info-table main-medication-box-table" id="main-current-medication-box-table">
+        <div class="info-table-item info-table-label">Drug</div>
+        <div class="info-table-item info-table-label">Dose & Frequency</div>
+        <div class="info-table-item info-table-label">Start Date</div>
+        <div class="info-table-item info-table-label">End Date</div>
+        <div class="info-table-item info-table-label">Duration</div>
+        <div class="info-table-item info-table-label">Route</div>
+        <div class="info-table-item info-table-label">Comments</div>
+        <div class="info-table-item info-table-label">Submitted by</div>
+      </div>
+      <div class="main-current-medication-foot-note">
+        last medication date: 1/1/2013
+      </div>
     </div>
-    <div class="info-table" id="main-current-medication-box-table">
-      <div class="info-table-item info-table-label">Drug</div>
-      <div class="info-table-item info-table-label">Dose & Frequency</div>
-      <div class="info-table-item info-table-label">Start Date</div>
-      <div class="info-table-item info-table-label">End Date</div>
-      <div class="info-table-item info-table-label">Duration</div>
-      <div class="info-table-item info-table-label">Route</div>
-      <div class="info-table-item">Antibiotics</div>
-      <div class="info-table-item">2 tablets, 2 times per day</div>
-      <div class="info-table-item">2012-13-13</div>
-      <div class="info-table-item">2012-13-18</div>
-      <div class="info-table-item">1 week</div>
-      <div class="info-table-item">Tablets</div>
-    </div>
-    <div class="main-current-medication-foot-note">
-      last medication date: 1/1/2013
-    </div>
-  </div>
   <!-- <h4>Add New Medical History</h4>
   <form class="add-entry-form d-flex flex-row justify-content-between" id="patient-medical-history-add-entry">
     <div class="add-history pt-1">
