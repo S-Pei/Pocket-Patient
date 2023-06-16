@@ -102,6 +102,7 @@ class EditConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                 'type': 'send_new_diary_information',
                 'event': "NEW_DIARY_ENTRY",
+                'category': response.get("contentType"),
                 'newDiaryData': new_diary_data
             })
         elif event == "NEW_DIARY_CLASS":
@@ -157,6 +158,7 @@ class EditConsumer(WebsocketConsumer):
     def send_new_diary_information(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
+            'category': res["category"],
             "newDiaryData": res["newDiaryData"],
         }))
 
@@ -212,9 +214,9 @@ class EditConsumer(WebsocketConsumer):
 
     def add_diary_entry(self, res):
         print(res.get("patientId"))
-        user = self.get_user_by_patientId(res.get("patientId"))
+        diaryClass = DiaryClass.objects.get(contentType=res.get("contentType"))
         date = res.get("date").split(" ")[0]
-        new_diary_entry = Diary.objects.create(patient=user, date=date, content=res.get("content"))
+        new_diary_entry = Diary.objects.create(diaryClass=diaryClass, date=date, content=res.get("content"))
         return DiarySerializer(new_diary_entry, many=False).data
     
     def add_diary_class(self, res):

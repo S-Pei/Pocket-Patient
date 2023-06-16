@@ -134,8 +134,13 @@ function connect_to_websocket() {
               newMh["summary"], newMh["visitType"], newMh["letter"])
           }
       } else if (event == "NEW_DIARY_ENTRY") {
-        addDiaryEntryToSession(data["newDiaryData"]);
-        if (window.location.href == base_url + "/patient-diary/") {
+        console.log('NEW_DIARY_ENTRY');
+        addDiaryEntryToSession(data["category"], data["newDiaryData"]);
+        console.log(window.location.href == base_url + "/patient-diary/")
+        console.log(getCategoryFromUrl())
+        console.log(data["category"].replace(/ /g,'').toLowerCase())
+        console.log(getCategoryFromUrl() === data["category"].replace(/ /g,'').toLowerCase())
+        if (window.location.href == base_url + `/patient-diary/?category=${data["category"].replace(/ /g,'').toLowerCase()}`) {
           addDiaryEntry(
             getNumOfExistingRows(),
             data["newDiaryData"]["id"],
@@ -171,4 +176,11 @@ function addDiaryCategoryToSession(category) {
   diary[category] = [];
   sessionStorage.setItem("patientDiary", JSON.stringify(diary));
   console.log(sessionStorage.getItem("patientDiary"));
+}
+
+function addDiaryEntryToSession(category, diaryEntry) {
+  let diary = JSON.parse(sessionStorage.getItem("patientDiary"));
+  diary[category].push(diaryEntry);
+  sessionStorage.setItem("patientDiary", JSON.stringify(diary));
+  console.log(JSON.parse(sessionStorage.getItem("patientDiary")));
 }
