@@ -18,6 +18,9 @@ var base_url = window.location.origin;
     } else {
         $(".section-header").html(scanName + ' Scans')
     }
+    $(document).ready(function(){
+        $('#region-filter').attr("onkeyup", "row_filter(imagingHistory)");
+    });
 
     // console.log(imagingHistory);
     insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName);
@@ -147,6 +150,28 @@ function row_click(rowNum, scanType){
         };
     }
 }
+
+function row_filter(imagingHistory){
+    var input = document.getElementById("region-filter");
+    var filter = input.value.toUpperCase();
+
+    for(var i = 0; i < imagingHistory.length; i ++) {
+        var rowClass = 'row-' + (i+1)
+        var row = document.getElementsByClassName(rowClass); 
+        if (row) {
+            var region = $(row[1]).text(); 
+            console.log(region); 
+            if (region.toUpperCase().indexOf(filter) > -1) {
+                // row.style.display = "";
+                $(row).css({ display: "" });
+            } else {
+                // row.style.display = "none";
+                $(row).css({ display: "none" });
+            }
+        }
+    }
+ }
+
 
 document.getElementById("add-imaging").addEventListener("click", (e) => {
     e.preventDefault();
