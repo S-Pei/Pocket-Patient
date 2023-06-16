@@ -8,6 +8,7 @@ from .models import (
     PatientUser,
     Medication,
     Diary,
+    DiaryClass,
     MedicalHistory
 )
 from .serializers import (
@@ -103,6 +104,14 @@ class EditConsumer(WebsocketConsumer):
                 'event': "NEW_DIARY_ENTRY",
                 'newDiaryData': new_diary_data
             })
+        elif event == "NEW_DIARY_CLASS":
+            print("NEW_DIARY_CLASS")
+            if self.add_diary_class(response):
+                async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                    'type': 'send_new_diary_category',
+                    'event': "NEW_DIARY_CLASS",
+                    'category': response.get("contentType")
+                })
         elif event == "NEW_HOSP_VISIT_ENTRY":
             print('receive new hosp notification')
             id = response.get('patientId')
@@ -149,6 +158,12 @@ class EditConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "newDiaryData": res["newDiaryData"],
+        }))
+
+    def send_new_diary_category(self, res):
+        self.send(text_data=json.dumps({
+            "event": res["event"],
+            "category": res["category"],
         }))
 
     def send_update_hosp_visit_information(self, res):
@@ -198,10 +213,15 @@ class EditConsumer(WebsocketConsumer):
     def add_diary_entry(self, res):
         print(res.get("patientId"))
         user = self.get_user_by_patientId(res.get("patientId"))
-        print(user)
         date = res.get("date").split(" ")[0]
         new_diary_entry = Diary.objects.create(patient=user, date=date, content=res.get("content"))
         return DiarySerializer(new_diary_entry, many=False).data
+    
+    def add_diary_class(self, res):
+        user = self.get_user_by_patientId(res.get("patientId"))
+        DiaryClass.objects.create(patient=user, contentType=res.get("contentType"))
+        return True
+        
 
     def get_user_by_patientId(self, patientId):
         patientUser = PatientUser.objects.get(patientId=patientId)
