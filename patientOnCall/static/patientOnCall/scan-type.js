@@ -53,6 +53,7 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
 
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
+        imagingHistory[i]["scanType"],
         imagingHistory[i]["region"],
          imagingHistory[i]["indication"],
          imagingHistory[i]["report"], 
@@ -61,7 +62,7 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
     i++;
   }
 }
-function addImagingHistoryEntry(rowNum, date, region, indication, report, images) {
+function addImagingHistoryEntry(rowNum, date, scanType, region, indication, report, images) {
     // Create a new entry for the table
     console.log(images)
     var tableBody = document.getElementById("main-current-visit-box-table");
@@ -91,7 +92,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
-        entryReport.textContent = "Imaging Report";
+        entryReport.textContent = scanType + " Report";
     } 
 
     const entryImages = document.createElement("div");
@@ -119,18 +120,19 @@ function row_hover(rowNum){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
-    function changeColor(color){
+    function changeColor(bgcolor, fontWeight){
         for(var i = 0; i < n; i++) {
-            row[i].style.backgroundColor = color; 
+            row[i].style.backgroundColor = bgcolor; 
+            row[i].style.fontWeight = fontWeight; 
         }
     }
     for(var i = 0; i < n; i ++) {
         row[i].onmouseover = function() {
-            changeColor("#73C1D2");
+            changeColor("#73C1D2", "bold");
 
         };
         row[i].onmouseout = function() {
-            changeColor("");
+            changeColor("", "normal");
         };   
     }
 }

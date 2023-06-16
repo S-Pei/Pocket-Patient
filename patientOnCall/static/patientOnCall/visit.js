@@ -72,19 +72,25 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     entryVisitType.textContent = visitType;
     if (visitType == "GP Consultation") {
         entryVisitType.style.backgroundColor = "#C55252";
-    }
-    else {
+    } else if (visitType== "Hospital Clinic"){
         entryVisitType.style.backgroundColor = "#6BC4EB";
+    } else {
+        entryVisitType.style.backgroundColor = "#FFDA29"
     }
+
     
     const entryConsultant = document.createElement("div");
     entryConsultant.classList.add("info-table-item");
     entryConsultant.classList.add(row);
     entryConsultant.textContent = "Dr John Lee"
     
+    const entryLetterBox = document.createElement("div");
+    entryLetterBox.classList.add("info-table-item");
+    entryLetterBox.classList.add(row);
+
     const entryLetter = document.createElement("a");
-    entryLetter.classList.add("info-table-item");
-    entryLetter.classList.add(row);
+    // entryLetter.classList.add("info-table-item");
+    // entryLetter.classList.add(row);
     console.log(letter)
     if  (letter === "False" || letter === "/media/False") {
         console.log("NOOOOO")
@@ -97,6 +103,7 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
             entryLetter.textContent = "Discharge Letter";
         }
     } 
+    entryLetterBox.appendChild(entryLetter)
 
     // const entryLab = document.createElement("a");
     // entryLab.classList.add("info-table-item");
@@ -130,7 +137,7 @@ function addMedHistoryEntry(rowNum, admissionDate, dischargeDate, summary, visit
     tableBody.appendChild(entrySummary);
     tableBody.appendChild(entryVisitType);
     tableBody.appendChild(entryConsultant);
-    tableBody.appendChild(entryLetter);
+    tableBody.appendChild(entryLetterBox);
     tableBody.appendChild(entryLabAndImaging);
 
 }
@@ -139,22 +146,25 @@ function row_hover(rowNum, visitType){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
-    function changeColor(color){
+    function changeColor(bgcolor, fontWeight){
         for(var i = 0; i < n; i++) {
-            row[i].style.backgroundColor = color; 
+            row[i].style.backgroundColor = bgcolor; 
+            row[i].style.fontWeight = fontWeight; 
         }
     }
     for(var i = 0; i < n; i ++) {
         row[i].onmouseover = function() {
-            changeColor("#73C1D2");
+            changeColor("#73C1D2", "bold");
 
         };
         row[i].onmouseout = function() {
-            changeColor("");
+            changeColor("", "normal");
             if (visitType== "GP Consultation"){
                 row[2].style.backgroundColor = "#C55252";
-            } else {
+            } else if (visitType== "Hospital Clinic"){
                 row[2].style.backgroundColor = "#6BC4EB";
+            } else {
+                row[2].style.backgroundColor = "#FFDA29"
             }
         };   
     }

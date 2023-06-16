@@ -46,7 +46,7 @@
 }
 
 .past-medical-history-entry {
-  background-color: #BFE2F1;
+  background-color: var(--info-bg-color);
   color: black;
 }
 

@@ -71,6 +71,9 @@ function getVisitEntry(entryNum) {
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
 }
 
+document.getElementById("add-lab").onclick = function() {
+    window.location.href = base_url + "/add-lab"
+};
 
 document.getElementById("add-imaging").onclick = function() {
     window.location.href = base_url + "/add-imaging"
