@@ -46,6 +46,10 @@ class LabHistory(models.Model):
     labType = models.CharField(max_length=100, choices=LAB_TYPE, default='Full Blood Count Report')
     report = models.FileField(upload_to='labattachments/', blank=True, null=True, default=True)
 
+    class Meta:
+       ordering = ('-date',)
+       
+
 
 class Medication(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -83,6 +87,8 @@ class ImagingHistory(models.Model):
    indication = models.CharField(max_length=1024)
    report = models.FileField(upload_to='imagingreports/', blank=True, null=True, default=True)
    # visitEntry = models.ForeignKey(MedicalHistory, on_delete=models.CASCADE)
+   class Meta:
+       ordering = ('-date',)
 
 
 class ImagingUpload(models.Model):

@@ -469,18 +469,7 @@ def addLab(request):
             
             request.session["report"] = labEntry.report.url if 'report' in request.FILES else False
         
-        if (labName == "Full Blood Count Report"):
-            labName = "fbc"
-        elif (labName == "Cancer Blood Test"): 
-            labName = "cancer"
-        elif (labName == "Electrolyte Test"): 
-            labName = "electrolyte"
-        elif (labName == "Genetic Test" ): 
-            labName = "genetic"
-        elif (labName == "Liver Function Test"): 
-            labName = "liver" 
-        elif (labName == "Thyroid Function Test"): 
-            labName = "thyroid"
+        labName = convertLabName(labName)
     
         return redirect(f"{BASE_URL}lab-type/"f"{labName}")
             
@@ -504,3 +493,25 @@ def addLabHistory(request):
         return JsonResponse({'ok': True,
                              'lab-history': labHistorySerializer.data},
                                status=status.HTTP_201_CREATED)
+
+@csrf_exempt
+def uploadLab(request, labType, id, labID):
+    labEntry = LabHistory.objects.get(id=labID)
+    reportUpload = request.FILES["report"] if 'report' in request.FILES else False
+    labEntry.report = reportUpload
+    labEntry.save()
+    return redirect(f"{BASE_URL}lab-type/"f"{labType}")
+
+def convertLabName(labName):
+    if (labName == "Full Blood Count Report"):
+        return "fbc"
+    elif (labName == "Cancer Blood Test"): 
+        return "cancer"
+    elif (labName == "Electrolyte Test"): 
+        return "electrolyte"
+    elif (labName == "Genetic Test" ): 
+        return "genetic"
+    elif (labName == "Liver Function Test"): 
+        return "liver" 
+    elif (labName == "Thyroid Function Test"): 
+        return "thyroid"

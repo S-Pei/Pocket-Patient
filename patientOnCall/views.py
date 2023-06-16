@@ -99,3 +99,6 @@ def displayLabType(request, id):
         request.session["labType"] = None
         request.session["report"] = None
     return render(request, 'patientOnCall/lab-type.html', context=context)
+
+def displayEditLab(request, labType, id):
+    return render(request, 'patientOnCall/edit-lab.html')

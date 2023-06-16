@@ -12,18 +12,19 @@ var base_url = window.location.origin;
     // console.log(window.location.href.split('/')[4])
     // document.getElementById("back-button").href = document.referrer
     
-    var labName = window.location.href.split('/')[4] 
-    if (labName === "fbc") {
+    var labURL = window.location.href.split('/')[4] 
+    var labName = ""
+    if (labURL === "fbc") {
         labName = "Full Blood Count Report"
-    } else if (labName === "cancer") {
+    } else if (labURL === "cancer") {
         labName = "Cancer Blood Test" 
-    } else if (labName === "electrolyte") {
+    } else if (labURL === "electrolyte") {
         labName = "Electrolyte Test" 
-    } else if (labName === "genetic") {
+    } else if (labURL === "genetic") {
         labName = "Genetic Test" 
-    } else if (labName === "liver") {
+    } else if (labURL === "liver") {
         labName = "Liver Function Test" 
-    } else if (labName === "thyroid") {
+    } else if (labURL === "thyroid") {
         labName = "Thyroid Function Test" 
     }
     $(".section-header").html(labName)
@@ -33,7 +34,7 @@ var base_url = window.location.origin;
     insertLabHistoryEntries(labHistory, labName);
     for(var i = 1; i <= labHistory.length; i ++) {
         row_hover(i, labHistory[i-1]["labType"]);
-        row_click(i,labName);
+        row_click(i,labURL);
     }
 
 })();
