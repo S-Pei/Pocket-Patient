@@ -6,6 +6,27 @@
   grid-template-columns: 1fr 8fr 25fr;
 }
 
+.back-button-box {
+  width: 15%;
+  text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-button-box > a > button {
+  font-weight: 700;
+  color: white;
+  border: none;
+  padding: 5px 2em;
+  box-shadow: 1px 1px 4px var(--dark-shade-color);
+}
+
+#category-label {
+  font-size: 1.5em;
+  font-style: italic;
+}
+
 .info-table {
   border: none !important;
 }

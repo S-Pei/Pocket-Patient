@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="{% static 'patientOnCall/edit-medication.css' %}"></link>
 </head>
 <body>
-  <div class="container-fluid p-3 mb-3">
+  <div class="container-fluid p-3 mb-3 patient-identity">
     <h1 id="patient-name">Bob Choy</h1>
     <h2 id="patient-id">12345</h2>
   </div>
@@ -30,8 +30,7 @@
     <div id="main-current-medication-box">
       <div id="main-current-medication-box-headers">
         <h4>Current Medications:</h4>
-        <button class="red-btn print-btn">print</button>
-        <button class="green-btn prev-btn">prev</button>
+        <div class="save-button-box"><button id="save-medication" class="add-button">Save</button></div>
       </div>
       <div class="info-table" id="main-current-medication-box-table">
         <div class="info-table-item info-table-label">Action</div>
@@ -46,7 +45,6 @@
         <div class="info-table-item info-table-label">Confirmation</div>
       </div>
       <div class="add-button-box" id="add-medication-button-box"><button id="add-medication-button">Add Medication</button></div>
-      <div class="add-button-box"><button id="save-medication" class="add-button">Save</button></div>
     </div>
   </div>
   <script src="{% static 'patientOnCall/edit-medication.js' %}"></script>

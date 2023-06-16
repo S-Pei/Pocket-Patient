@@ -2,8 +2,12 @@
   padding-top: 2em;
 }
 
+#main-medication-box {
+  overflow-y: scroll;
+}
+
 #main-current-medication-box {
-  max-height: 40vh;
+  /* max-height: 40vh; */
   margin-bottom: 1em;
 }
 

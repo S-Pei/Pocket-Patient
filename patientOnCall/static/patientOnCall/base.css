@@ -27,9 +27,10 @@
 }
 
 #sidebar {
-  padding-top: 3em;
+  padding-top: 2%;
   max-width: 20%;
-  height: 100%; 
+  min-width: 200px;
+  height: 100vh; 
   display: inline-block;
   background-color: var(--info-bg-color);
   margin: 0;
@@ -52,7 +53,7 @@
 }
 
 #return-to-search-btn-wrapper {
-  margin-bottom: 3em !important;
+  margin-bottom: 2em !important;
 }
 
 #return-to-search-btn {
@@ -61,7 +62,7 @@
   border: none;
   padding: 0.3em 1em;
   border-radius: 15px;
-  width: 70%;
+  width: 80%;
   transition: transform 0.1s, box-shadow 0.1s;
   font-weight: bold;
 }
@@ -77,6 +78,12 @@
   margin-bottom: 0.7em;
   margin-right: 0.05em; 
   margin-left: 0.05em; 
+}
+
+@media only screen and (max-width: 1400px) {
+  .sidebar-option {
+  font-size: 1.3em;
+  }
 }
 
 .sidebar-option a {
