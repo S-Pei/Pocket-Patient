@@ -26,10 +26,10 @@ var base_url = window.location.origin;
   visitDropDown.addEventListener("change", e => {
     var visitChosen = e.target.value;
     if (visitChosen == "GP Consultation" || visitChosen == "Hospital Clinic"){
-      document.getElementById("admission-date-label").innerHTML = 'Date'; 
+      document.getElementById("admission-date-label").innerHTML = 'Date:'; 
       document.getElementById("discharge-date-wrapper").style.display = 'none'; 
     } else {
-      document.getElementById("admission-date-label").innerHTML = 'Admission Date'; 
+      document.getElementById("admission-date-label").innerHTML = 'Admission Date:'; 
       document.getElementById("discharge-date-wrapper").style.display = 'block'; 
     }
   })

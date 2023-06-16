@@ -18,6 +18,9 @@ var base_url = window.location.origin;
     } else {
         $(".section-header").html(scanName + ' Scans')
     }
+    $(document).ready(function(){
+        $('#region-filter').attr("onkeyup", "row_filter(imagingHistory)");
+    });
 
     // console.log(imagingHistory);
     insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName);
@@ -53,6 +56,7 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
 
     if (imagingHistory[i]["scanType"] === scanName) {
         addImagingHistoryEntry(i+1, imagingHistory[i]["date"],
+        imagingHistory[i]["scanType"],
         imagingHistory[i]["region"],
          imagingHistory[i]["indication"],
          imagingHistory[i]["report"], 
@@ -61,7 +65,7 @@ function insertImagingHistoryEntries(imagingHistory, imagingUploads, scanName) {
     i++;
   }
 }
-function addImagingHistoryEntry(rowNum, date, region, indication, report, images) {
+function addImagingHistoryEntry(rowNum, date, scanType, region, indication, report, images) {
     // Create a new entry for the table
     console.log(images)
     var tableBody = document.getElementById("main-current-visit-box-table");
@@ -91,7 +95,7 @@ function addImagingHistoryEntry(rowNum, date, region, indication, report, images
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
-        entryReport.textContent = "Imaging Report";
+        entryReport.textContent = scanType + " Report";
     } 
 
     const entryImages = document.createElement("div");
@@ -119,18 +123,19 @@ function row_hover(rowNum){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
-    function changeColor(color){
+    function changeColor(bgcolor, fontWeight){
         for(var i = 0; i < n; i++) {
-            row[i].style.backgroundColor = color; 
+            row[i].style.backgroundColor = bgcolor; 
+            row[i].style.fontWeight = fontWeight; 
         }
     }
     for(var i = 0; i < n; i ++) {
         row[i].onmouseover = function() {
-            changeColor("#73C1D2");
+            changeColor("#73C1D2", "bold");
 
         };
         row[i].onmouseout = function() {
-            changeColor("");
+            changeColor("", "normal");
         };   
     }
 }
@@ -145,6 +150,28 @@ function row_click(rowNum, scanType){
         };
     }
 }
+
+function row_filter(imagingHistory){
+    var input = document.getElementById("region-filter");
+    var filter = input.value.toUpperCase();
+
+    for(var i = 0; i < imagingHistory.length; i ++) {
+        var rowClass = 'row-' + (i+1)
+        var row = document.getElementsByClassName(rowClass); 
+        if (row) {
+            var region = $(row[1]).text(); 
+            console.log(region); 
+            if (region.toUpperCase().indexOf(filter) > -1) {
+                // row.style.display = "";
+                $(row).css({ display: "" });
+            } else {
+                // row.style.display = "none";
+                $(row).css({ display: "none" });
+            }
+        }
+    }
+ }
+
 
 document.getElementById("add-imaging").addEventListener("click", (e) => {
     e.preventDefault();

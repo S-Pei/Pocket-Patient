@@ -52,7 +52,7 @@ function getScanEntry(entryNum) {
         reportForm.remove()
         const entryReportLink = document.createElement("a");
         entryReportLink.textContent = scanType + " Report"
-        entryReportLink.href = base_url + report
+        entryReportLink.href = report
         entryReport.append(entryReportLink)
     } 
 

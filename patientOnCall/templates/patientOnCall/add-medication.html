@@ -46,7 +46,15 @@
         </div>
         <div class="add-medication pt-1">
           <label for="medication-route">Route</label>
-          <input type="text" name="medication-route" id="medication-route"></input>
+          <div id="route-selection-box">
+            <select id="medication-route">
+              <option value="Oral">Oral</option>
+              <option value="Injection">Injection</option>
+              <option value="Nasal">Nasal</option>
+              <option value="Transdermal">Transdermal</option>
+              <option value="Otic">Otic</option>
+            </select>  
+          </div>
         </div>
         <div class="add-medication pt-1">
           <label for="medication-comment">Comment</label>

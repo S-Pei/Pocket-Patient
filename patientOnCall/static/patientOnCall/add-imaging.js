@@ -19,6 +19,19 @@ var base_url = window.location.origin;
     $('#id_date').datepicker({dateFormat: "yy-mm-dd"});
   });
 
+  console.log(document.referrer.split('/'))
+  if (document.referrer.split('/')[3] === "scan-type") {
+    labName = document.referrer.split('/')[4]
+    console.log(labName)
+    if (labName === "Medical-Photography") {
+      labName = "Medical Photography"
+    }
+    console.log(labName)
+    $(document).ready(function(){
+      $('#id_scanType').val(labName);
+    });
+  }
+
   $(document).ready(function(){
     $('#id_image').attr("multiple","true");
   });

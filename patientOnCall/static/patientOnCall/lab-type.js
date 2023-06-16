@@ -62,37 +62,43 @@ function addLabHistoryEntry(rowNum, date, report) {
     entryDate.classList.add(row);
     entryDate.textContent = date;
     
+    const entryReportBox = document.createElement("div");
+    entryReportBox.classList.add("info-table-item");
+    entryReportBox.classList.add(row);
+
     const entryReport = document.createElement("a");
-    entryReport.classList.add("info-table-item");
-    entryReport.classList.add(row);
+    // entryReport.classList.add("info-table-item");
+    // entryReport.classList.add(row);
     // console.log(report)
     if  (report === 'False' || report === (base_url + '/media/False')) {
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
-        entryReport.textContent = "Lab Report";
+        entryReport.textContent = report.replace(base_url+'/media/labattachments/', '');
     } 
+    entryReportBox.appendChild(entryReport)
 
     tableBody.appendChild(entryDate);
-    tableBody.appendChild(entryReport);
+    tableBody.appendChild(entryReportBox);
 }
 
 function row_hover(rowNum){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
-    function changeColor(color){
+    function changeColor(bgcolor, fontWeight){
         for(var i = 0; i < n; i++) {
-            row[i].style.backgroundColor = color; 
+            row[i].style.backgroundColor = bgcolor; 
+            row[i].style.fontWeight = fontWeight; 
         }
     }
     for(var i = 0; i < n; i ++) {
         row[i].onmouseover = function() {
-            changeColor("#73C1D2");
+            changeColor("#73C1D2", "bold");
 
         };
         row[i].onmouseout = function() {
-            changeColor("");
+            changeColor("", "normal");
         };   
     }
 }

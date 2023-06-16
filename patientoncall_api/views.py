@@ -365,6 +365,8 @@ def addImaging(request):
             # print(request.session)
             # tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
             # return HttpResponseRedirect(tableURL)
+        if (scanName == "Medical Photography"):
+            scanName = "Medical-Photography"
         return redirect(f"{BASE_URL}scan-type/"f"{scanName}")
             # return render_template(f"{BASE_URL}scan-type/{scanName}")
             # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
@@ -433,6 +435,8 @@ def uploadReport(request, scanType, id, imagingID):
     imagingEntry.report = reportUpload
     imagingEntry.save()
     # return render(request, 'patientOnCall/imaging.html', {'imaging':imagingEntry})
+    if (scanType == "Medical Photography"):
+        scanType = "Medical-Photography"
     return redirect(f"{BASE_URL}scan-type/"f"{scanType}")
 
 @csrf_exempt

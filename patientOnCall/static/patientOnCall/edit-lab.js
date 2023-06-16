@@ -42,8 +42,8 @@ function getLabEntry(entryNum) {
     } else {
         reportForm.remove()
         const entryReportLink = document.createElement("a");
-        entryReportLink.textContent = labType + " Report"
-        entryReportLink.href = base_url + report
+        entryReportLink.textContent = report.replace(base_url+'/media/labattachments/', ''); 
+        entryReportLink.href = report
         entryReport.append(entryReportLink)
     } 
         
