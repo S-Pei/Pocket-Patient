@@ -14,6 +14,8 @@ var base_url = window.location.origin;
 
 function getVisitEntry(entryNum) {
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+    const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
+    // const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     const id =  medicalHistory[entryNum]["id"]
     const admissionDate = medicalHistory[entryNum]["admissionDate"]
     const dischargeDate = medicalHistory[entryNum]["dischargeDate"]
@@ -72,9 +74,31 @@ function getVisitEntry(entryNum) {
     const addLabURL = 'add-lab/' + id
     console.log(addLabURL)
     
-    // document.getElementById("add-lab").onclick = function() {
-        //     window.location.href = base_url + "/add-lab/" + id
-    // };
+    document.getElementById("add-lab").onclick = function() {
+            window.location.href = base_url + "/add-lab/" + id
+    };
+
+    var counter = 0
+    for(var i = 0; i < labHistory.length; i ++) {
+        if (labHistory[i]["visitEntry"] === id) {
+            const labType = labHistory[i]["labType"]
+            var labEntry = labType + "-" + (i+1)  
+            console.log(labEntry)
+            const labName = document.createElement("p");
+            labName.innerHTML = labType + ':'
+            labEntry = document.createElement("a"); 
+            labEntry.href = labHistory[i]["report"]
+            const labLink = labHistory[i]["report"].replace(base_url+'/media/labattachments/', '') + '\n'
+            labEntry.innerText = labLink.replace('/media/labattachments/', '') + '\n'
+            document.getElementById("entry-lab-histories").appendChild(labName)
+            document.getElementById("entry-lab-histories").appendChild(labEntry)
+            counter++; 
+        }
+    }
+    if (counter === 0) {
+        console.log("meiyou")
+        document.getElementById("entry-lab-histories").style.display="none"
+    }
 
     console.log(addToMedicalHistory)
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory

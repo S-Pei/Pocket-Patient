@@ -526,7 +526,9 @@ def convertLabName(labName):
         return "liver" 
     elif (labName == "Thyroid Function Test"): 
         return "thyroid"
-    
+
+prevURL = ""
+
 @csrf_exempt
 def addVisitLab(request, visitID):
     global prevURL 
@@ -549,18 +551,18 @@ def addVisitLab(request, visitID):
             request.session["date"] = labEntry.date
             request.session["labType"] = labEntry.labType
             request.session["report"] = labEntry.report.url if 'report' in request.FILES else False
-            request.session["visitEntry"] = labEntry.visitEntry
+            request.session["visitEntry"] = visitID
         labName = convertLabName(labName)
-        print(prevURL)
-        prevPage = PurePosixPath(unquote(urlparse(prevURL).path)).parts[1]
-        print(prevPage)
-        if (prevPage == "edit-visit"):
-            return redirect(prevURL)
+        # print("prev" + prevURL)
+        # prevPage = PurePosixPath(unquote(urlparse(prevURL).path)).parts[1]
+        # print(prevPage)
+        # if (prevPage == "edit-visit"):
+        return redirect(prevURL)
         # return redirect(prevURL)
     else:
 
         form = AddLabForm()
-        print (request.META.get("HTTP_REFERER"))
+        # print (request.META.get("HTTP_REFERER"))
         prevURL = request.META.get("HTTP_REFERER")
         # print("add visit")
         return render(request, "patientOnCall/add-lab.html", {'form': form})

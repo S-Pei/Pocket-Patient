@@ -42,13 +42,15 @@ def displayEditVisit(request, id):
                     'id': request.session["id"],
                     'date': request.session["date"],
                     'labType': request.session["labType"],
-                    'report': request.session["report"]} 
+                    'report': request.session["report"],
+                    'visitEntry': request.session["visitEntry"]} 
         print(context)
         request.session["labCreated"] = False
         request.session["id"] = ""
         request.session["date"] = None
         request.session["labType"] = None
         request.session["report"] = None
+        request.session["visitEntry"] = None
     return render(request, 'patientOnCall/edit-visit.html', context=context)
 
 def newMedication(request):

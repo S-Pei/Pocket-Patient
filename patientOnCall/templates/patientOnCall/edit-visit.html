@@ -62,6 +62,7 @@
       <label for="entry-lab-report">Lab Reports:</label>
       <!-- <p class="form-control" name="entry-lab-report"></p>    -->
       <input class="add-option" type="submit" id="add-lab" value="Add Lab">
+      <div id="entry-lab-histories"></div>
     </div>
     <div class="add-history pt-1">
       <label>Imaging:</label>
@@ -77,8 +78,8 @@
   </div>
   
   <script>
-    var isCreated = "{{ labCreated }}"
-    console.log(isCreated)
+    // var isCreated = "{{ labCreated }}"
+    // console.log(isCreated)
     let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
@@ -91,6 +92,8 @@
       newLabHistory["date"]= "{{ date }}";
       newLabHistory["labType"]= "{{ labType }}";
       newLabHistory["report"]= "{{ report }}"
+      newLabHistory["visitEntry"] = "{{ visitEntry }}"
+
 
       labHistory.push(newLabHistory)
       labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
