@@ -41,7 +41,7 @@ var base_url = window.location.origin;
     $(document).ready(function(){
       $('#id_labType').val(labName);
     });
-  }
+  }  
 
   $("#patient-lab-history-add-entry").submit(function(eventObj) {
     let patientId = sessionStorage.getItem("patientID");

@@ -21,14 +21,14 @@ class MedicalHistoryAdmin(admin.ModelAdmin):
                     'addToMedicalHistory')
     
 class LabHistoryAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'date', 'labType', 'report')
+    list_display = ('patient', 'date', 'labType', 'report', 'visitEntry')
 
 class MedicationAdmin(admin.ModelAdmin):
     list_display = ('patient', 'drug', 'dosage', 'startDate', 'endDate', 
                     'duration', 'route', 'status', 'comments')
 
 class ImagingHistoryAdmin(admin.ModelAdmin):
-    list_display = ('patient','date','scanType','region','indication','report')
+    list_display = ('patient','date','scanType','region','indication','report', 'visitEntry')
 
 class ImagingUploadAdmin(admin.ModelAdmin):
     list_display = ('image', 'imagingEntry')
