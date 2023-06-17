@@ -32,8 +32,8 @@
     </div>
   </div>
   <script>
-    var isCreated = "{{ created }}"
-    console.log(isCreated)
+    // var isCreated = "{{ created }}"
+    // console.log(isCreated)
     let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     sessionStorage.setItem("labHistory",JSON.stringify(labHistory))

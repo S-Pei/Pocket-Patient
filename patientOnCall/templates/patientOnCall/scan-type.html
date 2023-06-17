@@ -36,8 +36,8 @@
     </div>
   </div>
   <script>
-    var isCreated = "{{ created }}"
-    console.log(isCreated)
+    // var isCreated = "{{ created }}"
+    // console.log(isCreated)
     let imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     let imagingUploads = JSON.parse(sessionStorage.getItem("imagingUploads"))
     imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
