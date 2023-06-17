@@ -298,17 +298,6 @@ def addVisit(request):
             request.session["letter"] = visit.letter.url if 'letter' in request.FILES else False
             request.session["addToMedicalHistory"] = visit.addToMedicalHistory
 
-
-            # context = {'created': True, 
-            #             'id': visit.id,
-            #             'admissionDate': visit.admissionDate,
-            #             'dischargeDate': visit.dischargeDate,
-            #             'summary': visit.summary,
-            #             'visitType': visit.visitType, 
-            #             'letter': visit.letter, 
-            #             'addToMedicalHistory': visit.addToMedicalHistory }
-            # print (context)
-            # print("is valid")
             return redirect(f"{BASE_URL}visit/")
     else:
         form = AddVisitForm()
@@ -617,3 +606,33 @@ def addVisitImaging(request, visitID):
         prevURL = request.META.get("HTTP_REFERER")
         # print("add visit")
         return render(request, "patientOnCall/add-imaging.html", {'form': form})
+    
+@csrf_exempt
+def editVisit(request, id, visitID):
+    if request.method == "POST":
+        form = AddVisitForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            visit = MedicalHistory.objects.get(id=visitID)
+            visit.admissionDate=request.POST.get("admissionDate")
+            visit.dischargeDate=request.POST.get("dischargeDate")
+            visit.summary = request.POST.get("summary")
+            visit.consultant = "John Lee"
+            visit.visitType = request.POST.get("visitType")
+            visit.letter=request.FILES["letter"] if 'letter' in request.FILES else False
+            visit.addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
+            visit.save()
+
+            request.session["visit-created"] = True
+            request.session["id"] = str(visit.id)
+            request.session["admissionDate"] = visit.admissionDate
+            request.session["dischargeDate"] = visit.dischargeDate
+            request.session["summary"] = visit.summary
+            request.session["visitType"] = visit.visitType
+            request.session["letter"] = visit.letter.url if 'letter' in request.FILES else False
+            request.session["addToMedicalHistory"] = visit.addToMedicalHistory
+
+            return redirect(f"{BASE_URL}edit-visit/"f"id")
+    else:
+        form = AddVisitForm()
+        # print("add visit")
+        return render(request, "patientOnCall/edit-visit-view.html", {'form': form})

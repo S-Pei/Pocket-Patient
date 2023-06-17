@@ -1,15 +1,36 @@
 var base_url = window.location.origin;
 
 (function() {
-    const firstName = sessionStorage.getItem("patientFirstName")
-    const lastName = sessionStorage.getItem("patientLastName")
-    const id = sessionStorage.getItem("patientID")
-    
-    document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
-    document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
+  
+  const firstName = sessionStorage.getItem("patientFirstName")
+  const lastName = sessionStorage.getItem("patientLastName")
+  const id = sessionStorage.getItem("patientID")
+  let medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
 
-    rowNum = window.location.href.split('/')[4]
-    getVisitEntry(rowNum-1)
+  document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
+  document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
+  
+  document.getElementById("back-button").href = document.referrer
+  
+  rowNum = window.location.href.split('/')[4]
+  getVisitEntry(rowNum-1)
+
+  // let inputs = $("p input, p textarea, p select")
+  
+  $("#patient-medical-history-add-entry").submit(function(eventObj) {
+    let patientId = sessionStorage.getItem("patientID");
+    let patientName = sessionStorage.getItem("patientName");
+    $(this).append(`<input type="hidden" name="patientId" value=${patientId} /> `);
+    $(this).append(`<input type="hidden" name="patientName" value=${patientName} /> `);
+    // console.log(newMedicalHistory.addToMedicalHistory)
+    // medicalHistory.push(newMedicalHistory)
+    // medicalHistory.unshift(newMedicalHistory)
+    // // console.log(medicalHistory)
+    medicalHistory.sort((a, b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
+    // // console.log(medicalHistory)
+    sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
+    return true;
+});
 })();
 
 function getVisitEntry(entryNum) {
@@ -24,61 +45,37 @@ function getVisitEntry(entryNum) {
     const letter = medicalHistory[entryNum]["letter"]
     const addToMedicalHistory = medicalHistory[entryNum]["addToMedicalHistory"]
 
-    console.log(window.location.href + 'edit-view/' + id)
-    document.getElementById("edit-button").href = window.location.href + 'edit-view/' + id 
-    
     $(".section-header").html("Visit Entry: " + admissionDate)
-    // document.getElementById("visit-title").innerHTML = "Visit Entry:" + admissionDate  
-    document.getElementById("entry-visit-type").innerHTML = visitType
-    // document.getElementById("entry-admission-date").innerHTML = admissionDate
-    // document.getElementById("entry-discharge-date").innerHTML = dischargeDate
-    
-    if (visitType == "GP Consultation" || visitType == "Hospital Clinic"){
+    $("#id_visitType").val(visitType) 
+    const visitDropDown = document.getElementById("id_visitType")
+    visitDropDown.addEventListener("change", e => {
+    var visitChosen = e.target.value;
+    if (visitChosen == "GP Consultation" || visitChosen == "Hospital Clinic"){
       document.getElementById("admission-date-label").innerHTML = 'Date:'; 
-      document.getElementById("entry-admission-date").innerHTML = admissionDate
       document.getElementById("discharge-date-wrapper").style.display = 'none'; 
-    } else { 
-        document.getElementById("entry-admission-date").innerHTML = admissionDate
-        document.getElementById("discharge-date-wrapper").style.display = 'block'; 
-        document.getElementById("entry-discharge-date").innerHTML = dischargeDate
-    }
-  
-    document.getElementById("entry-summary").innerHTML = summary
-    
-    
-    const uploadURL = 'upload-letter/' + id
-    console.log(uploadURL)
-    const letterForm = document.getElementById("upload-letter-form")
-    letterForm.setAttribute('action',uploadURL)
-    const entryLetter = document.getElementById("entry-letter")
-    
-    console.log(letter)
-    if  (letter === "False" || letter === '/media/False') {
-        $("#upload-letter-form").submit(function(eventObj) {
-            var letterUpload = $('#letter-upload').val().replace(/C:\\fakepath\\/, '/media/letterattachments/');
-            console.log(letterUpload)
-            medicalHistory[entryNum]["letter"] = letterUpload
-            console.log(medicalHistory[entryNum]["letter"])
-            sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
-            return true; 
-        });       
     } else {
-        letterForm.remove()
-        const entryLetterLink = document.createElement("a");
-        if (visitType == "GP Consultation") {
-            entryLetterLink.textContent = "GP Letter";
-        }
-        else {
-            entryLetterLink.textContent = "Discharge Letter";
-        }
-        entryLetterLink.href = base_url + letter
-        entryLetter.append(entryLetterLink)
-    } 
+      document.getElementById("admission-date-label").innerHTML = 'Admission Date:'; 
+      document.getElementById("discharge-date-wrapper").style.display = 'block'; 
+    }
+  })
+    $("#id_admissionDate").val(admissionDate)
+    $("#id_dischargeDate").val(dischargeDate)
+
+    $(document).ready(function() {
+        $('#id_admissionDate').datepicker({dateFormat: "yy-mm-dd", onSelect: function(dateText, inst){
+          $('#id_dischargeDate').datepicker('option', 'minDate', new Date(dateText))}});
+      });
+    $(document).ready(function() {
+        $('#id_dischargeDate').datepicker({dateFormat: "yy-mm-dd", onSelect: function(dateText, inst){
+        $('#id_admissionDate').datepicker('option', 'maxDate', new Date(dateText))}});
+      });
+    
+
     const addLabURL = 'add-lab/' + id
     console.log(addLabURL)
     
     document.getElementById("add-lab").onclick = function() {
-            window.location.href = base_url + "/add-lab/" + id
+        window.location.href = base_url + "/add-lab/" + id
     };
 
     for(var i = 0; i < labHistory.length; i ++) {
@@ -117,10 +114,7 @@ function getVisitEntry(entryNum) {
         }
     }
 
-    console.log(addToMedicalHistory)
-    document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
+    $("#id_addToMedicalHistory").val(addToMedicalHistory)
+
     
 }
-
-
-
