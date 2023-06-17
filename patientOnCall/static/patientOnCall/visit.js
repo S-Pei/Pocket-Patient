@@ -147,7 +147,7 @@ function row_hover(rowNum, visitType){
     function changeColor(bgcolor, fontWeight){
         for(var i = 0; i < n; i++) {
             row[i].style.backgroundColor = bgcolor; 
-            row[i].style.fontWeight = fontWeight; 
+            // row[i].style.fontWeight = fontWeight; 
         }
     }
     for(var i = 0; i < n; i ++) {
