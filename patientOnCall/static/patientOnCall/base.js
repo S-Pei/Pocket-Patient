@@ -106,45 +106,44 @@ function connect_to_websocket() {
             );
           }
         }
+      } else if (event == "EDIT_MEDICATION_ENTRY") {
+        let newMedicationData = data["updatedMedicationData"]
+        let updatedCurrMedication = JSON.parse(data["currentMedication"])
+        sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
 
-      // } else if (event == "NEW_MEDICATION_ENTRY") {
-      //   let newMedicationData = data["newMedicationData"]
-      //   let updatedCurrMedication = JSON.parse(data["currentMedication"])
-      //   sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
-
-      //   if (window.location.href == base_url + "/medication/") {
-      //     console.log("In medication page")
-      //     let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
-      //     if (nextMedId == null) {
-      //       addMedication(
-      //         true,
-      //         newMedicationData["id"],
-      //         newMedicationData["drug"],
-      //         newMedicationData["dosage"],
-      //         newMedicationData["startDate"],
-      //         newMedicationData["endDate"],
-      //         newMedicationData["duration"],
-      //         newMedicationData["route"],
-      //         newMedicationData["comments"],
-      //         newMedicationData["byPatient"]
-      //       )
-      //     } else {
-      //       insertNewMedBeforeMedWithId(
-      //         nextMedId, 
-      //         true,
-      //         newMedicationData["id"],
-      //         newMedicationData["drug"],
-      //         newMedicationData["dosage"],
-      //         newMedicationData["startDate"],
-      //         newMedicationData["endDate"],
-      //         newMedicationData["duration"],
-      //         newMedicationData["route"],
-      //         newMedicationData["comments"],
-      //         newMedicationData["byPatient"]
-      //       );
-      //     }
-      //   }
-
+        if (window.location.href == base_url + "/medication/") {
+          console.log("In medication page")
+          udpateMedicationDetails(newMedicationData);
+          // let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
+          // if (nextMedId == null) {
+          //   addMedication(
+          //     true,
+          //     newMedicationData["id"],
+          //     newMedicationData["drug"],
+          //     newMedicationData["dosage"],
+          //     newMedicationData["startDate"],
+          //     newMedicationData["endDate"],
+          //     newMedicationData["duration"],
+          //     newMedicationData["route"],
+          //     newMedicationData["comments"],
+          //     newMedicationData["byPatient"]
+          //   )
+          // } else {
+          //   insertNewMedBeforeMedWithId(
+          //     nextMedId, 
+          //     true,
+          //     newMedicationData["id"],
+          //     newMedicationData["drug"],
+          //     newMedicationData["dosage"],
+          //     newMedicationData["startDate"],
+          //     newMedicationData["endDate"],
+          //     newMedicationData["duration"],
+          //     newMedicationData["route"],
+          //     newMedicationData["comments"],
+          //     newMedicationData["byPatient"]
+          //   );
+          // }
+        }
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
         if (window.location.href == base_url + "/medication/") {
           let removedID = data["removedID"];
