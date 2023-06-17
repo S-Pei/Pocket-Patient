@@ -106,7 +106,15 @@ function connect_to_websocket() {
             );
           }
         }
+      } else if (event == "EDIT_MEDICATION_ENTRY") {
+        let newMedicationData = data["updatedMedicationData"]
+        let updatedCurrMedication = JSON.parse(data["currentMedication"])
+        sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
 
+        if (window.location.href == base_url + "/medication/") {
+          console.log("In medication page")
+          udpateMedicationDetails(newMedicationData);
+        }
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
         if (isMedicationLocation) {
           let removedID = data["removedID"];

@@ -19,8 +19,6 @@ from .serializers import (
     DiarySerializer
 )
 
-import jwt
-
 class EditConsumer(WebsocketConsumer):
 
     def connect(self):
@@ -88,6 +86,15 @@ class EditConsumer(WebsocketConsumer):
                 'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId"))),
                 'newMedicationData': new_medication_data
             })
+        elif event == "EDIT_MEDICATION_ENTRY":
+            print("EDIT_MEDICATION_ENTRY")
+            updated_medication_data = self.update_medication_entry(response)
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_current_medication_data',
+                'event': "EDIT_MEDICATION_ENTRY",
+                'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId"))),
+                'updatedMedicationData': updated_medication_data
+            })
         elif event == "REMOVE_MEDICATION_ENTRY":
             print("REMOVE_MEDICATION_ENTRY")
             self.remove_medication_entry(response)
@@ -152,7 +159,8 @@ class EditConsumer(WebsocketConsumer):
             "event": res["event"],
             "currentMedication": res["currentMedication"],
             "newMedicationData": res["newMedicationData"] if "newMedicationData" in res else None,
-            "removedID": res["removedID"] if "removedID" in res else None
+            "removedID": res["removedID"] if "removedID" in res else None,
+            "updatedMedicationData": res["updatedMedicationData"] if "updatedMedicationData" in res else None,
         }))
     
     def send_new_diary_information(self, res):
@@ -207,7 +215,22 @@ class EditConsumer(WebsocketConsumer):
                             comments=res.get("comments"),
                             byPatient=True)
         return MedicationSerializer(new_medication, many=False).data
-        
+    
+    def update_medication_entry(self, res):
+        medication_entry = Medication.objects.get(id=res.get("id"))
+        startDateTime = res.get("startDate")
+        startDate = startDateTime.split(" ")[0]
+        duration = res.get("duration")
+        medication_entry.drug = res.get("drug")
+        medication_entry.dosage = res.get("dosage")
+        medication_entry.startDate = startDate
+        medication_entry.endDate = add_time(startDate, duration)
+        medication_entry.duration = duration
+        medication_entry.route = res.get("route")
+        medication_entry.byPatient = True
+        medication_entry.save()
+        return MedicationSerializer(medication_entry, many=False).data
+
     def remove_medication_entry(self, res):
         print(res['id'])
         Medication.objects.get(id=res['id']).delete()
