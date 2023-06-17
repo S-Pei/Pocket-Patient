@@ -13,8 +13,8 @@ def displayMedication(request):
 
 def displayVisit(request):
     context = {}
-    if ("created" in request.session and request.session["created"] == True):
-        context = {'created': True, 
+    if ("visit-created" in request.session and request.session["visit-created"] == True):
+        context = {'visit-created': True, 
                     'id': request.session["id"],
                     'admissionDate': request.session["admissionDate"],
                     'dischargeDate': request.session["dischargeDate"],
@@ -22,7 +22,7 @@ def displayVisit(request):
                     'visitType': request.session["visitType"], 
                     'letter': request.session["letter"], 
                     'addToMedicalHistory': request.session["addToMedicalHistory"] }
-        request.session["created"] = False
+        request.session["visit-created"] = False
         request.session["id"] = ""
         request.session["admissionDate"] = None
         request.session["dischargeDate"] = None
@@ -62,8 +62,8 @@ def displayImaging(request):
 def displayScanType(request, id):
     context = {}
     # print(request.session)
-    if ("created" in request.session and request.session["created"] == True):
-        context = {'created': True, 
+    if ("scan-created" in request.session and request.session["scan-created"] == True):
+        context = {'scan-created': True, 
                     'id': request.session["id"],
                     'date': request.session["date"],
                     'scanType': request.session["scanType"],
@@ -72,7 +72,7 @@ def displayScanType(request, id):
                     'report': request.session["report"],
                     'image': request.session["image"]} 
         print(context)
-        request.session["created"] = False
+        request.session["scan-created"] = False
         request.session["id"] = ""
         request.session["date"] = None
         request.session["scanType"] = None
@@ -88,14 +88,14 @@ def displayEditScan(request, scanType, id):
 def displayLabType(request, id):
     context = {}
     print(request.session)
-    if ("created" in request.session and request.session["created"] == True):
-        context = {'created': True, 
+    if ("lab-created" in request.session and request.session["lab-created"] == True):
+        context = {'lab-created': True, 
                     'id': request.session["id"],
                     'date': request.session["date"],
                     'labType': request.session["labType"],
                     'report': request.session["report"]} 
         print(context)
-        request.session["created"] = False
+        request.session["lab-created"] = False
         request.session["id"] = ""
         request.session["date"] = None
         request.session["labType"] = None
