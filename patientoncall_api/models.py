@@ -45,7 +45,8 @@ class LabHistory(models.Model):
     date = models.DateField(default=datetime.today, blank=True, null=True)
     labType = models.CharField(max_length=100, choices=LAB_TYPE, default='Full Blood Count Report')
     report = models.FileField(upload_to='labattachments/', blank=True, null=True, default=True)
-
+    visitEntry = models.ForeignKey(MedicalHistory, on_delete=models.CASCADE, blank=True, null=True)
+    
     class Meta:
        ordering = ('-date',)
        

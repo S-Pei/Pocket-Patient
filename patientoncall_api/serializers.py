@@ -27,7 +27,7 @@ class LabHistorySerializer(serializers.ModelSerializer):
     report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
     class Meta:
         model = LabHistory
-        fields = ['id', 'date', 'labType', 'report']
+        fields = ['id', 'date', 'labType', 'report', 'visitEntry']
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:

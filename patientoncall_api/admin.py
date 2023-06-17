@@ -21,7 +21,7 @@ class MedicalHistoryAdmin(admin.ModelAdmin):
                     'addToMedicalHistory')
     
 class LabHistoryAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'date', 'labType', 'report')
+    list_display = ('patient', 'date', 'labType', 'report', 'visitEntry')
 
 class MedicationAdmin(admin.ModelAdmin):
     list_display = ('patient', 'drug', 'dosage', 'startDate', 'endDate', 

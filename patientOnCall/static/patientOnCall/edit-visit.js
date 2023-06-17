@@ -14,6 +14,7 @@ var base_url = window.location.origin;
 
 function getVisitEntry(entryNum) {
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+    const id =  medicalHistory[entryNum]["id"]
     const admissionDate = medicalHistory[entryNum]["admissionDate"]
     const dischargeDate = medicalHistory[entryNum]["dischargeDate"]
     const visitType = medicalHistory[entryNum]["visitType"]
@@ -39,12 +40,13 @@ function getVisitEntry(entryNum) {
   
     document.getElementById("entry-summary").innerHTML = summary
     
-    const uploadURL = 'upload-letter/' + medicalHistory[entryNum]["id"]
+    
+    const uploadURL = 'upload-letter/' + id
     console.log(uploadURL)
     const letterForm = document.getElementById("upload-letter-form")
     letterForm.setAttribute('action',uploadURL)
     const entryLetter = document.getElementById("entry-letter")
-
+    
     console.log(letter)
     if  (letter === "False" || letter === '/media/False') {
         $("#upload-letter-form").submit(function(eventObj) {
@@ -67,13 +69,19 @@ function getVisitEntry(entryNum) {
         entryLetterLink.href = base_url + letter
         entryLetter.append(entryLetterLink)
     } 
+    const addLabURL = 'add-lab/' + id
+    console.log(addLabURL)
+    
+    // document.getElementById("add-lab").onclick = function() {
+        //     window.location.href = base_url + "/add-lab/" + id
+    // };
+
     console.log(addToMedicalHistory)
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
+    
+    
 }
 
-document.getElementById("add-lab").onclick = function() {
-    window.location.href = base_url + "/add-lab"
-};
 
 document.getElementById("add-imaging").onclick = function() {
     window.location.href = base_url + "/add-imaging"

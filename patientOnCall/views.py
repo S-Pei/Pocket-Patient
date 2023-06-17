@@ -36,7 +36,20 @@ def displayAddVisit(request):
     return render(request, 'patientOnCall/add-visit.html')
 
 def displayEditVisit(request, id):
-    return render(request, 'patientOnCall/edit-visit.html')
+    context = {}
+    if ("lab-created" in request.session and request.session["lab-created"] == True):
+        context = {'lab-created': True, 
+                    'id': request.session["id"],
+                    'date': request.session["date"],
+                    'labType': request.session["labType"],
+                    'report': request.session["report"]} 
+        print(context)
+        request.session["labCreated"] = False
+        request.session["id"] = ""
+        request.session["date"] = None
+        request.session["labType"] = None
+        request.session["report"] = None
+    return render(request, 'patientOnCall/edit-visit.html', context=context)
 
 def newMedication(request):
     return render(request, 'patientOnCall/edit-medication.html')

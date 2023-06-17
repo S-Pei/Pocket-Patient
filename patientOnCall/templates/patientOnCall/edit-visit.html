@@ -76,6 +76,28 @@
     <!-- <input class="add-button" type="submit" value="Save" id="add-visit"> -->
   </div>
   
+  <script>
+    var isCreated = "{{ labCreated }}"
+    console.log(isCreated)
+    let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
+    labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
+
+    if ("{{ id }}"==="") {
+      console.log("no")
+    } else {
+      let newLabHistory = {}
+      newLabHistory["id"]= "{{ id }}";
+      newLabHistory["date"]= "{{ date }}";
+      newLabHistory["labType"]= "{{ labType }}";
+      newLabHistory["report"]= "{{ report }}"
+
+      labHistory.push(newLabHistory)
+      labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+      sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
+    }
+  </script>
     
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="

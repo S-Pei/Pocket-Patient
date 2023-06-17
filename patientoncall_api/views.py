@@ -464,7 +464,6 @@ def uploadImages(request, scanType, id, imagingID):
 
 @csrf_exempt
 def addLab(request):
-    global prevURL 
     if request.method == "POST":
         form = AddLabForm(request.POST, request.FILES or None)
         labName = request.POST.get("labType")
@@ -478,31 +477,19 @@ def addLab(request):
                 labType=labName,
                 report=request.FILES["report"] if 'report' in request.FILES else False,
             ) 
-           
             request.session["lab-created"] = True
             request.session["id"] = str(labEntry.id)
             request.session["date"] = labEntry.date
             request.session["labType"] = labEntry.labType
-            
             request.session["report"] = labEntry.report.url if 'report' in request.FILES else False
         
         labName = convertLabName(labName)
-        print(prevURL)
-        prevPage = PurePosixPath(unquote(urlparse(prevURL).path)).parts[1]
-        print(prevPage)
-        if (prevPage == "add-visit" or prevPage == "edit-visit"):
-            return redirect(prevURL)
-        else: 
-            return redirect(f"{BASE_URL}lab-type/"f"{labName}")
+        return redirect(f"{BASE_URL}lab-type/"f"{labName}")
         # return redirect(prevURL)
     else:
-
         form = AddLabForm()
-        print (request.META.get("HTTP_REFERER"))
-        prevURL = request.META.get("HTTP_REFERER")
-        # print("add visit")
         return render(request, "patientOnCall/add-lab.html", {'form': form})
-    
+
 @csrf_exempt
 def addLabHistory(request):
     if request.method == "POST":
@@ -539,3 +526,41 @@ def convertLabName(labName):
         return "liver" 
     elif (labName == "Thyroid Function Test"): 
         return "thyroid"
+    
+@csrf_exempt
+def addVisitLab(request, visitID):
+    global prevURL 
+    if request.method == "POST":
+        form = AddLabForm(request.POST, request.FILES or None)
+        labName = request.POST.get("labType")
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            labEntry = LabHistory.objects.create(
+                patient=user,
+                date=request.POST.get("date"),
+                labType=labName,
+                report=request.FILES["report"] if 'report' in request.FILES else False,
+                visitEntry=MedicalHistory.objects.get(id=visitID)
+            ) 
+            request.session["lab-created"] = True
+            request.session["id"] = str(labEntry.id)
+            request.session["date"] = labEntry.date
+            request.session["labType"] = labEntry.labType
+            request.session["report"] = labEntry.report.url if 'report' in request.FILES else False
+            request.session["visitEntry"] = labEntry.visitEntry
+        labName = convertLabName(labName)
+        print(prevURL)
+        prevPage = PurePosixPath(unquote(urlparse(prevURL).path)).parts[1]
+        print(prevPage)
+        if (prevPage == "edit-visit"):
+            return redirect(prevURL)
+        # return redirect(prevURL)
+    else:
+
+        form = AddLabForm()
+        print (request.META.get("HTTP_REFERER"))
+        prevURL = request.META.get("HTTP_REFERER")
+        # print("add visit")
+        return render(request, "patientOnCall/add-lab.html", {'form': form})
