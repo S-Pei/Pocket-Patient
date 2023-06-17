@@ -26,6 +26,25 @@ class MedicalHistory(models.Model):
   visitType = models.CharField(max_length=100, choices=VISIT_TYPE, default='Hospital Admission')
   letter = models.FileField(upload_to='letterattachments/', blank=True, null=True, default=True)
   addToMedicalHistory = models.BooleanField(default=True)
+#   byPatient = models.BooleanField(default=False)
+
+  def replace_file(self, file):
+     self.letter = file
+   
+  def updateAdmissionDate(self, date):
+     self.admissionDate = date
+
+  def updateDischargeDate(self, date):
+      self.dischargeDate = date   
+   
+  def updateSummary(self, summary):
+     self.summary = summary
+
+  def updateConsultant(self, consultant):
+     self.consultant = consultant
+   
+  def updateVisitType(self, visitType):
+     self.visitType = visitType
 
   class Meta:
      ordering = ('-admissionDate',)

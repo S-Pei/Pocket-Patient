@@ -11,6 +11,7 @@ var base_url = window.location.origin;
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
     console.log(medicalHistory);
+    console.log("runs page")
     insertMedHistoryEntries(medicalHistory);
     for(var i = 1; i <= medicalHistory.length; i ++) {
         row_hover(i, medicalHistory[i-1]["visitType"]);
@@ -21,6 +22,7 @@ var base_url = window.location.origin;
 
 function insertMedHistoryEntries(medicalHistory) {
   var i = 0
+  console.log("prints in insert medical history entries");
   while (i < medicalHistory.length) {
       addMedHistoryEntry(i+1, 
        medicalHistory[i]["id"],
@@ -42,7 +44,10 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
 
     const entryDate = document.createElement("div");
     entryDate.classList.add("info-table-item");
+    entryDate.classList.add("visit-info-item");
+    entryDate.classList.add("entry-date");
     entryDate.classList.add(row);
+    entryDate.setAttribute("visit-id", id);
     if (admissionDate === dischargeDate) {
         console.log("same date")
         entryDate.textContent = admissionDate;
@@ -63,7 +68,9 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     const entrySummary = document.createElement("div");
     entrySummary.classList.add("info-table-item");
     entrySummary.classList.add(row);
+    entrySummary.classList.add("summary");
     entrySummary.textContent = summary;
+    entrySummary.setAttribute("visit-id", id);
 
     // const entryConsultant = document.createElement("div");
     // entryConsultant.classList.add("info-table-item");
@@ -73,6 +80,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     entryVisitType.classList.add("info-table-item");
     entryVisitType.classList.add(row);
     entryVisitType.classList.add("visit-type");
+    entryVisitType.setAttribute("visit-id", id);
     entryVisitType.textContent = visitType;
     if (visitType == "GP Consultation") {
         entryVisitType.style.backgroundColor = "#C55252";
@@ -85,12 +93,16 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     
     const entryConsultant = document.createElement("div");
     entryConsultant.classList.add("info-table-item");
+    entryConsultant.classList.add("consultant");
     entryConsultant.classList.add(row);
+    entryConsultant.setAttribute("visit-id", id);
     entryConsultant.textContent = "Dr John Lee"
     
     const entryLetterBox = document.createElement("div");
     entryLetterBox.classList.add("info-table-item");
+    entryLetterBox.classList.add("letter");
     entryLetterBox.classList.add(row);
+    entryLetterBox.setAttribute("visit-id", id);
 
     const entryLetter = document.createElement("a");
     // entryLetter.classList.add("info-table-item");
@@ -113,6 +125,9 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     entryLabAndImaging.classList.add("info-table-item");
     entryLabAndImaging.classList.add(row);
     entryLabAndImaging.classList.add("add-lab-button");
+    entryLabAndImaging.setAttribute("visit-id", id);
+
+    // entryImaging.href = base_url + '/add-imaging'
 
     for(var i = 0; i < labHistory.length; i ++) {
         if (labHistory[i]["visitEntry"] === id) {
@@ -188,6 +203,77 @@ document.getElementById("add-visit").addEventListener("click", (e) => {
 document.getElementsByClassName("add-lab-button").onclick = function() {
     window.location.href = base_url + "/add-imaging"
 };
+
+function editHospVisitEntry(id, admissionDate, dischargeDate, summary, consultant, visitType, letter) {
+
+    console.log('editing')
+
+    var entryDateText;
+    if (admissionDate === dischargeDate) {
+        console.log("same date")
+        entryDateText = admissionDate;
+    } else {
+        entryDateText = admissionDate + "\n" + "-\n" + dischargeDate;
+    }
+
+    $(".visit-info-item").each(function () {
+        var classList = $(this).attr("class");
+        var classArr = classList.split(/\s+/);
+        var rowNumRegex = /row-[0-9]/;
+        let rowClass;   
+
+        if ($(this).attr("visit-id") == id) {
+            $.each(classArr, function(index, value){
+                console.log(value)
+                if (rowNumRegex.test(value)) {
+                    rowClass = value;
+                }
+            });
+
+          $("." + rowClass).each(function () {
+            var rowClassList = $(this).attr("class");
+            var rowClassArr = rowClassList.split(/\s+/);
+            console.log(rowClassArr)
+            console.log($.inArray('summary', rowClassArr))
+            if ($.inArray('entry-date', rowClassArr) > 0) {
+                $(this).text(entryDateText);
+            } else if ($.inArray('visit-type', rowClassArr) > 0) {
+                $(this).text(visitType);
+                if (visitType == "GP Consultation") {
+                    $(this).css("background-color", "#C55252");
+                } else if (visitType== "Hospital Clinic"){
+                    $(this).css("background-color", "#6BC4EB");
+                } else {
+                    $(this).css("background-color", "#FFDA29");
+                }
+            } else if ($.inArray('consultant', rowClassArr) > 0) {
+                $(this).text(consultant);
+            } else if ($.inArray('summary', rowClassArr) > 0) {
+                console.log($(this));
+                $(this).text(summary);
+            } else if ($.inArray('letter', rowClassArr) > 0) {
+                $(this).empty();
+                const entryLetter = document.createElement("a");
+                // entryLetter.classList.add("info-table-item");
+                // entryLetter.classList.add(row);
+                console.log(letter)
+                if  (letter === "False" || letter === "/media/False") {
+                    console.log("NOOOOO")
+                } else {
+                    entryLetter.href = base_url + letter;
+                    if (visitType == "GP Consultation") {
+                        entryLetter.textContent = "GP Letter";
+                    }
+                    else {
+                        entryLetter.textContent = "Discharge Letter";
+                    }
+                } 
+                $(this).append(entryLetter)
+            }
+          })
+        }
+      })
+}
 
 // function connect_to_websocket() {
 //     websocket = create_websocket(
