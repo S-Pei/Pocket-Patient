@@ -45,6 +45,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     const entryDate = document.createElement("div");
     entryDate.classList.add("info-table-item");
     entryDate.classList.add("visit-info-item");
+    entryDate.classList.add("entry-date");
     entryDate.classList.add(row);
     entryDate.setAttribute("visit-id", id);
     if (admissionDate === dischargeDate) {
@@ -218,46 +219,56 @@ function editHospVisitEntry(id, admissionDate, dischargeDate, summary, consultan
     $(".visit-info-item").each(function () {
         var classList = $(this).attr("class");
         var classArr = classList.split(/\s+/);
-        var rowNumRegex = new RegExp('rowNum[0-9]+');
-        let rowClass;        
+        var rowNumRegex = /row-[0-9]/;
+        let rowClass;   
 
         if ($(this).attr("visit-id") == id) {
             $.each(classArr, function(index, value){
+                console.log(value)
                 if (rowNumRegex.test(value)) {
-                    console.log(value)
                     rowClass = value;
                 }
             });
 
           $("." + rowClass).each(function () {
-            var rowClassList = $(this).classList;
-            if (inArray('entry-date', rowClassList)) {
-                $(this).textContent = entryDateText;
-            } else if (inArray('visit-type', rowClassList)) {
-                $(this).textContent = visitType;
+            var rowClassList = $(this).attr("class");
+            var rowClassArr = rowClassList.split(/\s+/);
+            console.log(rowClassArr)
+            console.log($.inArray('summary', rowClassArr))
+            if ($.inArray('entry-date', rowClassArr) > 0) {
+                $(this).text(entryDateText);
+            } else if ($.inArray('visit-type', rowClassArr) > 0) {
+                $(this).text(visitType);
                 if (visitType == "GP Consultation") {
-                    $(this).style.backgroundColor = "#C55252";
+                    $(this).css("background-color", "#C55252");
                 } else if (visitType== "Hospital Clinic"){
-                    $(this).style.backgroundColor = "#6BC4EB";
+                    $(this).css("background-color", "#6BC4EB");
                 } else {
-                    $(this).style.backgroundColor = "#FFDA29"
+                    $(this).css("background-color", "#FFDA29");
                 }
-            } else if (inArray('consultant', rowClassList)) {
-                $(this).textContent = consultant;
-            } else if (inArray('summary', rowClassList)) {
-                $(this).textContent = summary;
-            } else if (inArray('letter', rowClassList)) {
+            } else if ($.inArray('consultant', rowClassArr) > 0) {
+                $(this).text(consultant);
+            } else if ($.inArray('summary', rowClassArr) > 0) {
+                console.log($(this));
+                $(this).text(summary);
+            } else if ($.inArray('letter', rowClassArr) > 0) {
+                $(this).empty();
+                const entryLetter = document.createElement("a");
+                // entryLetter.classList.add("info-table-item");
+                // entryLetter.classList.add(row);
+                console.log(letter)
                 if  (letter === "False" || letter === "/media/False") {
                     console.log("NOOOOO")
                 } else {
                     entryLetter.href = base_url + letter;
                     if (visitType == "GP Consultation") {
-                        $(this).textContent.textContent = "GP Letter";
+                        entryLetter.textContent = "GP Letter";
                     }
                     else {
-                        $(this).textContent.textContent = "Discharge Letter";
+                        entryLetter.textContent = "Discharge Letter";
                     }
                 } 
+                $(this).append(entryLetter)
             }
           })
         }
