@@ -15,7 +15,7 @@ var base_url = window.location.origin;
 function getVisitEntry(entryNum) {
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
-    // const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
+    const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     const id =  medicalHistory[entryNum]["id"]
     const admissionDate = medicalHistory[entryNum]["admissionDate"]
     const dischargeDate = medicalHistory[entryNum]["dischargeDate"]
@@ -78,7 +78,6 @@ function getVisitEntry(entryNum) {
             window.location.href = base_url + "/add-lab/" + id
     };
 
-    var counter = 0
     for(var i = 0; i < labHistory.length; i ++) {
         if (labHistory[i]["visitEntry"] === id) {
             const labType = labHistory[i]["labType"]
@@ -91,23 +90,34 @@ function getVisitEntry(entryNum) {
             const labLink = labHistory[i]["report"].replace(base_url+'/media/labattachments/', '') + '\n'
             labEntry.innerText = labLink.replace('/media/labattachments/', '') + '\n'
             document.getElementById("entry-lab-histories").appendChild(labName)
-            document.getElementById("entry-lab-histories").appendChild(labEntry)
-            counter++; 
+            document.getElementById("entry-lab-histories").appendChild(labEntry) 
         }
     }
-    if (counter === 0) {
-        console.log("meiyou")
-        document.getElementById("entry-lab-histories").style.display="none"
+
+    document.getElementById("add-imaging").onclick = function() {
+        window.location.href = base_url + "/add-imaging/" + id
+    };
+
+    for(var i = 0; i < imagingHistory.length; i ++) {
+        if (imagingHistory[i]["visitEntry"] === id) {
+            const scanType = imagingHistory[i]["scanType"]
+            const region = imagingHistory[i]["region"]
+            var imagingEntry = scanType + "-" + (i+1)  
+            const scanName = document.createElement("p");
+            scanName.innerHTML = scanType + '(' + region + '):'
+            imagingEntry = document.createElement("a"); 
+            imagingEntry.href = imagingHistory[i]["report"]
+            const scanLink = imagingHistory[i]["report"].replace(base_url+'/media/imagingreports/', '') + '\n'
+            imagingEntry.innerText = scanLink.replace('/media/imagingreports/', '') + '\n'
+            document.getElementById("entry-imaging-histories").appendChild(scanName)
+            document.getElementById("entry-imaging-histories").appendChild(imagingEntry) 
+        }
     }
 
     console.log(addToMedicalHistory)
     document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
     
-    
 }
 
 
-document.getElementById("add-imaging").onclick = function() {
-    window.location.href = base_url + "/add-imaging"
-};
 

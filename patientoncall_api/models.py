@@ -87,7 +87,8 @@ class ImagingHistory(models.Model):
    region = models.CharField(max_length=256)
    indication = models.CharField(max_length=1024)
    report = models.FileField(upload_to='imagingreports/', blank=True, null=True, default=True)
-   # visitEntry = models.ForeignKey(MedicalHistory, on_delete=models.CASCADE)
+   visitEntry = models.ForeignKey(MedicalHistory, on_delete=models.CASCADE, blank=True, null=True)
+   
    class Meta:
        ordering = ('-date',)
 

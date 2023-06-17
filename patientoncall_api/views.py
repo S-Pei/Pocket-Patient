@@ -328,7 +328,6 @@ def readDiaryEntry(request):
 
 @csrf_exempt
 def addImaging(request):
-    global prevURL 
     if request.method == "POST":
         # form = AddImagingForm(request.POST, request.FILES or None)
         form = ImagesUploadForm(request.POST, request.FILES or None)
@@ -371,21 +370,12 @@ def addImaging(request):
         if (scanName == "Medical Photography"):
             scanName = "Medical-Photography"
         
-        print(prevURL)
-        prevPage = PurePosixPath(unquote(urlparse(prevURL).path)).parts[1]
-        print(prevPage)
-        if (prevPage == "add-visit" or prevPage == "edit-visit"):
-            return redirect(prevURL)
-        else: 
-            return redirect(f"{BASE_URL}scan-type/"f"{scanName}")
+        return redirect(f"{BASE_URL}scan-type/"f"{scanName}")
             # return render_template(f"{BASE_URL}scan-type/{scanName}")
             # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
     else:
-        # form = AddImagingForm()
-        form = ImagesUploadForm()
-        print (request.META.get("HTTP_REFERER"))
-        prevURL = request.META.get("HTTP_REFERER")
         # print("add visit")
+        form = ImagesUploadForm()
         return render(request, "patientOnCall/add-imaging.html", {'form': form})
 
 @csrf_exempt
@@ -566,3 +556,64 @@ def addVisitLab(request, visitID):
         prevURL = request.META.get("HTTP_REFERER")
         # print("add visit")
         return render(request, "patientOnCall/add-lab.html", {'form': form})
+    
+@csrf_exempt
+def addVisitImaging(request, visitID):
+    global prevURL 
+    if request.method == "POST":
+        # form = AddImagingForm(request.POST, request.FILES or None)
+        form = ImagesUploadForm(request.POST, request.FILES or None)
+        images = request.FILES.getlist('image')
+        scanName = request.POST.get("scanType")
+        if form.is_valid():
+            patientId = request.POST.get("patientId");
+            patientName = request.POST.get("patientName");
+            user = matchPatientUser(patientId, patientName)
+            imagingEntry = ImagingHistory.objects.create(
+                patient=user,
+                date=request.POST.get("date"),
+                scanType=scanName,
+                region = request.POST.get("region"),
+                indication = request.POST.get("indication"),
+                # visitType = request.POST.get("visitType"),
+                report=request.FILES["report"] if 'report' in request.FILES else False,
+                visitEntry=MedicalHistory.objects.get(id=visitID)
+            ) 
+            currImages = []
+            for i in images:
+                imageUploads = ImagingUpload.objects.create(
+                    imagingEntry=imagingEntry,
+                    image=i
+                )
+                currImages.append(imageUploads.image.url)
+            print(currImages)
+            # print("is valid")
+            request.session["scan-created"] = True
+            request.session["id"] = str(imagingEntry.id)
+            request.session["date"] = imagingEntry.date
+            request.session["scanType"] = imagingEntry.scanType
+            request.session["region"] = imagingEntry.region
+            request.session["indication"] = imagingEntry.indication
+            request.session["report"] = imagingEntry.report.url if 'report' in request.FILES else False
+            request.session["image"] = currImages 
+            request.session["visitEntry"] = visitID 
+            # print(request.session)
+            # tableURL = request.META.get('HTTP_ORIGIN') + '/scan-type/' + scanName
+            # return HttpResponseRedirect(tableURL)
+        if (scanName == "Medical Photography"):
+            scanName = "Medical-Photography"
+        
+        # print(prevURL)
+        # prevPage = PurePosixPath(unquote(urlparse(prevURL).path)).parts[1]
+        # print(prevPage)
+        # if (prevPage == "add-visit" or prevPage == "edit-visit"):
+        return redirect(prevURL)
+            # return render_template(f"{BASE_URL}scan-type/{scanName}")
+            # return render(request, "patientOnCall/scan-type/mri.html",{'scanType': scanName})
+    else:
+        # form = AddImagingForm()
+        form = ImagesUploadForm()
+        print (request.META.get("HTTP_REFERER"))
+        prevURL = request.META.get("HTTP_REFERER")
+        # print("add visit")
+        return render(request, "patientOnCall/add-imaging.html", {'form': form})

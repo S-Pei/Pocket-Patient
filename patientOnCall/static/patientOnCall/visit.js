@@ -35,7 +35,7 @@ function insertMedHistoryEntries(medicalHistory) {
 function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, visitType, letter) {
     // Create a new entry for the table
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
-    // const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
+    const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
     console.log(row)
@@ -120,6 +120,14 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
             labEntry.href = labHistory[i]["report"]
             labEntry.innerText = labHistory[i]["labType"] + '\n'
             entryLabAndImaging.appendChild(labEntry)
+        }
+    }
+    for(var i = 0; i < imagingHistory.length; i ++) {
+        if (imagingHistory[i]["visitEntry"] === id) {
+            imagingEntry = document.createElement("a"); 
+            imagingEntry.href = imagingHistory[i]["report"]
+            imagingEntry.innerText = imagingHistory[i]["scanType"] + '(' + imagingHistory[i]["region"] + ')\n'
+            entryLabAndImaging.appendChild(imagingEntry)
         }
     }
 

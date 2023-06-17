@@ -38,7 +38,7 @@ class ImagingHistorySerializer(serializers.ModelSerializer):
     report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
     class Meta:
         model = ImagingHistory
-        fields = ['id','patient','date','scanType','region','indication','report']
+        fields = ['id','patient','date','scanType','region','indication','report', 'visitEntry']
 
 class ImagingUploadSerializer(serializers.ModelSerializer):
     image = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
