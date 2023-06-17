@@ -25,7 +25,7 @@ function insertMedHistoryEntries(medicalHistory) {
   console.log("prints in insert medical history entries");
   while (i < medicalHistory.length) {
       addMedHistoryEntry(i+1, 
-       medicalHistory[i]['id'],
+       medicalHistory[i]["id"],
        medicalHistory[i]["admissionDate"],
        medicalHistory[i]["dischargeDate"],
        medicalHistory[i]["summary"],
@@ -33,12 +33,11 @@ function insertMedHistoryEntries(medicalHistory) {
        medicalHistory[i]["letter"])
       i++;
   }
-} 
+}
 function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, visitType, letter) {
-    console.log(id)
-    console.log(admissionDate)
-    console.log(dischargeDate)
     // Create a new entry for the table
+    const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
+    const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     var tableBody = document.getElementById("main-current-visit-box-table");
     var row = "row-" + rowNum
     console.log(row)
@@ -121,12 +120,6 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     } 
     entryLetterBox.appendChild(entryLetter)
 
-    // const entryLab = document.createElement("a");
-    // entryLab.classList.add("info-table-item");
-    // entryLab.classList.add(row);
-    // entryLab.classList.add("add-lab-button");
-    // entryLab.textContent = "Lab Report"
-
     const entryLabAndImaging = document.createElement("div");
     entryLabAndImaging.classList.add("info-table-item");
     entryLabAndImaging.classList.add(row);
@@ -135,23 +128,24 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
 
     // entryImaging.href = base_url + '/add-imaging'
 
-    // const entryImagingReport = document.createElement("a");
-    // // entryImagingReport.classList.add("info-table-item");
-    // // entryImagingReport.classList.add(row);
-    // entryImagingReport.textContent = "Imaging Report \n"
-    // entryImaging.appendChild(entryImagingReport)
-
-    // const entryAddImaging = document.createElement("a");
-    // // entryImaging.classList.add("info-table-item");
-    // // entryImaging.classList.add(row);
-    // entryAddImaging.classList.add("add-lab-button");
-    // entryAddImaging.textContent = "Add Imaging"
-    // entryAddImaging.href = base_url + '/add-imaging'
-    // entryImaging.appendChild(entryAddImaging)
+    for(var i = 0; i < labHistory.length; i ++) {
+        if (labHistory[i]["visitEntry"] === id) {
+            labEntry = document.createElement("a"); 
+            labEntry.href = labHistory[i]["report"]
+            labEntry.innerText = labHistory[i]["labType"] + '\n'
+            entryLabAndImaging.appendChild(labEntry)
+        }
+    }
+    for(var i = 0; i < imagingHistory.length; i ++) {
+        if (imagingHistory[i]["visitEntry"] === id) {
+            imagingEntry = document.createElement("a"); 
+            imagingEntry.href = imagingHistory[i]["report"]
+            imagingEntry.innerText = imagingHistory[i]["scanType"] + '(' + imagingHistory[i]["region"] + ')\n'
+            entryLabAndImaging.appendChild(imagingEntry)
+        }
+    }
 
     tableBody.appendChild(entryDate);
-    // tableBody.appendChild(entryAdmissionDate);
-    // tableBody.appendChild(entryDischargeDate);
     tableBody.appendChild(entrySummary);
     tableBody.appendChild(entryVisitType);
     tableBody.appendChild(entryConsultant);

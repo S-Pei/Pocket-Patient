@@ -21,6 +21,7 @@
       <div id="main-current-visit-box-headers">
         <h2 class="section-header"></h2>
       </div>
+      <input type="text" id="region-filter" onkeyup="" placeholder="Filter by region..">
       <div class="imaging-table" id="main-current-visit-box-table">
         <div class="info-table-item info-table-label date">Date of Report</div>
         <div class="info-table-item info-table-label region">Region</div>
@@ -35,8 +36,8 @@
     </div>
   </div>
   <script>
-    var isCreated = "{{ created }}"
-    console.log(isCreated)
+    // var isCreated = "{{ created }}"
+    // console.log(isCreated)
     let imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     let imagingUploads = JSON.parse(sessionStorage.getItem("imagingUploads"))
     imagingHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

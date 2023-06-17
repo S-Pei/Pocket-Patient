@@ -64,6 +64,7 @@ function connect_to_websocket() {
     (response) => {
       let data = JSON.parse(response.data);
       let event = data["event"]
+      let isMedicationLocation = (window.location.href == base_url + "/medication/" || window.location.href == base_url + "/main/")
       console.log("Has response from websocket.")
       if (event == "REVOKE_PATIENT_DATA_ACCESS") {
         console.log("NOO I GOT KICKED");
@@ -73,8 +74,7 @@ function connect_to_websocket() {
         let newMedicationData = data["newMedicationData"]
         let updatedCurrMedication = JSON.parse(data["currentMedication"])
         sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
-
-        if (window.location.href == base_url + "/medication/") {
+        if (isMedicationLocation) {
           console.log("In medication page")
           let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
           if (nextMedId == null) {
@@ -108,7 +108,7 @@ function connect_to_websocket() {
         }
 
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
-        if (window.location.href == base_url + "/medication/") {
+        if (isMedicationLocation) {
           let removedID = data["removedID"];
           document.getElementById(removedID + '-drug').remove();
           document.getElementById(removedID + '-dosage').remove();

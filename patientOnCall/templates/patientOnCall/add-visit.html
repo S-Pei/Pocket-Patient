@@ -19,7 +19,7 @@
   </div>
 
   <h4 class="section-header">Add Visit Entry</h4>
-    <form action="" class="pb-5 add-entry-form" id="patient-medical-history-add-entry" method="POST" enctype ="multipart/form-data">
+    <form action="" class="add-entry-form" id="patient-medical-history-add-entry" method="POST" enctype ="multipart/form-data">
       {% csrf_token %}
       <div class="add-history pt-1">
         <label for="entry-visit-type">Visit Type:</label>
@@ -60,17 +60,20 @@
       <div class="add-history pt-1">
         <p id="add-to-medical-history">Add discharge summary to medical history: {{form.addToMedicalHistory}}</p>   
       </div>
-      <div id="add-button-wrapper">
-        <input class="add-button" type="submit" value="Save" id="add-visit"/>
-      </div>
     </form> 
-    <!-- <div class="add-history pt-1">
-      <label for="entry-imaging">Upload Imaging Reports:</label>
-      <div class="add-imaging-box">
-        <button class="green-btn" onclick="window.location.href =window.location.origin + '/add-imaging'">Add Imaging</button>
-      </div>
-    </div> -->
+    <div class="add-entry-form add-history pt-1 pb-4">
+      <label for="entry-imaging">Upload Lab (optional):</label>
+      <button class="" id="entry-imaging" onclick="window.location.href =window.location.origin + '/add-lab'">Add Lab</button>
+    </div>
+    <div class="pb-5 add-entry-form add-history pt-1">
+      <label for="entry-imaging">Upload Imaging (optional):</label>
+      <button class="" id="entry-imaging" onclick="window.location.href =window.location.origin + '/add-imaging'">Add Imaging</button>
+    </div>
     
+    <div class="pb-5 add-entry-form" id="add-button-wrapper">
+      <input class="add-button" type="submit" value="Save" form="patient-medical-history-add-entry" id="add-visit"/>
+    </div>
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
     crossorigin="anonymous"></script>

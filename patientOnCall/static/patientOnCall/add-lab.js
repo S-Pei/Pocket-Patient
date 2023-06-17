@@ -14,11 +14,34 @@ var base_url = window.location.origin;
   document.getElementById("back-to-scan-type").href = document.referrer
   // const admissionDate = document.getElementById('#id_admissionDate')
   // const dischargeDate = document.getElementById('#id_dischargeDate')
-
+  
   $(document).ready(function() {
     $('#id_date').datepicker({dateFormat: "yy-mm-dd"});
   });
 
+  console.log(document.referrer.split('/'))
+  if (document.referrer.split('/')[3] === "lab-type") {
+    labURL = document.referrer.split('/')[4]
+    console.log(labURL)
+    var labName = ""
+    if (labURL === "fbc") {
+        labName = "Full Blood Count Report"
+    } else if (labURL === "cancer") {
+        labName = "Cancer Blood Test" 
+    } else if (labURL === "electrolyte") {
+        labName = "Electrolyte Test" 
+    } else if (labURL === "genetic") {
+        labName = "Genetic Test" 
+    } else if (labURL === "liver") {
+        labName = "Liver Function Test" 
+    } else if (labURL === "thyroid") {
+        labName = "Thyroid Function Test" 
+    }
+    console.log(labName)
+    $(document).ready(function(){
+      $('#id_labType').val(labName);
+    });
+  }  
 
   $("#patient-lab-history-add-entry").submit(function(eventObj) {
     let patientId = sessionStorage.getItem("patientID");

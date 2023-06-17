@@ -74,7 +74,8 @@ function addLabHistoryEntry(rowNum, date, report) {
         console.log("NOOOOO")
     } else {
         entryReport.href = report;
-        entryReport.textContent = report.replace(base_url+'/media/labattachments/', '');
+        const reportText = report.replace(base_url+'/media/labattachments/', ''); 
+        entryReport.textContent = reportText.replace('/media/labattachments/', '');
     } 
     entryReportBox.appendChild(entryReport)
 
