@@ -114,35 +114,6 @@ function connect_to_websocket() {
         if (window.location.href == base_url + "/medication/") {
           console.log("In medication page")
           udpateMedicationDetails(newMedicationData);
-          // let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
-          // if (nextMedId == null) {
-          //   addMedication(
-          //     true,
-          //     newMedicationData["id"],
-          //     newMedicationData["drug"],
-          //     newMedicationData["dosage"],
-          //     newMedicationData["startDate"],
-          //     newMedicationData["endDate"],
-          //     newMedicationData["duration"],
-          //     newMedicationData["route"],
-          //     newMedicationData["comments"],
-          //     newMedicationData["byPatient"]
-          //   )
-          // } else {
-          //   insertNewMedBeforeMedWithId(
-          //     nextMedId, 
-          //     true,
-          //     newMedicationData["id"],
-          //     newMedicationData["drug"],
-          //     newMedicationData["dosage"],
-          //     newMedicationData["startDate"],
-          //     newMedicationData["endDate"],
-          //     newMedicationData["duration"],
-          //     newMedicationData["route"],
-          //     newMedicationData["comments"],
-          //     newMedicationData["byPatient"]
-          //   );
-          // }
         }
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
         if (window.location.href == base_url + "/medication/") {
