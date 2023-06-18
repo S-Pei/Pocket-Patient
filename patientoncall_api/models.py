@@ -27,6 +27,9 @@ class MedicalHistory(models.Model):
   letter = models.FileField(upload_to='letterattachments/', blank=True, null=True, default=True)
   addToMedicalHistory = models.BooleanField(default=True)
 
+  def __str__(self) -> str:
+     return f"{self.patient.username}: {self.summary} ({self.admissionDate}, {self.visitType})"
+
   class Meta:
      ordering = ('-admissionDate',)
 

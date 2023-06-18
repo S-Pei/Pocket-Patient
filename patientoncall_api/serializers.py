@@ -25,6 +25,7 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
 
 class LabHistorySerializer(serializers.ModelSerializer):
     report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
+    visitEntry = serializers.CharField(source='visitEntry.id')
     class Meta:
         model = LabHistory
         fields = ['id', 'date', 'labType', 'report', 'visitEntry']
@@ -36,6 +37,8 @@ class MedicationSerializer(serializers.ModelSerializer):
 
 class ImagingHistorySerializer(serializers.ModelSerializer):
     report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
+    visitEntry = serializers.CharField(source='visitEntry.id')
+
     class Meta:
         model = ImagingHistory
         fields = ['id','patient','date','scanType','region','indication','report', 'visitEntry']
