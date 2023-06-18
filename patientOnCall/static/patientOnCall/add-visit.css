@@ -24,6 +24,27 @@
     width: 100%;
 }
 
+#button-bar {
+    margin-left: 5%;
+    width: 90%;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#button-bar > a > button {
+    font-weight: 700;
+    color: white;
+    border: none;
+    padding: 5px 2em;
+    box-shadow: 1px 1px 4px var(--dark-shade-color);
+}
+
+#edit-button {
+    margin-left: 80%;
+}
+
 
 /* .back-button-box {
     width: 15%;

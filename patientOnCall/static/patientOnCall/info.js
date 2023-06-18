@@ -22,7 +22,7 @@ var base_url = window.location.origin;
     insertMedHistoryEntries(medicalHistory);
     for(var i = 1; i <= medicalHistory.length; i ++) {
         row_hover(i, medicalHistory[i-1]["visitType"]);
-        row_click(i);
+        row_click(i, medicalHistory[i-1]["id"]);
     }
 
     insertMedication(currentMedication, true);
@@ -45,7 +45,7 @@ function addMedHistoryEntry(rowNum, dischargeDate, summary, addToMedicalHistory)
     // Create a new entry for the table
     var tableBody = document.getElementById("past-medical-history-entries");
     var row = "row-" + rowNum
-    if (addToMedicalHistory === true && summary !== ""){
+    if ((addToMedicalHistory === "True" || addToMedicalHistory === true) && summary !== ""){
         const newEntry = document.createElement("li");
         newEntry.classList.add("past-medical-history-entry", "p-1", "d-flex", 
             "flex-row", "w-100", "mb-2", "rounded-3", "border", "text-black-50")
@@ -86,13 +86,13 @@ function row_hover(rowNum, visitType){
     }
 }
 
-function row_click(rowNum){
+function row_click(rowNum, id){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
     for(var i = 0; i < n; i ++) {
         row[i].onclick = function() {
-            window.location.href = base_url + "/edit-visit/" + rowNum
+            window.location.href = base_url + "/edit-visit/" + id
         };
     }
 }

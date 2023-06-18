@@ -27,23 +27,24 @@
 #past-medical-history-and-presentation-box {
   height: 40vh;
   width: 100%;
-  display: flex;  
+  /* display: flex;   */
 }
 
 #main-past-medical-history-box {
-  width: 65%;
+  width: 100%;
   height: 100%; 
-  overflow-y: scroll;
 }
 
 #main-past-medical-history-box ul {
   list-style-type: none;
-  max-width: 700px;
+  width : 100%;
+  overflow-y: scroll;
+  /* max-width: 700px; */
 }
 
-#patient-medical-history-add-entry {
+/* #patient-medical-history-add-entry {
   max-width: 700px;
-}
+} */
 
 .past-medical-history-entry {
   background-color: var(--info-bg-color);
@@ -60,15 +61,6 @@
   font-size: 1.1em;
 }
 
-
-#presentation-box {
-  width: 35%;
-  border: 3px solid var(--info-darker-bg-color);
-  margin-right: 1%;
-  border-radius: 15px;
-  background-color: var(--info-lighter-bg-color);
-  font-size: 1.1em;
-}
 
 #main-current-medication-box {
   padding-top: 2em;

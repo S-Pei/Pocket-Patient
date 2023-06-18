@@ -12,9 +12,12 @@
     <h1 id="patient-name"></h1>
     <h2 id="patient-id"></h2>
   </div>
-  <div class="back-button-box" id="back-to-visit">
+  <div class="" id="button-bar">
     <a href="/visit/">
       <button class="green-btn" id="back-to-visit">back</button>
+    </a>
+    <a id="edit-button" href="">
+      <button class="green-btn" id="edit-visit">edit</button>
     </a>
   </div>
   <h4 class="section-header"></h4>
@@ -58,6 +61,11 @@
       </form>
       <!-- <input class="add-option" type="submit" id="upload-letter" value="Upload Letter"> -->
     </div>
+    
+    <div class="add-history pt-1">
+      <label for="entry-add-to-medical-history">Add discharge summary to medical history:</label>
+      <input type="checkbox" onclick="return false;" id="entry-add-to-medical-history" checked=""></input>
+    </div>
     <div class="add-history pt-1">
       <label for="entry-lab-report">Lab Reports:</label>
       <!-- <p class="form-control" name="entry-lab-report"></p>    -->
@@ -70,19 +78,14 @@
       <input class="add-option" type="submit" id="add-imaging" value="Add Imaging">
       <div id="entry-imaging-histories"></div>
     </div>
-    
-    <div class="add-history pt-1">
-      <label for="entry-add-to-medical-history">Add discharge summary to medical history:</label>
-      <input type="checkbox" onclick="return false;" id="entry-add-to-medical-history" checked=""></input>
-    </div>
     <!-- <input class="add-button" type="submit" value="Save" id="add-visit"> -->
   </div>
   
   <script>
     if ("{{ labCreated }}") {
       let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
-      labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
+      // labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      // sessionStorage.setItem("labHistory",JSON.stringify(labHistory))
   
       if ("{{ id }}"==="") {
         console.log("no")
@@ -148,7 +151,28 @@
         sessionStorage.setItem("imagingHistory",JSON.stringify(imagingHistory))
         sessionStorage.setItem("imagingUploads",JSON.stringify(imagingUploads))
       }
-    }
+    } else if ("{{visitEdited}}") {
+        let medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+        if ("{{ id }}"==="") {
+          console.log("no")
+        } else {
+          for(var i = 0; i < medicalHistory.length; i ++) {
+            if (medicalHistory[i]["id"] === "{{ id }}") {
+               medicalHistory[i]["admissionDate"] = "{{ admissionDate }}";
+               medicalHistory[i]["dischargeDate"]= "{{ dischargeDate }}";
+               medicalHistory[i]["summary"]= "{{ summary }}";
+               medicalHistory[i]["visitType"]= "{{ visitType }}";
+               medicalHistory[i]["letter"]= "{{ letter }}";
+               medicalHistory[i]["addToMedicalHistory"]= "{{ addToMedicalHistory }}";
+               medicalHistory.sort((a, b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
+              // // console.log(medicalHistory)
+               sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
+               break; 
+            }
+        }
+        }
+     }
+    </script>
   </script>
     
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"

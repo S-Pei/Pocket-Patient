@@ -48,8 +48,8 @@ function connect_to_websocket() {
     () => {
       console.log('Connected to websocket.');
       if (window.location.href == base_url + "/visit/") {
-        console.log(isCreated);
-        if (isCreated) {
+        console.log(visitCreated);
+        if (visitCreated) {
             const id = sessionStorage.getItem("patientID")
             const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
             websocket.send(JSON.stringify({
