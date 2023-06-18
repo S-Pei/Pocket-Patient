@@ -69,12 +69,10 @@ class PatientMedicalHistoryApiView(APIView):
         '''
         List all data for given requested patient user
         '''
-        
+
         user = get_user_by_patientId(request.POST.get('patient-id'))
         
         discharge_date = request.POST.get("dischargeDate").split(' ')[0]
-        # letter = request.POST.get("letter")
-        # letterFileName = f'{discharge_date} letter'
         admissionDate = request.POST.get("admissionDate").split(' ')[0]
 
         newMedHistory = MedicalHistory.objects.create(
@@ -112,6 +110,40 @@ class PatientMedicalHistoryApiView(APIView):
                          'imagingId': newImagingHistory.id if newImagingHistory else '',
                         }, status=status.HTTP_201_CREATED)
     
+
+@permission_classes([IsAuthenticated])
+class PatientEditMedicalHistoryApiView(APIView):
+    # add permission to check if user is authenticated
+    parser_classes = (MultiPartParser, FormParser, )
+
+    @csrf_exempt    
+    def post(self, request, *args, **kwargs):
+        '''
+        List all data for given requested patient user
+        '''
+
+        user = get_user_by_patientId(request.POST.get('patient-id'))
+        
+        mhId = request.POST.get("mhId")
+        discharge_date = request.POST.get("dischargeDate").split(' ')[0]
+        admission_date = request.POST.get("admissionDate").split(' ')[0]
+        print(admission_date)
+
+        obj = MedicalHistory.objects.get(id=mhId)
+        # obj.admissionDate= admission_date,
+        obj.updateAdmissionDate(admission_date)
+        obj.updateDischargeDate(discharge_date)
+        # obj.dischargeDate= discharge_date,
+        # obj.summary = request.POST.get("summary"),
+        obj.updateSummary(request.POST.get("summary"))
+        print(obj.summary)
+        obj.updateConsultant(request.POST.get("consultant"))
+        obj.updateVisitType(request.POST.get("visitType"))
+        if 'letter' in request.FILES:
+            obj.replace_file(request.FILES["letter"])
+        obj.addToMedicalHistory= True if (request.POST.get("addToMedicalHistory")=="on") else False
+        obj.save()
+        return Response({'ok': True, 'id': obj.id}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def verifyPatientCredentials(request):
