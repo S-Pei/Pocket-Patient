@@ -22,7 +22,7 @@ var base_url = window.location.origin;
     insertMedHistoryEntries(medicalHistory);
     for(var i = 1; i <= medicalHistory.length; i ++) {
         row_hover(i, medicalHistory[i-1]["visitType"]);
-        row_click(i);
+        row_click(i, medicalHistory[i-1]["id"]);
     }
 
     insertMedication(currentMedication, true);
@@ -86,13 +86,13 @@ function row_hover(rowNum, visitType){
     }
 }
 
-function row_click(rowNum){
+function row_click(rowNum, id){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
     for(var i = 0; i < n; i ++) {
         row[i].onclick = function() {
-            window.location.href = base_url + "/edit-visit/" + rowNum
+            window.location.href = base_url + "/edit-visit/" + id
         };
     }
 }

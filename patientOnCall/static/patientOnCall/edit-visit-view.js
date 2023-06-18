@@ -94,52 +94,7 @@ function getVisitEntry(id) {
       $("#id_addToMedicalHistory").attr('checked', true)
     else {
       $("#id_addToMedicalHistory").attr('checked', false)
-    }
-
-    const addLabURL = 'add-lab/' + id
-    console.log(addLabURL)
-    document.getElementById("add-lab").onclick = function() {
-        window.location.href = base_url + "/add-lab/" + id
-    };
-
-    for(var i = 0; i < labHistory.length; i ++) {
-        if (labHistory[i]["visitEntry"] === id) {
-            const labType = labHistory[i]["labType"]
-            var labEntry = labType + "-" + (i+1)  
-            console.log(labEntry)
-            const labName = document.createElement("p");
-            labName.innerHTML = labType + ':'
-            labEntry = document.createElement("a"); 
-            labEntry.href = labHistory[i]["report"]
-            const labLink = labHistory[i]["report"].replace(base_url+'/media/labattachments/', '') + '\n'
-            labEntry.innerText = labLink.replace('/media/labattachments/', '') + '\n'
-            document.getElementById("entry-lab-histories").appendChild(labName)
-            document.getElementById("entry-lab-histories").appendChild(labEntry) 
-        }
-    }
-
-    document.getElementById("add-imaging").onclick = function() {
-        window.location.href = base_url + "/add-imaging/" + id
-    };
-
-    for(var i = 0; i < imagingHistory.length; i ++) {
-        if (imagingHistory[i]["visitEntry"] === id) {
-            const scanType = imagingHistory[i]["scanType"]
-            const region = imagingHistory[i]["region"]
-            var imagingEntry = scanType + "-" + (i+1)  
-            const scanName = document.createElement("p");
-            scanName.innerHTML = scanType + '(' + region + '):'
-            imagingEntry = document.createElement("a"); 
-            imagingEntry.href = imagingHistory[i]["report"]
-            const scanLink = imagingHistory[i]["report"].replace(base_url+'/media/imagingreports/', '') + '\n'
-            imagingEntry.innerText = scanLink.replace('/media/imagingreports/', '') + '\n'
-            document.getElementById("entry-imaging-histories").appendChild(scanName)
-            document.getElementById("entry-imaging-histories").appendChild(imagingEntry) 
-        }
-    }
-
-
-    
+    } 
 }
 
 function date_toggle(visitChosen) {
