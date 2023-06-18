@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from drp39.settings import DEBUG
+
 from .models import (
     PatientUser,
     MedicalHistory,
@@ -17,18 +19,33 @@ class PatientUserSerializer(serializers.ModelSerializer):
         fields = ['patientBirthdate', 'patientAddress']
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
-    letter = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
+    letter = serializers.SerializerMethodField()
     class Meta:
         model = MedicalHistory
         fields = ['id', 'admissionDate', 'dischargeDate', 'consultant', 
                   'summary', 'visitType', 'letter', 'addToMedicalHistory']
+    def get_letter(self, medHistory):
+        if DEBUG:
+            request = self.context.get('request')
+            letter_url = medHistory.letter.url
+            return request.build_absolute_uri(letter_url)
+        else:
+            return medHistory.letter.url
 
 class LabHistorySerializer(serializers.ModelSerializer):
-    report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
+    report = serializers.SerializerMethodField()
+    # report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
     visitEntry = serializers.CharField(source='visitEntry.id')
     class Meta:
         model = LabHistory
         fields = ['id', 'date', 'labType', 'report', 'visitEntry']
+    def get_report(self, labHistory):
+        if DEBUG:
+            request = self.context.get('request')
+            lab_url = labHistory.report.url
+            return request.build_absolute_uri(lab_url)
+        else:
+            return labHistory.report.url
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,12 +53,20 @@ class MedicationSerializer(serializers.ModelSerializer):
         fields = ['id', 'drug', 'dosage', 'startDate', 'endDate', 'duration', 'route', 'status', 'comments', 'byPatient']
 
 class ImagingHistorySerializer(serializers.ModelSerializer):
-    report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
+    report = serializers.SerializerMethodField()
+    # report = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)
     visitEntry = serializers.CharField(source='visitEntry.id')
 
     class Meta:
         model = ImagingHistory
         fields = ['id','patient','date','scanType','region','indication','report', 'visitEntry']
+    def get_report(self, imagingHistory):
+        if DEBUG:
+            request = self.context.get('request')
+            imaging_url = imagingHistory.report.url
+            return request.build_absolute_uri(imaging_url)
+        else:
+            return imagingHistory.report.url
 
 class ImagingUploadSerializer(serializers.ModelSerializer):
     image = serializers.FileField(max_length=None, allow_empty_file=True, use_url=True)

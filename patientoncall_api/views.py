@@ -139,11 +139,41 @@ class PatientEditMedicalHistoryApiView(APIView):
         print(obj.summary)
         obj.updateConsultant(request.POST.get("consultant"))
         obj.updateVisitType(request.POST.get("visitType"))
+
         if 'letter' in request.FILES:
             obj.replace_file(request.FILES["letter"])
+
         obj.addToMedicalHistory= True if (request.POST.get("addToMedicalHistory")=="on") else False
         obj.save()
-        return Response({'ok': True, 'id': obj.id}, status=status.HTTP_200_OK)
+
+        newLabHistory = None
+        newImagingHistory = None
+
+        if 'lab' in request.FILES:
+            oldLabHistory = LabHistory.objects.get(visitEntry=obj)
+            if oldLabHistory:
+                oldLabHistory.delete()
+                newLabHistory = LabHistory.objects.create(
+                    patient=user,
+                    date=discharge_date,
+                    report=request.FILES['lab'],
+                    visitEntry=obj
+                )
+        if 'imaging' in request.FILES:
+            oldImagingHistory = ImagingHistory.objects.get(visitEntry=obj)
+            if oldImagingHistory:
+                oldImagingHistory.delete()
+                newImagingHistory = ImagingHistory.objects.create(
+                    patient=user,
+                    date=discharge_date,
+                    report=request.FILES['imaging'],
+                    visitEntry=obj
+                )
+
+        return Response({'ok': True, 'id': obj.id,
+                         'labId': newLabHistory.id if newLabHistory else '',
+                         'imagingId': newImagingHistory.id if newImagingHistory else ''
+                         }, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def verifyPatientCredentials(request):
@@ -186,7 +216,8 @@ def getAllPatientDataById(request, user, toHideIds=[]):
     currentMedication = Medication.objects.filter(patient=user.id, status="current")
     previousMedication = Medication.objects.filter(patient=user.id, status="past")
     patientUserSerializer = PatientUserSerializer(patientUser, many=False)
-    medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+    medicalHistorySerializer = MedicalHistorySerializer(medicalHistories,
+                                                        context={"request": request},
                                                         many=True)
     labHistorySerializer = LabHistorySerializer(labHistories, 
                         context={"request": request}, many=True)
@@ -196,6 +227,7 @@ def getAllPatientDataById(request, user, toHideIds=[]):
                         context={"request": request}, many=True)
     currentMedicationSerializer = MedicationSerializer(currentMedication, many=True)
     previousMedicationSerializer = MedicationSerializer(previousMedication, many=True)
+
     sessionID = request.session.session_key
     return {
         'ok': True,
@@ -235,7 +267,8 @@ def addMedicalHistory(request):
                                       visitType=request.POST['entryVisitType'],
                                       letter=request.POST['entryLetter'])
         medicalHistories = MedicalHistory.objects.filter(patient=user.id)
-        medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+        medicalHistorySerializer = MedicalHistorySerializer(medicalHistories,
+                                                        context={"request": request}, 
                                                         many=True)
         return JsonResponse({'ok': True,
                              'medical-history': medicalHistorySerializer.data},
@@ -444,7 +477,8 @@ def addImagingHistory(request):
                                       # visitEntry=request.POST.get("visitEntry"))
         imageList = addImagingUploads(request, entry)
         imagingHistories = ImagingHistory.objects.filter(patient=user.id)
-        imagingHistorySerializer = ImagingHistorySerializer(imagingHistories, 
+        imagingHistorySerializer = ImagingHistorySerializer(imagingHistories,
+                                                        context={"request": request},
                                                         many=True)
         return JsonResponse({'ok': True,
                              'imaging-history': imagingHistorySerializer.data,
@@ -541,7 +575,8 @@ def addLabHistory(request):
                                 scanType=request.POST.get("scanType"),
                                 report=request.FILES["report"] if 'report' in request.FILES else False)
         labHistories = LabHistory.objects.filter(patient=user.id)
-        labHistorySerializer = LabHistorySerializer(labHistories, 
+        labHistorySerializer = LabHistorySerializer(labHistories,
+                                                        context={"request": request}, 
                                                         many=True)
         return JsonResponse({'ok': True,
                              'lab-history': labHistorySerializer.data},

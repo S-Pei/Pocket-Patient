@@ -30,7 +30,7 @@ class MedicalHistory(models.Model):
 
   def replace_file(self, file):
      self.letter = file
-   
+      
   def updateAdmissionDate(self, date):
      self.admissionDate = date
 
