@@ -10,10 +10,9 @@ var base_url = window.location.origin;
   document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
   document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
   
-  document.getElementById("back-button").href = document.referrer
-  
-  rowNum = window.location.href.split('/')[4]
-  getVisitEntry(rowNum-1)
+  visitID = window.location.href.split('/')[4]
+  document.getElementById("back-button").href = base_url + '/edit-visit/' + visitID
+  getVisitEntry(visitID)
 
   // let inputs = $("p input, p textarea, p select")
   
@@ -33,11 +32,19 @@ var base_url = window.location.origin;
 });
 })();
 
-function getVisitEntry(entryNum) {
+function getVisitEntry(id) {
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
-    const id =  medicalHistory[entryNum]["id"]
+    var entryNum = ""
+    for(var i = 0; i < medicalHistory.length; i ++) {
+        console.log(medicalHistory[i]["id"]===id)
+        if (medicalHistory[i]["id"]===id){
+            console.log("row found")
+            entryNum = i 
+            break; 
+        }
+    }
     const admissionDate = medicalHistory[entryNum]["admissionDate"]
     const dischargeDate = medicalHistory[entryNum]["dischargeDate"]
     const visitType = medicalHistory[entryNum]["visitType"]
@@ -82,6 +89,13 @@ function getVisitEntry(entryNum) {
       entryLetter.href = base_url + letter
     } 
 
+    // document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
+    if (addToMedicalHistory === "True" || addToMedicalHistory === true)
+      $("#id_addToMedicalHistory").attr('checked', true)
+    else {
+      $("#id_addToMedicalHistory").attr('checked', false)
+    }
+
     const addLabURL = 'add-lab/' + id
     console.log(addLabURL)
     document.getElementById("add-lab").onclick = function() {
@@ -124,7 +138,6 @@ function getVisitEntry(entryNum) {
         }
     }
 
-    $("#id_addToMedicalHistory").val(addToMedicalHistory)
 
     
 }

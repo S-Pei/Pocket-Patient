@@ -15,7 +15,8 @@ var base_url = window.location.origin;
     insertMedHistoryEntries(medicalHistory);
     for(var i = 1; i <= medicalHistory.length; i ++) {
         row_hover(i, medicalHistory[i-1]["visitType"]);
-        row_click(i);
+        console.log(medicalHistory[i-1]["id"])
+        row_click(i, medicalHistory[i-1]["id"]);
     }
 
 })();
@@ -48,7 +49,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     entryDate.classList.add("entry-date");
     entryDate.classList.add(row);
     entryDate.setAttribute("visit-id", id);
-    if (admissionDate === dischargeDate) {
+    if ((admissionDate === dischargeDate) || visitType === "GP Consultation" || visitType === "Hospital Clinic") {
         console.log("same date")
         entryDate.textContent = admissionDate;
     } else {
@@ -183,13 +184,13 @@ function row_hover(rowNum, visitType){
     }
 }
 
-function row_click(rowNum){
+function row_click(rowNum,visitID){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;
     for(var i = 0; i < n; i ++) {
         row[i].onclick = function() {
-            window.location.href = base_url + "/edit-visit/" + rowNum
+            window.location.href = base_url + "/edit-visit/" + visitID
         };
     }
 }

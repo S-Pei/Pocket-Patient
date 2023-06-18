@@ -8,15 +8,25 @@ var base_url = window.location.origin;
     document.getElementById("patient-name").innerHTML = firstName + ' ' + lastName
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
-    rowNum = window.location.href.split('/')[4]
-    getVisitEntry(rowNum-1)
+    visitID = window.location.href.split('/')[4]
+    console.log(visitID)
+    getVisitEntry(visitID)
 })();
 
-function getVisitEntry(entryNum) {
+function getVisitEntry(id) {
     const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
-    const id =  medicalHistory[entryNum]["id"]
+    var entryNum = ""
+    for(var i = 0; i < medicalHistory.length; i ++) {
+        console.log(medicalHistory[i]["id"]===id)
+        if (medicalHistory[i]["id"]===id){
+            console.log("row found")
+            entryNum = i 
+            break; 
+        }
+    }
+
     const admissionDate = medicalHistory[entryNum]["admissionDate"]
     const dischargeDate = medicalHistory[entryNum]["dischargeDate"]
     const visitType = medicalHistory[entryNum]["visitType"]
@@ -25,7 +35,7 @@ function getVisitEntry(entryNum) {
     const addToMedicalHistory = medicalHistory[entryNum]["addToMedicalHistory"]
 
     console.log(window.location.href + 'edit-view/' + id)
-    document.getElementById("edit-button").href = window.location.href + 'edit-view/' + id 
+    document.getElementById("edit-button").href = window.location.href + 'edit-view/'  
     
     $(".section-header").html("Visit Entry: " + admissionDate)
     // document.getElementById("visit-title").innerHTML = "Visit Entry:" + admissionDate  
@@ -74,6 +84,14 @@ function getVisitEntry(entryNum) {
         entryLetterLink.href = base_url + letter
         entryLetter.append(entryLetterLink)
     } 
+    
+    console.log(addToMedicalHistory)
+    if (addToMedicalHistory === "True" || addToMedicalHistory === true) {
+        document.getElementById("entry-add-to-medical-history").checked = true
+    } else {
+        document.getElementById("entry-add-to-medical-history").checked = false
+    }
+
     const addLabURL = 'add-lab/' + id
     console.log(addLabURL)
     
@@ -117,8 +135,6 @@ function getVisitEntry(entryNum) {
         }
     }
 
-    console.log(addToMedicalHistory)
-    document.getElementById("entry-add-to-medical-history").checked = addToMedicalHistory
     
 }
 

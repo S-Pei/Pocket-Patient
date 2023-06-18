@@ -636,11 +636,12 @@ def addVisitImaging(request, visitID):
         return render(request, "patientOnCall/add-imaging.html", {'form': form})
     
 @csrf_exempt
-def editVisit(request, id, visitID):
+def editVisit(request, visitID):
     if request.method == "POST":
         form = AddVisitForm(request.POST, request.FILES or None)
         if form.is_valid():
             visit = MedicalHistory.objects.get(id=visitID)
+            print(visit)
             visit.admissionDate=request.POST.get("admissionDate")
             visit.dischargeDate=request.POST.get("dischargeDate")
             visit.summary = request.POST.get("summary")
@@ -650,7 +651,7 @@ def editVisit(request, id, visitID):
             visit.addToMedicalHistory= request.POST.get("addToMedicalHistory")=="on"
             visit.save()
 
-            request.session["visit-created"] = True
+            request.session["visit-edited"] = True
             request.session["id"] = str(visit.id)
             request.session["admissionDate"] = visit.admissionDate
             request.session["dischargeDate"] = visit.dischargeDate
@@ -659,7 +660,7 @@ def editVisit(request, id, visitID):
             request.session["letter"] = visit.letter.url if 'letter' in request.FILES else False
             request.session["addToMedicalHistory"] = visit.addToMedicalHistory
 
-            return redirect(f"{BASE_URL}edit-visit/"f"id")
+            return redirect(f"{BASE_URL}edit-visit/"f"{visitID}")
     else:
         form = AddVisitForm()
         # print("add visit")
