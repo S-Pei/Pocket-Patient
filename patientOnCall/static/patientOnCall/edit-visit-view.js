@@ -46,18 +46,15 @@ function getVisitEntry(entryNum) {
     const addToMedicalHistory = medicalHistory[entryNum]["addToMedicalHistory"]
 
     $(".section-header").html("Visit Entry: " + admissionDate)
+    
     $("#id_visitType").val(visitType) 
     const visitDropDown = document.getElementById("id_visitType")
+    // console.log(visitDropDown)
+    date_toggle(visitType)
     visitDropDown.addEventListener("change", e => {
     var visitChosen = e.target.value;
-    if (visitChosen == "GP Consultation" || visitChosen == "Hospital Clinic"){
-      document.getElementById("admission-date-label").innerHTML = 'Date:'; 
-      document.getElementById("discharge-date-wrapper").style.display = 'none'; 
-    } else {
-      document.getElementById("admission-date-label").innerHTML = 'Admission Date:'; 
-      document.getElementById("discharge-date-wrapper").style.display = 'block'; 
-    }
-  })
+    date_toggle(visitChosen)
+    })
     $("#id_admissionDate").val(admissionDate)
     $("#id_dischargeDate").val(dischargeDate)
 
@@ -70,10 +67,23 @@ function getVisitEntry(entryNum) {
         $('#id_admissionDate').datepicker('option', 'maxDate', new Date(dateText))}});
       });
     
+    $("#id_summary").val(summary)
+
+    if  (letter === "False" || letter === '/media/False') {  
+      document.getElementById("entry-letter-link").remove()     
+    } else {
+      const entryLetter = document.getElementById("entry-letter-link")  
+      if (visitType == "GP Consultation") {
+          entryLetter.textContent = "GP Letter";
+      }
+      else {
+          entryLetter.textContent = "Discharge Letter";
+      }
+      entryLetter.href = base_url + letter
+    } 
 
     const addLabURL = 'add-lab/' + id
     console.log(addLabURL)
-    
     document.getElementById("add-lab").onclick = function() {
         window.location.href = base_url + "/add-lab/" + id
     };
@@ -117,4 +127,14 @@ function getVisitEntry(entryNum) {
     $("#id_addToMedicalHistory").val(addToMedicalHistory)
 
     
+}
+
+function date_toggle(visitChosen) {
+  if (visitChosen == "GP Consultation" || visitChosen == "Hospital Clinic"){
+    document.getElementById("admission-date-label").innerHTML = 'Date:'; 
+    document.getElementById("discharge-date-wrapper").style.display = 'none'; 
+  } else {
+    document.getElementById("admission-date-label").innerHTML = 'Admission Date:'; 
+    document.getElementById("discharge-date-wrapper").style.display = 'block'; 
+  }
 }

@@ -7,6 +7,7 @@ class AddVisitForm(ModelForm):
       exclude = ('id', 'patient')
 
 class AddImagingForm(ModelForm):
+  report = FileField(required=True)
   class Meta:
       model = ImagingHistory
       fields = ['date', 'scanType','region', 'indication', 'report']
@@ -19,6 +20,7 @@ class ImagesUploadForm(AddImagingForm):
     fields = AddImagingForm.Meta.fields + ['image',]
 
 class AddLabForm(ModelForm):
+  report = FileField(required=True)
   class Meta:
       model = LabHistory
       fields = ['date', 'labType', 'report']
