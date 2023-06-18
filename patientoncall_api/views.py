@@ -75,7 +75,7 @@ class PatientMedicalHistoryApiView(APIView):
         discharge_date = request.POST.get("dischargeDate").split(' ')[0]
         admissionDate = request.POST.get("admissionDate").split(' ')[0]
 
-        obj = MedicalHistory.objects.create(
+        newMedHistory = MedicalHistory.objects.create(
                 patient=user,
                 admissionDate=admissionDate,
                 dischargeDate=discharge_date,
@@ -85,7 +85,31 @@ class PatientMedicalHistoryApiView(APIView):
                 letter= request.FILES["letter"] if 'letter' in request.FILES else False,
                 addToMedicalHistory=True if (request.POST.get("addToMedicalHistory")=="on") else False
             )
-        return Response({'ok': True, 'id': obj.id}, status=status.HTTP_201_CREATED)
+        
+        newLabHistory = None
+        newImagingHistory = None
+        
+        if 'lab' in request.FILES and request.FILES['lab'] != None:
+            newLabHistory = LabHistory.objects.create(
+                patient=user,
+                date=discharge_date,
+                report=request.FILES['lab'],
+                visitEntry=newMedHistory
+            )
+        if 'imaging' in request.FILES and request.FILES['imaging'] != None:
+            newImagingHistory = ImagingHistory.objects.create(
+                patient=user,
+                date=discharge_date,
+                report=request.FILES['imaging'],
+                visitEntry=newMedHistory
+            )
+
+        return Response({'ok': True, 
+                         'id': newMedHistory.id,
+                         'labId': newLabHistory.id if newLabHistory else '',
+                         'imagingId': newImagingHistory.id if newImagingHistory else '',
+                        }, status=status.HTTP_201_CREATED)
+    
 
 @permission_classes([IsAuthenticated])
 class PatientEditMedicalHistoryApiView(APIView):

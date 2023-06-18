@@ -46,6 +46,9 @@ class MedicalHistory(models.Model):
   def updateVisitType(self, visitType):
      self.visitType = visitType
 
+  def __str__(self) -> str:
+     return f"{self.patient.username}: {self.summary} ({self.admissionDate}, {self.visitType})"
+
   class Meta:
      ordering = ('-admissionDate',)
 
