@@ -14,7 +14,7 @@ def displayMedication(request):
 def displayVisit(request):
     context = {}
     if ("visit-created" in request.session and request.session["visit-created"] == True):
-        context = {'visit-created': True, 
+        context = {'visitCreated': True, 
                     'id': request.session["id"],
                     'admissionDate': request.session["admissionDate"],
                     'dischargeDate': request.session["dischargeDate"],
