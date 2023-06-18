@@ -115,68 +115,6 @@ document.getElementById("edit-medication").addEventListener("click", (e) => {
     window.location.href = base_url + "/edit-medication"
   })
 
-
-// function connect_to_websocket() {
-//   websocket = create_websocket(
-//     () => {
-//       console.log("Connected to websocket");
-//     },
-//     (response) => {
-//       let data = JSON.parse(response.data)
-//       let event = data["event"]
-
-//       if (event == "NEW_MEDICATION_ENTRY") {
-//         let newMedicationData = data["newMedicationData"]
-//         console.log(newMedicationData)
-
-//         let updatedCurrMedication = JSON.parse(data["currentMedication"])
-//         sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
-
-//         let nextMedId = getNextMedicationId(newMedicationData["id"], updatedCurrMedication);
-//         if (nextMedId == null) {
-//           addMedication(
-//             true,
-//             newMedicationData["id"],
-//             newMedicationData["drug"],
-//             newMedicationData["dosage"],
-//             newMedicationData["startDate"],
-//             newMedicationData["endDate"],
-//             newMedicationData["duration"],
-//             newMedicationData["route"],
-//             newMedicationData["comments"],
-//             newMedicationData["byPatient"]
-//           )
-//         } else {
-//           insertNewMedBeforeMedWithId(
-//             nextMedId, 
-//             true,
-//             newMedicationData["id"],
-//             newMedicationData["drug"],
-//             newMedicationData["dosage"],
-//             newMedicationData["startDate"],
-//             newMedicationData["endDate"],
-//             newMedicationData["duration"],
-//             newMedicationData["route"],
-//             newMedicationData["comments"],
-//             newMedicationData["byPatient"]
-//           );
-//         }
-
-//       } else if (event == "REMOVE_MEDICATION_ENTRY") {
-//         let removedID = data["removedID"];
-//         document.getElementById(removedID + '-drug').remove();
-//         document.getElementById(removedID + '-dosage').remove();
-//         document.getElementById(removedID + '-start-date').remove();
-//         document.getElementById(removedID + '-end-date').remove();
-//         document.getElementById(removedID + '-duration').remove();
-//         document.getElementById(removedID + '-route').remove();
-//         document.getElementById(removedID + '-comments').remove();
-//         document.getElementById(removedID + '-owner').remove();
-//       }
-//     }
-//   )
-// }
-
 function getNextMedicationId(medId, currMedication) {
   let i = 0;
   while (i < currMedication.length) {
@@ -270,4 +208,18 @@ function insertNewMedBeforeMedWithId(nextMedId, isCurrent, id, drug, dosage, sta
         $(this).before(medicationByPatient);
       }
     })
+}
+
+function udpateMedicationDetails(newMedicationData) {
+  $(".info-table-item").each(function () {
+    if ($(this).attr("medication-id") == newMedicationData["id"]) {
+      if ($(this).hasClass("drug-info-item")) { $(this).text(newMedicationData["drug"]) }
+      else if ($(this).hasClass("dosage-info-item")) { $(this).text(newMedicationData["dosage"]) }
+      else if ($(this).hasClass("start-date-info-item")) { $(this).text(newMedicationData["startDate"]) }
+      else if ($(this).hasClass("end-date-info-item")) { $(this).text(newMedicationData["endDate"]) }
+      else if ($(this).hasClass("duration-info-item")) { $(this).text(newMedicationData["duration"]) }
+      else if ($(this).hasClass("route-info-item")) { $(this).text(newMedicationData["route"]) }
+      else if ($(this).hasClass("comments-info-item")) { $(this).text(newMedicationData["comments"]) };
+    }
+  })
 }

@@ -165,6 +165,7 @@ margin-right: 1%;
   height: 100vh;
   z-index: 3;
 }
+
 #add-medication-button-box {
   display: flex;
   justify-content: center;

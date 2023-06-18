@@ -13,6 +13,7 @@
 
 .category-item-box {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -29,4 +30,24 @@
   font-weight: bold;
   font-size: x-large;
   cursor: pointer;
+}
+
+#add-category-button-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4em;
+}
+
+#add-category-button {
+  width: 99%;
+  padding: 0 !important;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--info-lighter-bg-color);
+  box-shadow: 1px 1px 3px var(--dark-shade-color);
+}
+
+#add-category-button button {
+  width: 90%;
 }

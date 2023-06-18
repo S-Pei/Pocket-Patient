@@ -19,8 +19,6 @@ from .serializers import (
     DiarySerializer
 )
 
-import jwt
-
 class EditConsumer(WebsocketConsumer):
 
     def connect(self):
@@ -88,6 +86,15 @@ class EditConsumer(WebsocketConsumer):
                 'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId"))),
                 'newMedicationData': new_medication_data
             })
+        elif event == "EDIT_MEDICATION_ENTRY":
+            print("EDIT_MEDICATION_ENTRY")
+            updated_medication_data = self.update_medication_entry(response)
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_current_medication_data',
+                'event': "EDIT_MEDICATION_ENTRY",
+                'currentMedication': json.dumps(self.get_updated_medication(response.get("patientId"))),
+                'updatedMedicationData': updated_medication_data
+            })
         elif event == "REMOVE_MEDICATION_ENTRY":
             print("REMOVE_MEDICATION_ENTRY")
             self.remove_medication_entry(response)
@@ -121,7 +128,7 @@ class EditConsumer(WebsocketConsumer):
             medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
                                                             many=True)
             if not response.get('doctor_update'):
-                newMh = MedicalHistory.objects.get(id=response.get('mhId'))
+                newMh = MedicalHistory.objects.get(id=response.get("mhId"))
                 
                 newMhSerialised = MedicalHistorySerializer(newMh, 
                                                             many=False)
@@ -137,6 +144,24 @@ class EditConsumer(WebsocketConsumer):
                     'event': "NEW_HOSP_VISIT_ENTRY",
                     'hospital_visit_history': medicalHistorySerializer.data,
                 })  
+        elif event == "EDIT_HOSP_VISIT_ENTRY":
+            print('receive edit hosp notification')
+            id = response.get('patientId')
+            user = self.get_user_by_patientId(id)
+            medicalHistories = MedicalHistory.objects.filter(patient=user)
+            medicalHistorySerializer = MedicalHistorySerializer(medicalHistories, 
+                                                            many=True)
+            editedMh = MedicalHistory.objects.get(id=response.get('mhId'))
+        
+            editedMhSerialised = MedicalHistorySerializer(editedMh, 
+                                                        many=False)
+            async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
+                'type': 'send_edited_hosp_visit_information',
+                'event': "EDIT_HOSP_VISIT_ENTRY",
+                'mhId': response.get('mhId'),
+                'hospital_visit_history': medicalHistorySerializer.data,
+                'edited_visit_entry': editedMhSerialised.data
+            })    
 
         else:
             print("UNKNOWN EVENT")
@@ -152,7 +177,8 @@ class EditConsumer(WebsocketConsumer):
             "event": res["event"],
             "currentMedication": res["currentMedication"],
             "newMedicationData": res["newMedicationData"] if "newMedicationData" in res else None,
-            "removedID": res["removedID"] if "removedID" in res else None
+            "removedID": res["removedID"] if "removedID" in res else None,
+            "updatedMedicationData": res["updatedMedicationData"] if "updatedMedicationData" in res else None,
         }))
     
     def send_new_diary_information(self, res):
@@ -179,6 +205,14 @@ class EditConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "hospital_visit_history": res["hospital_visit_history"],
+        }))
+
+    def send_edited_hosp_visit_information(self, res):
+        self.send(text_data=json.dumps({
+            "event": res["event"],
+            "mhId": res["mhId"],
+            "hospital_visit_history": res["hospital_visit_history"],
+            'edited_visit_entry': res["edited_visit_entry"]
         }))
     
     def patient_data_access_authentication(self, res):
@@ -207,7 +241,22 @@ class EditConsumer(WebsocketConsumer):
                             comments=res.get("comments"),
                             byPatient=True)
         return MedicationSerializer(new_medication, many=False).data
-        
+    
+    def update_medication_entry(self, res):
+        medication_entry = Medication.objects.get(id=res.get("id"))
+        startDateTime = res.get("startDate")
+        startDate = startDateTime.split(" ")[0]
+        duration = res.get("duration")
+        medication_entry.drug = res.get("drug")
+        medication_entry.dosage = res.get("dosage")
+        medication_entry.startDate = startDate
+        medication_entry.endDate = add_time(startDate, duration)
+        medication_entry.duration = duration
+        medication_entry.route = res.get("route")
+        medication_entry.byPatient = True
+        medication_entry.save()
+        return MedicationSerializer(medication_entry, many=False).data
+
     def remove_medication_entry(self, res):
         print(res['id'])
         Medication.objects.get(id=res['id']).delete()

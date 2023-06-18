@@ -106,7 +106,15 @@ function connect_to_websocket() {
             );
           }
         }
+      } else if (event == "EDIT_MEDICATION_ENTRY") {
+        let newMedicationData = data["updatedMedicationData"]
+        let updatedCurrMedication = JSON.parse(data["currentMedication"])
+        sessionStorage.setItem("currentMedication", JSON.stringify(updatedCurrMedication))
 
+        if (window.location.href == base_url + "/medication/") {
+          console.log("In medication page")
+          udpateMedicationDetails(newMedicationData);
+        }
       } else if (event == "REMOVE_MEDICATION_ENTRY") {
         if (isMedicationLocation) {
           let removedID = data["removedID"];
@@ -130,9 +138,29 @@ function connect_to_websocket() {
           console.log(medicalHistory)
           sessionStorage.setItem("medicalHistory",JSON.stringify(data["hospital_visit_history"]))
           if (window.location.href == base_url + "/visit/") {  
-            addMedHistoryEntry(medicalHistory.length, newMh["admissionDate"], newMh["dischargeDate"],
+            var row = medicalHistory.length
+            addMedHistoryEntry(row, newMh['id'], newMh["admissionDate"], newMh["dischargeDate"],
               newMh["summary"], newMh["visitType"], newMh["letter"])
+            row_hover(row, medicalHistory[row-1]["visitType"]);
+            row_click(row);
           }
+      } else if (event == "EDIT_HOSP_VISIT_ENTRY") {
+        console.log('EDIT_HOSP_VISIT_ENTRY')
+        let editedMh = data["edited_visit_entry"]
+        const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+        console.log(medicalHistory)
+        sessionStorage.setItem("medicalHistory",JSON.stringify(data["hospital_visit_history"]))
+        if (window.location.href == base_url + "/visit/") {  
+          editHospVisitEntry(
+            editedMh['id'],
+            editedMh['admissionDate'],
+            editedMh['dischargeDate'],
+            editedMh['summary'],
+            editedMh['consultant'],
+            editedMh['visitType'],
+            editedMh['letter']
+          )
+        }
       } else if (event == "NEW_DIARY_ENTRY") {
         console.log('NEW_DIARY_ENTRY');
         addDiaryEntryToSession(data["category"], data["newDiaryData"]);

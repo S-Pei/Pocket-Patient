@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     PatientApiView,
     PatientMedicalHistoryApiView,
+    PatientEditMedicalHistoryApiView
 )
 from . import views
 from rest_framework_simplejwt.views import (
@@ -14,6 +15,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('patient-data/', PatientApiView.as_view()),
     path('patient-data/patient-add-visit/',PatientMedicalHistoryApiView.as_view()),
+    path('patient-data/patient-edit-visit/',PatientEditMedicalHistoryApiView.as_view()),
     path('patient-data/medical-history/', PatientMedicalHistoryApiView.as_view()),
     path('doctor/patient-verify/', views.verifyPatientCredentials),
     path('doctor/patient-data/', views.getPatientData),
