@@ -534,15 +534,15 @@ def addLab(request):
         form = AddLabForm(request.POST, request.FILES or None)
         labName = request.POST.get("labType")
         if form.is_valid():
-            patientId = request.POST.get("patientId");
-            patientName = request.POST.get("patientName");
+            patientId = request.POST.get("patientId")
+            patientName = request.POST.get("patientName")
             user = matchPatientUser(patientId, patientName)
             labEntry = LabHistory.objects.create(
                 patient=user,
                 date=request.POST.get("date"),
                 labType=labName,
                 report=request.FILES["report"] if 'report' in request.FILES else False,
-            ) 
+            )
             request.session["lab-created"] = True
             request.session["id"] = str(labEntry.id)
             request.session["date"] = labEntry.date

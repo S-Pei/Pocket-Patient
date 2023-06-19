@@ -82,6 +82,13 @@
   </div>
   
   <script>
+    var isLabCreated = "{{ labCreated }}";
+    var newLabId = "{{ id }}";
+    var newLabDate = "{{ date }}";
+    var newLabType = "{{ labType }}";
+    var newLabReport = "{{ report }}";
+    var newLabVisitEntry = "{{ visitEntry }}";
+
     if ("{{ labCreated }}") {
       let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
       // labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -165,7 +172,6 @@
                medicalHistory[i]["letter"]= "{{ letter }}";
                medicalHistory[i]["addToMedicalHistory"]= "{{ addToMedicalHistory }}";
                medicalHistory.sort((a, b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
-              // // console.log(medicalHistory)
                sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
                break; 
             }

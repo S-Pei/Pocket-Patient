@@ -9,7 +9,7 @@ var base_url = window.location.origin;
     document.getElementById("patient-id").innerHTML = 'NHS Number:' + id
 
     visitID = window.location.href.split('/')[4]
-    console.log(visitID)
+    // console.log(visitID)
     getVisitEntry(visitID)
 })();
 
@@ -19,9 +19,9 @@ function getVisitEntry(id) {
     const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
     var entryNum = ""
     for(var i = 0; i < medicalHistory.length; i ++) {
-        console.log(medicalHistory[i]["id"]===id)
+        // console.log(medicalHistory[i]["id"]===id)
         if (medicalHistory[i]["id"]===id){
-            console.log("row found")
+            // console.log("row found")
             entryNum = i 
             break; 
         }
@@ -35,7 +35,7 @@ function getVisitEntry(id) {
     const letter = medicalHistory[entryNum]["letter"]
     const addToMedicalHistory = medicalHistory[entryNum]["addToMedicalHistory"]
 
-    console.log(window.location.href + 'edit-view/' + id)
+    // console.log(window.location.href + 'edit-view/' + id)
     document.getElementById("edit-button").href = window.location.href + 'edit-view/'  
     
     $(".section-header").html("Visit Entry: " + admissionDate)
@@ -60,18 +60,18 @@ function getVisitEntry(id) {
     
     
     const uploadURL = 'upload-letter/' + id
-    console.log(uploadURL)
+    // console.log(uploadURL)
     const letterForm = document.getElementById("upload-letter-form")
     letterForm.setAttribute('action',uploadURL)
     const entryLetter = document.getElementById("entry-letter")
     
     console.log(letter)
-    if  (letter === "False" || letter === '/media/False') {
+    if  (letter === "False" || letter === '/media/False' || letter === base_url + '/media/False') {
         $("#upload-letter-form").submit(function(eventObj) {
             var letterUpload = $('#letter-upload').val().replace(/C:\\fakepath\\/, '/media/letterattachments/');
-            console.log(letterUpload)
+            // console.log(letterUpload)
             medicalHistory[entryNum]["letter"] = letterUpload
-            console.log(medicalHistory[entryNum]["letter"])
+            // console.log(medicalHistory[entryNum]["letter"])
             sessionStorage.setItem("medicalHistory",JSON.stringify(medicalHistory))
             return true; 
         });       
@@ -96,7 +96,7 @@ function getVisitEntry(id) {
     }
 
     const addLabURL = 'add-lab/' + id
-    console.log(addLabURL)
+    // console.log(addLabURL)
     
     document.getElementById("add-lab").onclick = function() {
             window.location.href = base_url + "/add-lab/" + id
@@ -106,7 +106,7 @@ function getVisitEntry(id) {
         if (labHistory[i]["visitEntry"] === id) {
             const labType = labHistory[i]["labType"]
             var labEntry = labType + "-" + (i+1)  
-            console.log(labEntry)
+            // console.log(labEntry)
             const labName = document.createElement("p");
             labName.innerHTML = labType + ':'
             labEntry = document.createElement("a"); 
@@ -137,9 +137,27 @@ function getVisitEntry(id) {
             document.getElementById("entry-imaging-histories").appendChild(imagingEntry) 
         }
     }
-
-    
 }
 
+// function updateNewLabInWebsocket() {
+//     console.log(isLabCreated);
+//     if (isLabCreated && websocket) {
+//         if (websocket.readyState == websocket.OPEN) {
+//             const id = sessionStorage.getItem("patientID")
+//             const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+//             const newLabHistory = {
+
+//             }
+//             websocket.send(JSON.stringify({
+//                 "event": "NEW_HOSP_VISIT_ENTRY",
+//                 "patientId": id,
+//                 "hospital_visit_history": medicalHistory,
+//                 "doctor_update": true
+//             }));       
+//         } else {
+//             setTimeout(updateNewVisitInWebsocket, 500);
+//         }
+//     }
+// }
 
 

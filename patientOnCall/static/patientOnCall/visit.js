@@ -111,7 +111,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     // entryLetter.classList.add("info-table-item");
     // entryLetter.classList.add(row);
     console.log(letter)
-    if  (letter === "False" || letter === "/media/False") {
+    if  (letter === "False" || letter === "/media/False" || letter === base_url + '/media/False') {
         console.log("NOOOOO")
     } else {
         entryLetter.href = letter;
@@ -141,6 +141,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
         }
     }
     for(var i = 0; i < imagingHistory.length; i ++) {
+        console.log("Print lab link");
         if (imagingHistory[i]["visitEntry"] === id) {
             imagingEntry = document.createElement("a"); 
             imagingEntry.href = imagingHistory[i]["report"]
