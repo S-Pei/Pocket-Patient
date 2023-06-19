@@ -426,13 +426,14 @@ function addTime(dateStr, num, unit) {
 
     const date = new Date(year, month, day);
 
-    if (unit === 'day') {
+    if (unit === 'Day') {
         date.setDate(date.getDate() + num);
-    } else if (unit === 'week') {
+        console.log("change in day")
+    } else if (unit === 'Week') {
         date.setDate(date.getDate() + (num * 7));
-    } else if (unit === 'month') {
+    } else if (unit === 'Month') {
         date.setMonth(date.getMonth() + num);
-    } else if (unit === 'year') {
+    } else if (unit === 'Year') {
         date.setFullYear(date.getFullYear() + num);
     }
 

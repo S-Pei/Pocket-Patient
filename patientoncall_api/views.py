@@ -303,6 +303,7 @@ def updateMedication(request):
         for deleted_medication in json_data["deleteIds"]:
             my_object = Medication.objects.get(id=deleted_medication['medicationID'])
             my_object.status = "past"
+            my_object.endDate = date.today()
             my_object.comments = deleted_medication['medicationComments']
             my_object.save()
 
@@ -320,6 +321,7 @@ def updateMedication(request):
         for new_medication in json_data["editItems"]:
             my_object = Medication.objects.get(id=new_medication['medicationID'])
             my_object.status = "past"
+            my_object.endDate = date.today()
             my_object.save()
             Medication.objects.create(patient=user, 
                                         drug=new_medication['medicationDrug'], 
