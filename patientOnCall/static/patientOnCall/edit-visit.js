@@ -147,10 +147,10 @@ function updateNewLabInWebsocket(visitID) {
         if (websocket.readyState == websocket.OPEN) {
             const id = sessionStorage.getItem("patientID")
             let newLabHistory = {}
-            newLabHistory["id"]= newLabId;
-            newLabHistory["date"]= newLabDate;
-            newLabHistory["labType"]= newLabType;
-            newLabHistory["report"]= newLabReport;
+            newLabHistory["id"] = newLabId;
+            newLabHistory["date"] = newLabDate;
+            newLabHistory["labType"] = newLabType;
+            newLabHistory["report"] = newLabReport;
             newLabHistory["visitEntry"] = newLabVisitEntry;
             websocket.send(JSON.stringify({
                 "event": "EDIT_HOSP_VISIT_ENTRY",
@@ -160,7 +160,34 @@ function updateNewLabInWebsocket(visitID) {
                 "new_lab_history": newLabHistory
             }));       
         } else {
-            setTimeout(updateNewVisitInWebsocket, 500);
+            setTimeout(() => {
+                updateNewLabInWebsocket(visitID);
+            }, 500);
+        }
+    }
+    
+    if (isScanCreated && websocket) {
+        if (websocket.readyState == websocket.OPEN) {
+            const id = sessionStorage.getItem("patientID")
+            let newImagingHistory = {}
+            newImagingHistory["id"] = newImagingHistoryId;
+            newImagingHistory["date"] = newImagingHistoryDate;
+            newImagingHistory["scanType"] = newImagingHistoryScanType;
+            newImagingHistory["region"] = newImagingHistoryRegion;
+            newImagingHistory["indication"] = newImagingHistoryIndication;
+            newImagingHistory["report"] = newImagingHistoryReport;
+            newImagingHistory["visitEntry"] = newImagingHistoryVisitEntry;
+            websocket.send(JSON.stringify({
+                "event": "EDIT_HOSP_VISIT_ENTRY",
+                "patientId": id,
+                // "doctor_update": true,
+                "mhId": visitID,
+                "new_imaging_history": newImagingHistory
+            }));       
+        } else {
+            setTimeout(() => {
+                updateNewLabInWebsocket(visitID);
+            }, 500);
         }
     }
 }

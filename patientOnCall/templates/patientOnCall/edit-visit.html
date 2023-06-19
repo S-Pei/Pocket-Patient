@@ -89,6 +89,15 @@
     var newLabReport = "{{ report }}";
     var newLabVisitEntry = "{{ visitEntry }}";
 
+    var isScanCreated = "{{ scanCreated }}"
+    var newImagingHistoryId = "{{ id }}";
+    var newImagingHistoryDate = "{{ date }}";
+    var newImagingHistoryScanType = "{{ scanType }}";
+    var newImagingHistoryRegion = "{{ region }}"
+    var newImagingHistoryIndication = "{{ indication }}"
+    var newImagingHistoryReport = "{{ report }}"
+    var newImagingHistoryVisitEntry  = "{{ visitEntry }}"
+
     if ("{{ labCreated }}") {
       let labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
       // labHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

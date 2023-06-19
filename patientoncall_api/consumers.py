@@ -144,14 +144,16 @@ class EditConsumer(WebsocketConsumer):
                     'event': "NEW_HOSP_VISIT_ENTRY",
                     'hospital_visit_history': medicalHistorySerializer.data,
                     'new_visit_entry': newMhSerialised.data,
-                    'new_lab_history': labHistorySerializer.data,
-                    'new_imaging_history': imagingHistorySerializer.data,
+                    'new_lab_history': labHistorySerializer.data if labHistory else {},
+                    'new_imaging_history': imagingHistorySerializer.data if imagingHistory else {},
                 })    
             else:
                 async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                     'type': 'send_doc_update_hosp_visit_information',
                     'event': "NEW_HOSP_VISIT_ENTRY",
                     'hospital_visit_history': medicalHistorySerializer.data,
+                    'new_lab_history': {},
+                    'new_imaging_history': {},
                 })  
         elif event == "EDIT_HOSP_VISIT_ENTRY":
             print('receive edit hosp notification')
@@ -170,8 +172,8 @@ class EditConsumer(WebsocketConsumer):
                 'mhId': response.get('mhId'),
                 'hospital_visit_history': medicalHistorySerializer.data,
                 'edited_visit_entry': editedMhSerialised.data,
-                'new_lab_history': response["new_lab_history"] if "new_lab_history" in response else None,
-                'new_imaging_history': response["new_imaging_history"] if "new_imaging_history" in response else None
+                'new_lab_history': response["new_lab_history"] if "new_lab_history" in response else {},
+                'new_imaging_history': response["new_imaging_history"] if "new_imaging_history" in response else {}
             })    
 
         else:
@@ -210,14 +212,16 @@ class EditConsumer(WebsocketConsumer):
             "event": res["event"],
             "hospital_visit_history": res["hospital_visit_history"],
             'new_visit_entry': res["new_visit_entry"],
-            'new_lab_history': res['new_lab_history'] if 'new_lab_history' in res else None,
-            'new_imaging_history': res['new_imaging_history'] if 'new_imaging_history' in res else None, 
+            'new_lab_history': res['new_lab_history'] if 'new_lab_history' in res else {},
+            'new_imaging_history': res['new_imaging_history'] if 'new_imaging_history' in res else {}, 
         }))
 
     def send_doc_update_hosp_visit_information(self, res):
         self.send(text_data=json.dumps({
             "event": res["event"],
             "hospital_visit_history": res["hospital_visit_history"],
+            'new_lab_history': {},
+            'new_imaging_history': {}
         }))
 
     def send_edited_hosp_visit_information(self, res):
@@ -226,8 +230,8 @@ class EditConsumer(WebsocketConsumer):
             "mhId": res["mhId"],
             "hospital_visit_history": res["hospital_visit_history"],
             'edited_visit_entry': res["edited_visit_entry"],
-            'new_lab_history': res["new_lab_history"],
-            'new_imaging_history': res["new_imaging_history"]
+            'new_lab_history': res["new_lab_history"] if 'new_lab_history' in res else {},
+            'new_imaging_history': res["new_imaging_history"] if 'new_imaging_history' in res else {}
         }))
     
     def patient_data_access_authentication(self, res):
