@@ -34,6 +34,7 @@ LOCAL_APP_HOST = '10.0.2.2'
 ALLOWED_HOSTS = [WEBAPP_HOST, LOCAL_HOST, LOCAL_APP_HOST]
 
 BASE_URL = f'http://{LOCAL_HOST}:8000/' if DEBUG else f'https://{WEBAPP_HOST}/'
+BASE_URL_2 = f'http://{LOCAL_HOST}:8000'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

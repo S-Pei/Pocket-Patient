@@ -137,8 +137,8 @@ class EditConsumer(WebsocketConsumer):
                                                             many=False)
                 labHistory = LabHistory.objects.get(id=response.get('labId')) if response.get('labId') else None
                 imagingHistory = ImagingHistory.objects.get(id=response.get('imagingId')) if response.get('imagingId') else None
-                labHistorySerializer = LabHistorySerializer(labHistory, many=False, context={"request": response})
-                imagingHistorySerializer = ImagingHistorySerializer(imagingHistory, many=False, context={"request": response})
+                labHistorySerializer = LabHistorySerializer(labHistory, many=False)
+                imagingHistorySerializer = ImagingHistorySerializer(imagingHistory, many=False)
                 async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
                     'type': 'send_update_hosp_visit_information',
                     'event': "NEW_HOSP_VISIT_ENTRY",

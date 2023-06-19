@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from drp39.settings import DEBUG
+from drp39.settings import DEBUG, BASE_URL_2
 
 from .models import (
     PatientUser,
@@ -28,7 +28,10 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
         if DEBUG:
             request = self.context.get('request')
             letter_url = medHistory.letter.url
-            return request.build_absolute_uri(letter_url)
+            if request:
+                return request.build_absolute_uri(letter_url)
+            else:
+                return f"{BASE_URL_2}{letter_url}"
         else:
             return medHistory.letter.url
 
@@ -43,7 +46,10 @@ class LabHistorySerializer(serializers.ModelSerializer):
         if DEBUG:
             request = self.context.get('request')
             lab_url = labHistory.report.url
-            return request.build_absolute_uri(lab_url)
+            if request:
+                return request.build_absolute_uri(lab_url)
+            else:
+                return f"{BASE_URL_2}{lab_url}"
         else:
             return labHistory.report.url
 
@@ -64,7 +70,10 @@ class ImagingHistorySerializer(serializers.ModelSerializer):
         if DEBUG:
             request = self.context.get('request')
             imaging_url = imagingHistory.report.url
-            return request.build_absolute_uri(imaging_url)
+            if request:
+                return request.build_absolute_uri(imaging_url)
+            else:
+                return f"{BASE_URL}{imaging_url}"
         else:
             return imagingHistory.report.url
 
