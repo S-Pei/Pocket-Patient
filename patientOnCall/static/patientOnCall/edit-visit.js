@@ -11,6 +11,8 @@ var base_url = window.location.origin;
     visitID = window.location.href.split('/')[4]
     // console.log(visitID)
     getVisitEntry(visitID)
+
+    updateNewLabInWebsocket(visitID);
 })();
 
 function getVisitEntry(id) {
@@ -139,25 +141,28 @@ function getVisitEntry(id) {
     }
 }
 
-// function updateNewLabInWebsocket() {
-//     console.log(isLabCreated);
-//     if (isLabCreated && websocket) {
-//         if (websocket.readyState == websocket.OPEN) {
-//             const id = sessionStorage.getItem("patientID")
-//             const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
-//             const newLabHistory = {
-
-//             }
-//             websocket.send(JSON.stringify({
-//                 "event": "NEW_HOSP_VISIT_ENTRY",
-//                 "patientId": id,
-//                 "hospital_visit_history": medicalHistory,
-//                 "doctor_update": true
-//             }));       
-//         } else {
-//             setTimeout(updateNewVisitInWebsocket, 500);
-//         }
-//     }
-// }
+function updateNewLabInWebsocket(visitID) {
+    console.log(isLabCreated);
+    if (isLabCreated && websocket) {
+        if (websocket.readyState == websocket.OPEN) {
+            const id = sessionStorage.getItem("patientID")
+            let newLabHistory = {}
+            newLabHistory["id"]= newLabId;
+            newLabHistory["date"]= newLabDate;
+            newLabHistory["labType"]= newLabType;
+            newLabHistory["report"]= newLabReport;
+            newLabHistory["visitEntry"] = newLabVisitEntry;
+            websocket.send(JSON.stringify({
+                "event": "EDIT_HOSP_VISIT_ENTRY",
+                "patientId": id,
+                // "doctor_update": true,
+                "mhId": visitID,
+                "new_lab_history": newLabHistory
+            }));       
+        } else {
+            setTimeout(updateNewVisitInWebsocket, 500);
+        }
+    }
+}
 
 
