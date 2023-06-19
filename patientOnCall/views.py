@@ -18,6 +18,7 @@ def displayVisit(request):
                     'id': request.session["id"],
                     'admissionDate': request.session["admissionDate"],
                     'dischargeDate': request.session["dischargeDate"],
+                    'consultant': request.session["consultant"],
                     'summary': request.session["summary"],
                     'visitType': request.session["visitType"], 
                     'letter': request.session["letter"], 
@@ -26,6 +27,7 @@ def displayVisit(request):
         request.session["id"] = ""
         request.session["admissionDate"] = None
         request.session["dischargeDate"] = None
+        request.session["consultant"] = None
         request.session["summary"] = None
         request.session["visitType"] = None
         request.session["letter"] = None

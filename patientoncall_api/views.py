@@ -378,6 +378,7 @@ def addVisit(request):
             request.session["id"] = str(visit.id)
             request.session["admissionDate"] = visit.admissionDate
             request.session["dischargeDate"] = visit.dischargeDate
+            request.session["consultant"] = visit.consultant
             request.session["summary"] = visit.summary
             request.session["visitType"] = visit.visitType
             request.session["letter"] = visit.letter.url if 'letter' in request.FILES else False

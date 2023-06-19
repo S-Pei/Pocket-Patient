@@ -114,7 +114,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     if  (letter === "False" || letter === "/media/False") {
         console.log("NOOOOO")
     } else {
-        entryLetter.href = base_url + letter;
+        entryLetter.href = letter;
         if (visitType == "GP Consultation") {
             entryLetter.textContent = "GP Letter";
         }
