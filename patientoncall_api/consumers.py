@@ -169,7 +169,9 @@ class EditConsumer(WebsocketConsumer):
                 'event': "EDIT_HOSP_VISIT_ENTRY",
                 'mhId': response.get('mhId'),
                 'hospital_visit_history': medicalHistorySerializer.data,
-                'edited_visit_entry': editedMhSerialised.data
+                'edited_visit_entry': editedMhSerialised.data,
+                'new_lab_history': response["new_lab_history"] if "new_lab_history" in response else None,
+                'new_imaging_history': response["new_imaging_history"] if "new_imaging_history" in response else None
             })    
 
         else:
@@ -223,7 +225,9 @@ class EditConsumer(WebsocketConsumer):
             "event": res["event"],
             "mhId": res["mhId"],
             "hospital_visit_history": res["hospital_visit_history"],
-            'edited_visit_entry': res["edited_visit_entry"]
+            'edited_visit_entry': res["edited_visit_entry"],
+            'new_lab_history': res["new_lab_history"],
+            'new_imaging_history': res["new_imaging_history"]
         }))
     
     def patient_data_access_authentication(self, res):
