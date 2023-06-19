@@ -144,8 +144,8 @@ class EditConsumer(WebsocketConsumer):
                     'event': "NEW_HOSP_VISIT_ENTRY",
                     'hospital_visit_history': medicalHistorySerializer.data,
                     'new_visit_entry': newMhSerialised.data,
-                    'new_lab_history': labHistorySerializer.data,
-                    'new_imaging_history': imagingHistorySerializer.data,
+                    'new_lab_history': labHistorySerializer.data if labHistory else {},
+                    'new_imaging_history': imagingHistorySerializer.data if imagingHistory else {},
                 })    
             else:
                 async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
@@ -208,8 +208,8 @@ class EditConsumer(WebsocketConsumer):
             "event": res["event"],
             "hospital_visit_history": res["hospital_visit_history"],
             'new_visit_entry': res["new_visit_entry"],
-            'new_lab_history': res['new_lab_history'] if 'new_lab_history' in res else None,
-            'new_imaging_history': res['new_imaging_history'] if 'new_imaging_history' in res else None, 
+            'new_lab_history': res['new_lab_history'] if 'new_lab_history' in res else {},
+            'new_imaging_history': res['new_imaging_history'] if 'new_imaging_history' in res else {}, 
         }))
 
     def send_doc_update_hosp_visit_information(self, res):
