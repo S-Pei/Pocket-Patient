@@ -31,11 +31,12 @@ function insertMedHistoryEntries(medicalHistory) {
        medicalHistory[i]["dischargeDate"],
        medicalHistory[i]["summary"],
        medicalHistory[i]["visitType"],
-       medicalHistory[i]["letter"])
+       medicalHistory[i]["letter"],
+       medicalHistory[i]["consultant"])
       i++;
   }
 }
-function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, visitType, letter) {
+function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, visitType, letter, consultant) {
     // Create a new entry for the table
     const labHistory = JSON.parse(sessionStorage.getItem("labHistory"))
     const imagingHistory = JSON.parse(sessionStorage.getItem("imagingHistory"))
@@ -97,7 +98,7 @@ function addMedHistoryEntry(rowNum, id, admissionDate, dischargeDate, summary, v
     entryConsultant.classList.add("consultant");
     entryConsultant.classList.add(row);
     entryConsultant.setAttribute("visit-id", id);
-    entryConsultant.textContent = "Dr John Lee"
+    entryConsultant.textContent = consultant;
     
     const entryLetterBox = document.createElement("div");
     entryLetterBox.classList.add("info-table-item");
@@ -184,7 +185,7 @@ function row_hover(rowNum, visitType){
     }
 }
 
-function row_click(rowNum,visitID){
+function row_click(rowNum, visitID){
     var rowClass = 'row-' + rowNum 
     var row = document.getElementsByClassName(rowClass);
     var n = row.length;

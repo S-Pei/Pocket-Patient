@@ -135,14 +135,13 @@ function connect_to_websocket() {
       } else if (event == "NEW_HOSP_VISIT_ENTRY") {
           let newMh = data["new_visit_entry"]
           const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
-          console.log(medicalHistory)
           sessionStorage.setItem("medicalHistory",JSON.stringify(data["hospital_visit_history"]))
           if (window.location.href == base_url + "/visit/") {  
-            var row = medicalHistory.length
+            var row = medicalHistory.length + 1
             addMedHistoryEntry(row, newMh['id'], newMh["admissionDate"], newMh["dischargeDate"],
-              newMh["summary"], newMh["visitType"], newMh["letter"])
-            row_hover(row, medicalHistory[row-1]["visitType"]);
-            row_click(row);
+              newMh["summary"], newMh["visitType"], newMh["letter"], newMh["consultant"])
+            row_hover(row, newMh["visitType"]);
+            row_click(row, newMh["id"]);
           }
       } else if (event == "EDIT_HOSP_VISIT_ENTRY") {
         console.log('EDIT_HOSP_VISIT_ENTRY')

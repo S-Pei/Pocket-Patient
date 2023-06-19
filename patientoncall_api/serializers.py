@@ -73,7 +73,7 @@ class ImagingHistorySerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(imaging_url)
             else:
-                return f"{BASE_URL}{imaging_url}"
+                return f"{BASE_URL_2}{imaging_url}"
         else:
             return imagingHistory.report.url
 

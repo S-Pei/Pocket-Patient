@@ -29,6 +29,7 @@ function getVisitEntry(id) {
 
     const admissionDate = medicalHistory[entryNum]["admissionDate"]
     const dischargeDate = medicalHistory[entryNum]["dischargeDate"]
+    const consultant = medicalHistory[entryNum]["consultant"]
     const visitType = medicalHistory[entryNum]["visitType"]
     const summary = medicalHistory[entryNum]["summary"]
     const letter = medicalHistory[entryNum]["letter"]
@@ -53,7 +54,9 @@ function getVisitEntry(id) {
         document.getElementById("entry-discharge-date").innerHTML = dischargeDate
     }
   
-    document.getElementById("entry-summary").innerHTML = summary
+    document.getElementById("entry-summary").innerHTML = summary;
+
+    document.getElementById("entry-consultant").innerHTML = consultant;
     
     
     const uploadURL = 'upload-letter/' + id
@@ -81,7 +84,7 @@ function getVisitEntry(id) {
         else {
             entryLetterLink.textContent = "Discharge Letter";
         }
-        entryLetterLink.href = base_url + letter
+        entryLetterLink.href = letter
         entryLetter.append(entryLetterLink)
     } 
     
