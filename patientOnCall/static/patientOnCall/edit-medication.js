@@ -330,6 +330,19 @@ function changeMedicationInfoToEditable(row, type) {
         newChild.id = "medication-confirm-button-" + row;
     } else if (type == "duration") {
         newChild = createDurationEditablesElement(elem, row);
+    } else if (type == "route") {
+        let routeStore = elem.textContent
+        newChild = document.createElement("select");
+        newChild.id = `input-route-${row}`;
+        let routes = ["Oral", "Injection", "Nasal", "Transdermal", "Otic"]
+        let optionIndex = routes.indexOf(routeStore);
+        for (i in routes) {
+            let newOption = document.createElement("option");
+            newOption.value = routes[i];
+            newOption.innerHTML = routes[i];
+            newChild.appendChild(newOption);
+        }
+        newChild.selectedIndex = optionIndex;
     } else {
         newChild = document.createElement("input");
         newChild.type = (type == "start-date" || type == "end-date") ? "date": "text";
@@ -340,6 +353,7 @@ function changeMedicationInfoToEditable(row, type) {
         } else {
             newChild.value = elem.textContent;
         }
+    
     }
     elem.innerHTML = "";
     elem.appendChild(newChild);
