@@ -47,19 +47,19 @@ function connect_to_websocket() {
   websocket = create_websocket(
     () => {
       console.log('Connected to websocket.');
-      if (window.location.href == base_url + "/visit/") {
-        console.log(isCreated);
-        if (isCreated) {
-            const id = sessionStorage.getItem("patientID")
-            const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
-            websocket.send(JSON.stringify({
-                "event": "NEW_HOSP_VISIT_ENTRY",
-                "patientId": id,
-                "hospital_visit_history": medicalHistory,
-                "doctor_update": true
-              }))
-        }
-      }
+      // if (window.location.href == base_url + "/visit/") {
+      //   console.log(isCreated);
+      //   if (isCreated) {
+      //       const id = sessionStorage.getItem("patientID")
+      //       const medicalHistory = JSON.parse(sessionStorage.getItem("medicalHistory"))
+      //       websocket.send(JSON.stringify({
+      //           "event": "NEW_HOSP_VISIT_ENTRY",
+      //           "patientId": id,
+      //           "hospital_visit_history": medicalHistory,
+      //           "doctor_update": true
+      //         }))
+      //   }
+      // }
     },
     (response) => {
       let data = JSON.parse(response.data);
@@ -138,6 +138,16 @@ function connect_to_websocket() {
           sessionStorage.setItem("medicalHistory",JSON.stringify(data["hospital_visit_history"]))
           if (window.location.href == base_url + "/visit/") {  
             var row = medicalHistory.length + 1
+            if (Object.keys(data).includes('new_lab_history') && data['new_lab_history'] != undefined) {
+              let labHistories = JSON.parse(sessionStorage.getItem('labHistory'));
+              labHistories.push(data['new_lab_history']);
+              sessionStorage.setItem('labHistory', JSON.stringify(labHistories));
+            }
+            if (Object.keys(data).includes('new_imaging_history') && data['new_imaging_history'] != undefined) {
+              let imagingHistories = JSON.parse(sessionStorage.getItem('imagingHistory'));
+              imagingHistories.push(data['new_imaging_history']);
+              sessionStorage.setItem('imagingHistory', JSON.stringify(imagingHistories));
+            }
             addMedHistoryEntry(row, newMh['id'], newMh["admissionDate"], newMh["dischargeDate"],
               newMh["summary"], newMh["visitType"], newMh["letter"], newMh["consultant"])
             row_hover(row, newMh["visitType"]);
